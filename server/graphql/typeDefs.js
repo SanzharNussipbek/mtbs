@@ -25,6 +25,43 @@ module.exports = gql`
     rating: String!
     createdAt: String!
   }
+  type Seat {
+    id: ID!
+    seatNumber: Number!
+    hallId: ID!
+  }
+  type Hall {
+    id: ID!
+    name: String!
+    type: String!
+    totalSeats: Number!
+  }
+  type Ticket {
+    id: ID!
+    sessionId: ID!
+    userId: ID!
+    price: String!
+    status: String!
+    timestamp: String!
+    promocode: String!
+  }
+  type Session {
+    id: ID!
+    movieId: ID!
+    hallId: ID!
+    date: String!
+    startTime: String!
+    endTime: String!
+  }
+  type SessionSeat {
+    id: ID!
+    seatId: ID!
+    sessionId: String!
+    ticketId: String!
+    type: String!
+    status: String!
+    price: Number!
+  }
   input RegisterInput {
     email: String!
     firstname: String!
