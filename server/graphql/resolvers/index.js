@@ -1,5 +1,5 @@
 const usersResolvers = require("./users");
-const moviesResolvers = require("./users");
+const moviesResolvers = require("./movies");
 
 module.exports = {
   Query: {

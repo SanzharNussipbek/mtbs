@@ -41,12 +41,7 @@ module.exports = {
       },
       context
     ) {
-      const user = checkAuth(context);
-
-      if (body.trim() === "") {
-        throw new Error("Post body must not be empty");
-      }
-
+      // const user = checkAuth(context);
       const newMovie = new Movie({
         name,
         description,
@@ -63,16 +58,17 @@ module.exports = {
 
       const movie = await newMovie.save();
 
-      return Movie;
+      return movie;
     },
     async deleteMovie(_, { movieId }, context) {
       try {
-        const user = checkAuth(context);
+        // const user = checkAuth(context);
         const movie = await Movie.findById(movieId);
         if (!movie) {
           throw new Error("Movie not found");
         }
         await movie.delete();
+        return "Movie deleted successfully";
       } catch (e) {
         throw new Error(e);
       }

@@ -9,7 +9,7 @@ const MovieSchema = new Schema({
   country: String,
   genre: String,
   director: String,
-  cast: [String],
+  cast: String,
   rating: String,
   createdAt: String,
 });

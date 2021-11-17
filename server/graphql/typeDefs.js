@@ -4,10 +4,12 @@ module.exports = gql`
   type User {
     id: ID!
     email: String!
+    password: String!
     firstname: String!
     lastname: String!
     createdAt: String!
     status: String
+    phone: String
     tickets: [String]
     token: String!
   }
@@ -27,14 +29,14 @@ module.exports = gql`
   }
   type Seat {
     id: ID!
-    seatNumber: Number!
+    seatNumber: Int!
     hallId: ID!
   }
   type Hall {
     id: ID!
     name: String!
     type: String!
-    totalSeats: Number!
+    totalSeats: Int!
   }
   type Ticket {
     id: ID!
@@ -60,7 +62,7 @@ module.exports = gql`
     ticketId: String!
     type: String!
     status: String!
-    price: Number!
+    price: Int!
   }
   input RegisterInput {
     email: String!
@@ -75,7 +77,7 @@ module.exports = gql`
   }
   type Mutation {
     register(registerInput: RegisterInput): User!
-    login(username: String!, password: String!): User!
+    login(email: String!, password: String!): User!
     createMovie(
       name: String!
       description: String!
