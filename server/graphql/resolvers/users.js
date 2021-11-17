@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { UserInputError } = require("apollo-server");
+const checkAuth = require("../../utils/auth");
 
 const { SECRET_KEY } = require("../../config");
 
@@ -109,6 +110,37 @@ module.exports = {
       return {
         ...user._doc,
         id: user.id,
+        token: token,
+      };
+    },
+    async updateUser(_, { updateUserInput }, context) {
+      const user = await User.findOne({ email: updateUserInput.email });
+      const signedUser = checkAuth(context);
+
+      if (user?.id !== signedUser?.id) {
+        throw new UserInputError("User is not signed in");
+      }
+
+      if (!user) {
+        throw new UserInputError("User not found");
+      }
+
+      const updatedUser = await User.findOneAndUpdate(
+        { id: signedUser.id },
+        {
+          firstname: updateUserInput.firstname,
+          lastname: updateUserInput.lastname,
+          email: updateUserInput.email,
+          password: await bcrypt.hash(updateUserInput.password, 12),
+          phone: updateUserInput.phone,
+        },
+        { new: true }
+      );
+
+      const token = generateToken(updatedUser);
+      return {
+        ...updatedUser._doc,
+        id: updatedUser.id,
         token: token,
       };
     },

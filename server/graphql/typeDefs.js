@@ -71,6 +71,13 @@ module.exports = gql`
     password: String!
     confirmPassword: String!
   }
+  input UpdateUserInput {
+    email: String
+    firstname: String
+    lastname: String
+    password: String
+    phone: String
+  }
   type Query {
     getMovies: [Movie]
     getMovie(movieId: ID!): Movie
@@ -78,6 +85,7 @@ module.exports = gql`
   type Mutation {
     register(registerInput: RegisterInput): User!
     login(email: String!, password: String!): User!
+    updateUser(updateUserInput: UpdateUserInput): User!
     createMovie(
       name: String!
       description: String!
