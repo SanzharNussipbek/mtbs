@@ -15,7 +15,8 @@ module.exports.validateRegisterInput = (
   if (email.trim() === "") {
     errors.email = "Email must not be empty";
   } else {
-    const regEx = /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/;
+    const regEx =
+      /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/;
     if (!email.match(regEx)) {
       errors.email = "Email must be a valid email address";
     }
@@ -39,6 +40,56 @@ module.exports.validateLoginInput = (email, password) => {
   }
   if (password.trim() === "") {
     errors.password = "Password must not be empty";
+  }
+
+  return {
+    errors,
+    valid: Object.keys(errors).length < 1,
+  };
+};
+
+module.exports.validateCreateMovieInput = (
+  name,
+  description,
+  duration,
+  language,
+  releaseDate,
+  country,
+  genre,
+  director,
+  cast,
+  rating
+) => {
+  const errors = {};
+  if (name.trim() === "") {
+    errors.name = "Name must not be empty";
+  }
+  if (description.trim() === "") {
+    errors.description = "Description must not be empty";
+  }
+  if (duration.trim() === "") {
+    errors.duration = "Duration must not be empty";
+  }
+  if (language.trim() === "") {
+    errors.language = "Language must not be empty";
+  }
+  if (releaseDate.trim() === "") {
+    errors.releaseDate = "ReleaseDate must not be empty";
+  }
+  if (country.trim() === "") {
+    errors.country = "Country must not be empty";
+  }
+  if (genre.trim() === "") {
+    errors.genre = "Genre must not be empty";
+  }
+  if (director.trim() === "") {
+    errors.director = "Director must not be empty";
+  }
+  if (cast.trim() === "") {
+    errors.cast = "Cast must not be empty";
+  }
+  if (rating.trim() === "") {
+    errors.rating = "Rating must not be empty";
   }
 
   return {

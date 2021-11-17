@@ -1,6 +1,7 @@
 const Movie = require("../../models/Movie");
 const checkAuth = require("../../utils/auth");
-const { AuthenticationError } = require("apollo-server");
+const { AuthenticationError, UserInputError } = require("apollo-server");
+const { validateCreateMovieInput } = require("../../utils/validators");
 
 module.exports = {
   Query: {
@@ -42,6 +43,23 @@ module.exports = {
       context
     ) {
       // const user = checkAuth(context);
+      const { valid, errors } = validateCreateMovieInput(
+        name,
+        description,
+        duration,
+        language,
+        releaseDate,
+        country,
+        genre,
+        director,
+        cast,
+        rating
+      );
+      if (!valid) {
+        throw new UserInputError("Errors", {
+          errors,
+        });
+      }
       const newMovie = new Movie({
         name,
         description,
