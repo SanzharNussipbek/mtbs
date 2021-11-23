@@ -39,6 +39,7 @@ module.exports = {
         director,
         cast,
         rating,
+        imgUrl,
       },
       context
     ) {
@@ -53,7 +54,8 @@ module.exports = {
         genre,
         director,
         cast,
-        rating
+        rating,
+        imgUrl,
       );
       if (!valid) {
         throw new UserInputError("Errors", {
@@ -71,6 +73,7 @@ module.exports = {
         director,
         cast,
         rating,
+        imgUrl,
         createdAt: new Date().toISOString(),
       });
 

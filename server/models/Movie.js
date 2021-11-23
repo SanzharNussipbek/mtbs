@@ -12,6 +12,7 @@ const MovieSchema = new Schema({
   cast: String,
   rating: String,
   createdAt: String,
+  imgUrl: String,
 });
 
 module.exports = model("Movie", MovieSchema);

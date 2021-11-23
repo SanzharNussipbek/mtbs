@@ -58,7 +58,8 @@ module.exports.validateCreateMovieInput = (
   genre,
   director,
   cast,
-  rating
+  rating,
+  imgUrl
 ) => {
   const errors = {};
   if (name.trim() === "") {
@@ -90,6 +91,9 @@ module.exports.validateCreateMovieInput = (
   }
   if (rating.trim() === "") {
     errors.rating = "Rating must not be empty";
+  }
+  if (imgUrl.trim() === "") {
+    errors.imgUrl = "Image URL must not be empty";
   }
 
   return {

@@ -25,6 +25,7 @@ module.exports = gql`
     director: String!
     cast: String!
     rating: String!
+    imgUrl: String!
     createdAt: String!
   }
   type Seat {
