@@ -124,7 +124,7 @@ module.exports.validateCreateHallInput = (name, type, totalSeats) => {
   };
 };
 
-module.exports.validateCreateSeatInput = (seatNumber, hallId) => {
+module.exports.validateCreateSeatInput = async (seatNumber, hallId) => {
   const errors = {};
 
   if (hallId.trim() === "") {
@@ -146,7 +146,7 @@ module.exports.validateCreateSeatInput = (seatNumber, hallId) => {
   };
 };
 
-module.exports.validateCreateSessionInput = (
+module.exports.validateCreateSessionInput = async (
   movieId,
   hallId,
   date,
@@ -191,7 +191,7 @@ module.exports.validateCreateSessionInput = (
   };
 };
 
-module.exports.validateCreateSessionSeatInput = (
+module.exports.validateCreateSessionSeatInput = async (
   seatId,
   sessionId,
   ticketId,
@@ -246,7 +246,7 @@ module.exports.validateCreateSessionSeatInput = (
   };
 };
 
-module.exports.validateCreateTicketInput = (
+module.exports.validateCreateTicketInput = async (
   sessionId,
   userId,
   price,

@@ -26,7 +26,7 @@ module.exports = {
   },
   Mutation: {
     async createSeat(_, { seatNumber, hallId }, context) {
-      const { valid, errors } = validateCreateSeatInput(seatNumber, hallId);
+      const { valid, errors } = await validateCreateSeatInput(seatNumber, hallId);
       if (!valid) {
         throw new UserInputError("Errors", {
           errors,

@@ -30,7 +30,7 @@ module.exports = {
       { movieId, hallId, date, startTime, endTime },
       context
     ) {
-      const { valid, errors } = validateCreateSessionInput(
+      const { valid, errors } = await validateCreateSessionInput(
         movieId,
         hallId,
         date,

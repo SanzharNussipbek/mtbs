@@ -30,7 +30,7 @@ module.exports = {
       { seatId, sessionId, ticketId, type, status, price },
       context
     ) {
-      const { valid, errors } = validateCreateSessionSeatInput(
+      const { valid, errors } = await validateCreateSessionSeatInput(
         seatId,
         sessionId,
         ticketId,
