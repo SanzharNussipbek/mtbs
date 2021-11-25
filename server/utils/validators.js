@@ -1,4 +1,5 @@
 const Hall = require("../models/Hall");
+const Movie = require("../models/Movie");
 
 module.exports.validateRegisterInput = (
   firstname,
@@ -135,6 +136,49 @@ module.exports.validateCreateSeatInput = (seatNumber, hallId) => {
 
   if (seatNumber == null) {
     errors.duration = "Seat number must not be empty";
+  }
+
+  return {
+    errors,
+    valid: Object.keys(errors).length < 1,
+  };
+};
+
+module.exports.validateCreateSessionInput = (
+  movieId,
+  hallId,
+  date,
+  startTime,
+  endTime
+) => {
+  const errors = {};
+  if (movieId.trim() === "") {
+    errors.movieId = "Movie ID must not be empty";
+  } else {
+    const movie = await Movie.findById(movieId);
+    if (!movie) {
+      errors.movieId = "Movie with such ID is not found";
+    }
+  }
+  if (hallId.trim() === "") {
+    errors.hallId = "Hall ID must not be empty";
+  } else {
+    const hall = await Hall.findById(hallId);
+    if (!hall) {
+      errors.hallId = "Hall with such ID is not found";
+    }
+  }
+
+  if (date.trim() === "") {
+    errors.date = "Date must not be empty";
+  }
+
+  if (startTime.trim() === "") {
+    errors.startTime = "Start time must not be empty";
+  }
+
+  if (endTime.trim() === "") {
+    errors.endTime = "End time must not be empty";
   }
 
   return {

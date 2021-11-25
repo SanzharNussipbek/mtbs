@@ -6,6 +6,7 @@ const SessionSchema = new Schema({
   date: String,
   startTime: String,
   endTime: String,
+  createdAt: String,
 });
 
 module.exports = model("Session", SessionSchema);
