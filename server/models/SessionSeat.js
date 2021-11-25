@@ -7,6 +7,7 @@ const SessionSeatSchema = new Schema({
   type: String,
   status: String,
   price: Number,
+  createdAt: String,
 });
 
 module.exports = model("SessionSeat", SessionSeatSchema);

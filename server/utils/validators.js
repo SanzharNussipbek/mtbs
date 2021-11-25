@@ -1,5 +1,6 @@
 const Hall = require("../models/Hall");
 const Movie = require("../models/Movie");
+const Ticket = require("../models/Ticket");
 
 module.exports.validateRegisterInput = (
   firstname,
@@ -125,6 +126,7 @@ module.exports.validateCreateHallInput = (name, type, totalSeats) => {
 
 module.exports.validateCreateSeatInput = (seatNumber, hallId) => {
   const errors = {};
+
   if (hallId.trim() === "") {
     errors.hallId = "Hall ID must not be empty";
   } else {
@@ -152,6 +154,7 @@ module.exports.validateCreateSessionInput = (
   endTime
 ) => {
   const errors = {};
+
   if (movieId.trim() === "") {
     errors.movieId = "Movie ID must not be empty";
   } else {
@@ -160,6 +163,7 @@ module.exports.validateCreateSessionInput = (
       errors.movieId = "Movie with such ID is not found";
     }
   }
+
   if (hallId.trim() === "") {
     errors.hallId = "Hall ID must not be empty";
   } else {
@@ -179,6 +183,61 @@ module.exports.validateCreateSessionInput = (
 
   if (endTime.trim() === "") {
     errors.endTime = "End time must not be empty";
+  }
+
+  return {
+    errors,
+    valid: Object.keys(errors).length < 1,
+  };
+};
+
+module.exports.validateCreateSessionSeatInput = (
+  seatId,
+  sessionId,
+  ticketId,
+  type,
+  status,
+  price
+) => {
+  const errors = {};
+
+  if (seatId.trim() === "") {
+    errors.seatId = "Seat ID must not be empty";
+  } else {
+    const seat = await Seat.findById(seatId);
+    if (!seat) {
+      errors.seatId = "Seat with such ID is not found";
+    }
+  }
+
+  if (sessionId.trim() === "") {
+    errors.sessionId = "Session ID must not be empty";
+  } else {
+    const session = await Session.findById(sessionId);
+    if (!session) {
+      errors.sessionId = "Session with such ID is not found";
+    }
+  }
+
+  if (ticketId.trim() === "") {
+    errors.ticketId = "Ticket ID must not be empty";
+  } else {
+    const ticket = await Ticket.findById(ticketId);
+    if (!ticket) {
+      errors.ticketId = "Ticket with such ID is not found";
+    }
+  }
+
+  if (type.trim() === "") {
+    errors.type = "Type must not be empty";
+  }
+
+  if (status.trim() === "") {
+    errors.status = "Status must not be empty";
+  }
+
+  if (price == null) {
+    errors.price = "Price must not be empty";
   }
 
   return {
