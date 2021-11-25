@@ -1,3 +1,5 @@
+const Hall = require("../models/Hall");
+
 module.exports.validateRegisterInput = (
   firstname,
   lastname,
@@ -102,20 +104,37 @@ module.exports.validateCreateMovieInput = (
   };
 };
 
-module.exports.validateCreateHallInput = (
-  name,
-  type,
-  totalSeats,
-) => {
+module.exports.validateCreateHallInput = (name, type, totalSeats) => {
   const errors = {};
   if (name.trim() === "") {
     errors.name = "Hall name must not be empty";
   }
   if (type.trim() === "") {
-    errors.description = "Hall type must not be empty";
+    errors.type = "Hall type must not be empty";
   }
   if (totalSeats == null) {
-    errors.duration = "Total number of seats must not be empty";
+    errors.totalSeats = "Total number of seats must not be empty";
+  }
+
+  return {
+    errors,
+    valid: Object.keys(errors).length < 1,
+  };
+};
+
+module.exports.validateCreateSeatInput = (seatNumber, hallId) => {
+  const errors = {};
+  if (hallId.trim() === "") {
+    errors.hallId = "Hall ID must not be empty";
+  } else {
+    const hall = await Hall.findById(hallId);
+    if (!hall) {
+      errors.hallId = "Hall with such ID is not found";
+    }
+  }
+
+  if (seatNumber == null) {
+    errors.duration = "Seat number must not be empty";
   }
 
   return {
