@@ -101,3 +101,25 @@ module.exports.validateCreateMovieInput = (
     valid: Object.keys(errors).length < 1,
   };
 };
+
+module.exports.validateCreateHallInput = (
+  name,
+  type,
+  totalSeats,
+) => {
+  const errors = {};
+  if (name.trim() === "") {
+    errors.name = "Hall name must not be empty";
+  }
+  if (type.trim() === "") {
+    errors.description = "Hall type must not be empty";
+  }
+  if (totalSeats == null) {
+    errors.duration = "Total number of seats must not be empty";
+  }
+
+  return {
+    errors,
+    valid: Object.keys(errors).length < 1,
+  };
+};
