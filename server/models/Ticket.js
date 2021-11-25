@@ -7,6 +7,7 @@ const TicketSchema = new Schema({
   status: String,
   timestamp: String,
   promocode: String,
+  createdAt: String,
 });
 
 module.exports = model("Ticket", TicketSchema);

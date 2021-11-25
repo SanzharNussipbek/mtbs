@@ -236,7 +236,57 @@ module.exports.validateCreateSessionSeatInput = (
     errors.status = "Status must not be empty";
   }
 
-  if (price == null) {
+  if (price.trim() === "") {
+    errors.price = "Price must not be empty";
+  }
+
+  return {
+    errors,
+    valid: Object.keys(errors).length < 1,
+  };
+};
+
+module.exports.validateCreateTicketInput = (
+  sessionId,
+  userId,
+  price,
+  status,
+  timestamp,
+  promocode
+) => {
+  const errors = {};
+
+  if (userId.trim() === "") {
+    errors.userId = "User ID must not be empty";
+  } else {
+    const user = await User.findById(userId);
+    if (!seat) {
+      errors.userId = "User with such ID is not found";
+    }
+  }
+
+  if (sessionId.trim() === "") {
+    errors.sessionId = "Session ID must not be empty";
+  } else {
+    const session = await Session.findById(sessionId);
+    if (!session) {
+      errors.sessionId = "Session with such ID is not found";
+    }
+  }
+
+  if (timestamp.trim() === "") {
+    errors.timestamp = "Timestamp must not be empty";
+  }
+
+  if (status.trim() === "") {
+    errors.status = "Status must not be empty";
+  }
+
+  if (promocode.trim() === "") {
+    errors.promocode = "Promocode must not be empty";
+  }
+
+  if (price.trim() === "") {
     errors.price = "Price must not be empty";
   }
 
