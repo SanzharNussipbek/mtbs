@@ -13,13 +13,13 @@ module.exports.validateRegisterInput = (
   confirmPassword
 ) => {
   const errors = {};
-  if (firstname.trim() === "") {
+  if (firstname?.trim() === "") {
     errors.firstname = "First name must not be empty";
   }
-  if (lastname.trim() === "") {
+  if (lastname?.trim() === "") {
     errors.lastname = "Last name must not be empty";
   }
-  if (email.trim() === "") {
+  if (email?.trim() === "") {
     errors.email = "Email must not be empty";
   } else {
     const regEx =
@@ -42,10 +42,10 @@ module.exports.validateRegisterInput = (
 
 module.exports.validateLoginInput = (email, password) => {
   const errors = {};
-  if (email.trim() === "") {
+  if (email?.trim() === "") {
     errors.email = "Email must not be empty";
   }
-  if (password.trim() === "") {
+  if (password?.trim() === "") {
     errors.password = "Password must not be empty";
   }
 
@@ -69,37 +69,37 @@ module.exports.validateCreateMovieInput = (
   imgUrl
 ) => {
   const errors = {};
-  if (name.trim() === "") {
+  if (name?.trim() === "") {
     errors.name = "Name must not be empty";
   }
-  if (description.trim() === "") {
+  if (description?.trim() === "") {
     errors.description = "Description must not be empty";
   }
-  if (duration.trim() === "") {
+  if (duration?.trim() === "") {
     errors.duration = "Duration must not be empty";
   }
-  if (language.trim() === "") {
+  if (language?.trim() === "") {
     errors.language = "Language must not be empty";
   }
-  if (releaseDate.trim() === "") {
+  if (releaseDate?.trim() === "") {
     errors.releaseDate = "ReleaseDate must not be empty";
   }
-  if (country.trim() === "") {
+  if (country?.trim() === "") {
     errors.country = "Country must not be empty";
   }
-  if (genre.trim() === "") {
+  if (genre?.trim() === "") {
     errors.genre = "Genre must not be empty";
   }
-  if (director.trim() === "") {
+  if (director?.trim() === "") {
     errors.director = "Director must not be empty";
   }
-  if (cast.trim() === "") {
+  if (cast?.trim() === "") {
     errors.cast = "Cast must not be empty";
   }
-  if (rating.trim() === "") {
+  if (rating?.trim() === "") {
     errors.rating = "Rating must not be empty";
   }
-  if (imgUrl.trim() === "") {
+  if (imgUrl?.trim() === "") {
     errors.imgUrl = "Image URL must not be empty";
   }
 
@@ -111,10 +111,10 @@ module.exports.validateCreateMovieInput = (
 
 module.exports.validateCreateHallInput = (name, type, totalSeats) => {
   const errors = {};
-  if (name.trim() === "") {
+  if (name?.trim() === "") {
     errors.name = "Hall name must not be empty";
   }
-  if (type.trim() === "") {
+  if (type?.trim() === "") {
     errors.type = "Hall type must not be empty";
   }
   if (totalSeats == null) {
@@ -130,7 +130,7 @@ module.exports.validateCreateHallInput = (name, type, totalSeats) => {
 module.exports.validateCreateSeatInput = async (seatNumber, hallId) => {
   const errors = {};
 
-  if (hallId.trim() === "") {
+  if (hallId?.trim() === "") {
     errors.hallId = "Hall ID must not be empty";
   } else {
     const hall = await Hall.findById(hallId);
@@ -158,7 +158,7 @@ module.exports.validateCreateSessionInput = async (
 ) => {
   const errors = {};
 
-  if (movieId.trim() === "") {
+  if (movieId?.trim() === "") {
     errors.movieId = "Movie ID must not be empty";
   } else {
     const movie = await Movie.findById(movieId);
@@ -167,7 +167,7 @@ module.exports.validateCreateSessionInput = async (
     }
   }
 
-  if (hallId.trim() === "") {
+  if (hallId?.trim() === "") {
     errors.hallId = "Hall ID must not be empty";
   } else {
     const hall = await Hall.findById(hallId);
@@ -176,15 +176,15 @@ module.exports.validateCreateSessionInput = async (
     }
   }
 
-  if (date.trim() === "") {
+  if (date?.trim() === "") {
     errors.date = "Date must not be empty";
   }
 
-  if (startTime.trim() === "") {
+  if (startTime?.trim() === "") {
     errors.startTime = "Start time must not be empty";
   }
 
-  if (endTime.trim() === "") {
+  if (endTime?.trim() === "") {
     errors.endTime = "End time must not be empty";
   }
 
@@ -204,7 +204,7 @@ module.exports.validateCreateSessionSeatInput = async (
 ) => {
   const errors = {};
 
-  if (seatId.trim() === "") {
+  if (seatId?.trim() === "") {
     errors.seatId = "Seat ID must not be empty";
   } else {
     const seat = await Seat.findById(seatId);
@@ -213,7 +213,7 @@ module.exports.validateCreateSessionSeatInput = async (
     }
   }
 
-  if (sessionId.trim() === "") {
+  if (sessionId?.trim() === "") {
     errors.sessionId = "Session ID must not be empty";
   } else {
     const session = await Session.findById(sessionId);
@@ -222,7 +222,7 @@ module.exports.validateCreateSessionSeatInput = async (
     }
   }
 
-  if (ticketId.trim() === "") {
+  if (ticketId?.trim() === "") {
     errors.ticketId = "Ticket ID must not be empty";
   } else {
     const ticket = await Ticket.findById(ticketId);
@@ -231,15 +231,15 @@ module.exports.validateCreateSessionSeatInput = async (
     }
   }
 
-  if (type.trim() === "") {
+  if (type?.trim() === "") {
     errors.type = "Type must not be empty";
   }
 
-  if (status.trim() === "") {
+  if (status?.trim() === "") {
     errors.status = "Status must not be empty";
   }
 
-  if (price.trim() === "") {
+  if (price?.trim() === "") {
     errors.price = "Price must not be empty";
   }
 
@@ -253,13 +253,11 @@ module.exports.validateCreateTicketInput = async (
   sessionId,
   userId,
   price,
-  status,
-  timestamp,
-  promocode
+  status
 ) => {
   const errors = {};
 
-  if (userId.trim() === "") {
+  if (userId?.trim() === "") {
     errors.userId = "User ID must not be empty";
   } else {
     const user = await User.findById(userId);
@@ -268,7 +266,7 @@ module.exports.validateCreateTicketInput = async (
     }
   }
 
-  if (sessionId.trim() === "") {
+  if (sessionId?.trim() === "") {
     errors.sessionId = "Session ID must not be empty";
   } else {
     const session = await Session.findById(sessionId);
@@ -277,15 +275,11 @@ module.exports.validateCreateTicketInput = async (
     }
   }
 
-  if (timestamp.trim() === "") {
-    errors.timestamp = "Timestamp must not be empty";
-  }
-
-  if (status.trim() === "") {
+  if (status?.trim() === "") {
     errors.status = "Status must not be empty";
   }
 
-  if (price.trim() === "") {
+  if (price?.trim() === "") {
     errors.price = "Price must not be empty";
   }
 
