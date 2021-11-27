@@ -13,9 +13,9 @@ module.exports = {
         throw new Error(e);
       }
     },
-    async getMovie(_, { movieId }) {
+    async getMovie(_, { id }) {
       try {
-        const movie = await Movie.findById(movieId);
+        const movie = await Movie.findById(id);
         if (!movie) {
           throw new Error("Movie not found");
         }
@@ -29,17 +29,19 @@ module.exports = {
     async createMovie(
       _,
       {
-        name,
-        description,
-        duration,
-        language,
-        releaseDate,
-        country,
-        genre,
-        director,
-        cast,
-        rating,
-        imgUrl,
+        data: {
+          name,
+          description,
+          duration,
+          language,
+          releaseDate,
+          country,
+          genre,
+          director,
+          cast,
+          rating,
+          imgUrl,
+        },
       },
       context
     ) {
@@ -55,7 +57,7 @@ module.exports = {
         director,
         cast,
         rating,
-        imgUrl,
+        imgUrl
       );
       if (!valid) {
         throw new UserInputError("Errors", {
@@ -81,10 +83,10 @@ module.exports = {
 
       return movie;
     },
-    async deleteMovie(_, { movieId }, context) {
+    async deleteMovie(_, { id }, context) {
       try {
         // const user = checkAuth(context);
-        const movie = await Movie.findById(movieId);
+        const movie = await Movie.findById(id);
         if (!movie) {
           throw new Error("Movie not found");
         }

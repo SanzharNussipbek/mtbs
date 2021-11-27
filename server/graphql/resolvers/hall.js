@@ -4,7 +4,7 @@ const { validateCreateHallInput } = require("../../utils/validators");
 
 module.exports = {
   Query: {
-    async getHall() {
+    async getHalls() {
       try {
         const halls = await Hall.find()?.sort({ createdAt: -1 });
         return halls;
@@ -12,9 +12,9 @@ module.exports = {
         throw new Error(e);
       }
     },
-    async getHall(_, { hallId }) {
+    async getHall(_, { id }) {
       try {
-        const hall = await Hall.findById(hallId);
+        const hall = await Hall.findById(id);
         if (!hall) {
           throw new Error("Hall not found");
         }
@@ -25,7 +25,11 @@ module.exports = {
     },
   },
   Mutation: {
-    async createHall(_, { name, type, totalSeats }, context) {
+    async createHall(
+      _,
+      { data: { name, type, totalSeats } },
+      context
+    ) {
       const { valid, errors } = validateCreateHallInput(name, type, totalSeats);
       if (!valid) {
         throw new UserInputError("Errors", {
@@ -43,9 +47,9 @@ module.exports = {
 
       return hall;
     },
-    async deleteHall(_, { hallId }, context) {
+    async deleteHall(_, { id }, context) {
       try {
-        const hall = await Hall.findById(hallId);
+        const hall = await Hall.findById(id);
         if (!hall) {
           throw new Error("Hall not found");
         }

@@ -4,7 +4,7 @@ const { validateCreateTicketInput } = require("../../utils/validators");
 
 module.exports = {
   Query: {
-    async getTicket() {
+    async getTickets() {
       try {
         const tickets = await Ticket.find()?.sort({ createdAt: -1 });
         return tickets;
@@ -12,9 +12,9 @@ module.exports = {
         throw new Error(e);
       }
     },
-    async getTicket(_, { ticketId }) {
+    async getTicket(_, { id }) {
       try {
-        const ticket = await Ticket.findById(ticketId);
+        const ticket = await Ticket.findById(id);
         if (!ticket) {
           throw new Error("Ticket not found");
         }
@@ -27,7 +27,7 @@ module.exports = {
   Mutation: {
     async createTicket(
       _,
-      { sessionId, userId, price, status, timestamp, promocode },
+      { data: { sessionId, userId, price, status, timestamp, promocode } },
       context
     ) {
       const { valid, errors } = await validateCreateTicketInput(
@@ -57,9 +57,9 @@ module.exports = {
 
       return ticket;
     },
-    async deleteTicket(_, { ticketId }, context) {
+    async deleteTicket(_, { id }, context) {
       try {
-        const ticket = await Ticket.findById(ticketId);
+        const ticket = await Ticket.findById(id);
         if (!ticket) {
           throw new Error("Ticket not found");
         }

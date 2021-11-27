@@ -4,7 +4,7 @@ const { validateCreateSeatInput } = require("../../utils/validators");
 
 module.exports = {
   Query: {
-    async getSeat() {
+    async getSeats() {
       try {
         const seats = await Seat.find()?.sort({ createdAt: -1 });
         return seats;
@@ -12,9 +12,9 @@ module.exports = {
         throw new Error(e);
       }
     },
-    async getSeat(_, { seatId }) {
+    async getSeat(_, { id }) {
       try {
-        const seat = await Seat.findById(seatId);
+        const seat = await Seat.findById(id);
         if (!seat) {
           throw new Error("Seat not found");
         }
@@ -25,8 +25,11 @@ module.exports = {
     },
   },
   Mutation: {
-    async createSeat(_, { seatNumber, hallId }, context) {
-      const { valid, errors } = await validateCreateSeatInput(seatNumber, hallId);
+    async createSeat(_, { data: { seatNumber, hallId } }, context) {
+      const { valid, errors } = await validateCreateSeatInput(
+        seatNumber,
+        hallId
+      );
       if (!valid) {
         throw new UserInputError("Errors", {
           errors,
@@ -42,9 +45,9 @@ module.exports = {
 
       return seat;
     },
-    async deleteSeat(_, { seatId }, context) {
+    async deleteSeat(_, { id }, context) {
       try {
-        const seat = await Seat.findById(seatId);
+        const seat = await Seat.findById(id);
         if (!seat) {
           throw new Error("Seat not found");
         }

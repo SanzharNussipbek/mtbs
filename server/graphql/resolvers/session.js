@@ -4,7 +4,7 @@ const { validateCreateSessionInput } = require("../../utils/validators");
 
 module.exports = {
   Query: {
-    async getSession() {
+    async getSessions() {
       try {
         const sessions = await Session.find()?.sort({ createdAt: -1 });
         return sessions;
@@ -12,9 +12,9 @@ module.exports = {
         throw new Error(e);
       }
     },
-    async getSession(_, { sessionId }) {
+    async getSession(_, { id }) {
       try {
-        const session = await Session.findById(sessionId);
+        const session = await Session.findById(id);
         if (!session) {
           throw new Error("Session not found");
         }
@@ -27,7 +27,7 @@ module.exports = {
   Mutation: {
     async createSession(
       _,
-      { movieId, hallId, date, startTime, endTime },
+      { data: { movieId, hallId, date, startTime, endTime } },
       context
     ) {
       const { valid, errors } = await validateCreateSessionInput(
@@ -55,9 +55,9 @@ module.exports = {
 
       return session;
     },
-    async deleteSession(_, { sessionId }, context) {
+    async deleteSession(_, { id }, context) {
       try {
-        const session = await Session.findById(sessionId);
+        const session = await Session.findById(id);
         if (!session) {
           throw new Error("Session not found");
         }
