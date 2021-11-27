@@ -1,6 +1,9 @@
 const Hall = require("../models/Hall");
 const Movie = require("../models/Movie");
 const Ticket = require("../models/Ticket");
+const User = require("../models/User");
+const Session = require("../models/Session");
+const Seat = require("../models/Seat");
 
 module.exports.validateRegisterInput = (
   firstname,
@@ -260,7 +263,7 @@ module.exports.validateCreateTicketInput = async (
     errors.userId = "User ID must not be empty";
   } else {
     const user = await User.findById(userId);
-    if (!seat) {
+    if (!user) {
       errors.userId = "User with such ID is not found";
     }
   }
@@ -280,10 +283,6 @@ module.exports.validateCreateTicketInput = async (
 
   if (status.trim() === "") {
     errors.status = "Status must not be empty";
-  }
-
-  if (promocode.trim() === "") {
-    errors.promocode = "Promocode must not be empty";
   }
 
   if (price.trim() === "") {
