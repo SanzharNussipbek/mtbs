@@ -67,5 +67,20 @@ module.exports = {
         throw new Error(e);
       }
     },
+    async updateSession(_, { data }, context) {
+      try {
+        const { id, ...updateSessionInput } = data;
+        const session = await Session.findById(id);
+        if (!session) {
+          throw new Error("Session not found");
+        }
+        const updatedSession = await Session.findByIdAndUpdate(id, updateSessionInput, {
+          new: true,
+        });
+        return updatedSession;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
   },
 };

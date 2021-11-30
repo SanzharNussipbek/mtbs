@@ -25,11 +25,7 @@ module.exports = {
     },
   },
   Mutation: {
-    async createHall(
-      _,
-      { data: { name, type, totalSeats } },
-      context
-    ) {
+    async createHall(_, { data: { name, type, totalSeats } }, context) {
       const { valid, errors } = validateCreateHallInput(name, type, totalSeats);
       if (!valid) {
         throw new UserInputError("Errors", {
@@ -55,6 +51,21 @@ module.exports = {
         }
         await hall.delete();
         return "Hall deleted successfully";
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    async updateHall(_, { data }, context) {
+      try {
+        const { id, ...updateHallInput } = data;
+        const hall = await Hall.findById(id);
+        if (!hall) {
+          throw new Error("Hall not found");
+        }
+        const updatedHall = await Hall.findByIdAndUpdate(id, updateHallInput, {
+          new: true,
+        });
+        return updatedHall;
       } catch (e) {
         throw new Error(e);
       }

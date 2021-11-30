@@ -27,16 +27,14 @@ module.exports = {
   Mutation: {
     async createTicket(
       _,
-      { data: { sessionId, userId, price, status, timestamp, promocode } },
+      { data: { sessionId, userId, price, status, promocode } },
       context
     ) {
       const { valid, errors } = await validateCreateTicketInput(
         sessionId,
         userId,
         price,
-        status,
-        timestamp,
-        promocode
+        status
       );
       if (!valid) {
         throw new UserInputError("Errors", {
@@ -48,7 +46,6 @@ module.exports = {
         userId,
         price,
         status,
-        timestamp,
         promocode,
         createdAt: new Date().toISOString(),
       });
@@ -65,6 +62,25 @@ module.exports = {
         }
         await ticket.delete();
         return "Ticket deleted successfully";
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    async updateTicket(_, { data }, context) {
+      try {
+        const { id, ...updateTicketInput } = data;
+        const ticket = await Ticket.findById(id);
+        if (!ticket) {
+          throw new Error("Ticket not found");
+        }
+        const updatedTicket = await Ticket.findByIdAndUpdate(
+          id,
+          updateTicketInput,
+          {
+            new: true,
+          }
+        );
+        return updatedTicket;
       } catch (e) {
         throw new Error(e);
       }

@@ -78,7 +78,7 @@ module.exports = gql`
     confirmPassword: String!
   }
   input UpdateUserInput {
-    email: String
+    email: String!
     firstname: String
     lastname: String
     password: String
@@ -101,9 +101,19 @@ module.exports = gql`
     type: String!
     totalSeats: Int!
   }
+  input UpdateHallInput {
+    id: ID!
+    name: String
+    type: String
+    totalSeats: Int
+  }
   input CreateSeatInput {
     seatNumber: Int!
     hallId: ID!
+  }
+  input UpdateSeatInput {
+    id: ID!
+    seatNumber: Int
   }
   input CreateSessionInput {
     movieId: ID!
@@ -111,6 +121,14 @@ module.exports = gql`
     date: String!
     startTime: String!
     endTime: String!
+  }
+  input UpdateSessionInput {
+    id: ID!
+    movieId: ID
+    hallId: ID
+    date: String
+    startTime: String
+    endTime: String
   }
   input CreateSessionSeatInput {
     seatId: ID!
@@ -120,13 +138,28 @@ module.exports = gql`
     status: String!
     price: String!
   }
+  input UpdateSessionSeatInput {
+    id: ID!
+    seatId: ID
+    sessionId: String
+    ticketId: String
+    type: String
+    status: String
+    price: String
+  }
   input CreateTicketInput {
     sessionId: ID!
     userId: ID!
     price: String!
     status: String!
-    timestamp: String!
     promocode: String!
+  }
+  input UpdateTicketInput {
+    id: ID!
+    sessionId: ID
+    price: String
+    status: String
+    promocode: String
   }
   input CreateMovieInput {
     name: String!
@@ -140,6 +173,20 @@ module.exports = gql`
     cast: String!
     imgUrl: String!
     rating: String!
+  }
+  input UpdateMovieInput {
+    id: ID!
+    name: String
+    description: String
+    duration: String
+    language: String
+    releaseDate: String
+    country: String
+    genre: String
+    director: String
+    cast: String
+    imgUrl: String
+    rating: String
   }
   type Query {
     getMovies: [Movie]
@@ -161,21 +208,27 @@ module.exports = gql`
     updateUser(updateUserInput: UpdateUserInput): User!
 
     createMovie(data: CreateMovieInput): Movie!
+    updateMovie(data: UpdateMovieInput): Movie!
     deleteMovie(id: ID!): String!
 
     createHall(data: CreateHallInput): Hall!
+    updateHall(data: UpdateHallInput): Hall!
     deleteHall(id: ID!): String!
 
     createSeat(data: CreateSeatInput): Seat!
+    updateSeat(data: UpdateSeatInput): Seat!
     deleteSeat(id: ID!): String!
 
     createSession(data: CreateSessionInput): Session!
+    updateSession(data: UpdateSessionInput): Session!
     deleteSession(id: ID!): String!
 
     createSessionSeat(data: CreateSessionSeatInput): SessionSeat!
+    updateSessionSeat(data: UpdateSessionSeatInput): SessionSeat!
     deleteSessionSeat(id: ID!): String!
 
     createTicket(data: CreateTicketInput): Ticket!
+    updateTicket(data: UpdateTicketInput): Ticket!
     deleteTicket(id: ID!): String!
   }
 `;

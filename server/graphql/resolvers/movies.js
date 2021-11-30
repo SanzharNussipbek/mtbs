@@ -96,5 +96,20 @@ module.exports = {
         throw new Error(e);
       }
     },
+    async updateMovie(_, { data }, context) {
+      try {
+        const { id, ...updateMovieInput } = data;
+        const movie = await Movie.findById(id);
+        if (!movie) {
+          throw new Error("Movie not found");
+        }
+        const updatedMovie = await Movie.findByIdAndUpdate(id, updateMovieInput, {
+          new: true,
+        });
+        return updatedMovie;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
   },
 };

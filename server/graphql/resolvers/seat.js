@@ -1,4 +1,5 @@
 const Seat = require("../../models/Seat");
+const Hall = require("../../models/Hall");
 const { UserInputError } = require("apollo-server");
 const { validateCreateSeatInput } = require("../../utils/validators");
 
@@ -53,6 +54,21 @@ module.exports = {
         }
         await seat.delete();
         return "Seat deleted successfully";
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    async updateSeat(_, { data }, context) {
+      try {
+        const { id, ...updateSeatInput } = data;
+        const seat = await Seat.findById(id);
+        if (!seat) {
+          throw new Error("Seat not found");
+        }
+        const updatedSeat = await Seat.findByIdAndUpdate(id, updateSeatInput, {
+          new: true,
+        });
+        return updatedSeat;
       } catch (e) {
         throw new Error(e);
       }

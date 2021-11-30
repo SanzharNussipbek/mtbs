@@ -69,5 +69,20 @@ module.exports = {
         throw new Error(e);
       }
     },
+    async updateSessionSeat(_, { data }, context) {
+      try {
+        const { id, ...updateSessionSeatInput } = data;
+        const sessionSeat = await SessionSeat.findById(id);
+        if (!sessionSeat) {
+          throw new Error("Session Seat not found");
+        }
+        const updatedSessionSeat = await SessionSeat.findByIdAndUpdate(id, updateSessionSeatInput, {
+          new: true,
+        });
+        return updatedSessionSeat;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
   },
 };
