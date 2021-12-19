@@ -70,6 +70,28 @@ module.exports = gql`
     price: String!
     createdAt: String!
   }
+  type Post {
+    id: ID!
+    title: String!
+    body: String!
+    author: String!
+    imgUrl: String
+    createdAt: String!
+  }
+  input CreatePostInput {
+    title: String!
+    body: String!
+    author: String!
+    imgUrl: String
+    createdAt: String!
+  }
+  input UpdatePostInput {
+    id: ID!
+    title: String
+    body: String
+    author: String
+    imgUrl: String
+  }
   input RegisterInput {
     email: String!
     firstname: String!
@@ -179,16 +201,24 @@ module.exports = gql`
   type Query {
     getMovies: [Movie]
     getMovie(id: ID!): Movie
+
     getHalls: [Hall]
     getHall(id: ID!): Hall
+
     getSeats: [Seat]
     getSeat(id: ID!): Seat
+
     getSessions: [Session]
     getSession(id: ID!): Session
+
     getSessionSeats: [SessionSeat]
     getSessionSeat(id: ID!): SessionSeat
+
     getTickets: [Ticket]
     getTicket(id: ID!): Ticket
+
+    getPosts: [Post]
+    getPost(id: ID!): Post
   }
   type Mutation {
     register(registerInput: RegisterInput): User!
@@ -218,5 +248,9 @@ module.exports = gql`
     createTicket(data: CreateTicketInput): Ticket!
     updateTicket(data: UpdateTicketInput): Ticket!
     deleteTicket(id: ID!): String!
+
+    createPost(data: CreatePostInput): Ticket!
+    updatePost(data: UpdatePostInput): Ticket!
+    deletePost(id: ID!): String!
   }
 `;
