@@ -1,5 +1,4 @@
 const Seat = require("../../models/Seat");
-const Hall = require("../../models/Hall");
 const { UserInputError } = require("apollo-server");
 const { validateCreateSeatInput } = require("../../utils/validators");
 
@@ -53,6 +52,10 @@ module.exports = {
           throw new Error("Seat not found");
         }
         await seat.delete();
+
+        const sessionSeats = await SessionSeat.find({ seatId: id });
+        sessionSeats?.map(async (sessionSeat) => await sessionSeat?.delete());
+
         return "Seat deleted successfully";
       } catch (e) {
         throw new Error(e);

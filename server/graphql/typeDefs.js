@@ -17,7 +17,7 @@ module.exports = gql`
     id: ID!
     name: String!
     description: String!
-    duration: String!
+    duration: Int!
     language: String!
     releaseDate: String!
     country: String!
@@ -83,18 +83,6 @@ module.exports = gql`
     lastname: String
     password: String
     phone: String
-  }
-  input CreateMovieInput {
-    name: String!
-    description: String!
-    duration: String!
-    language: String!
-    releaseDate: String!
-    country: String!
-    genre: String!
-    director: String!
-    cast: String!
-    rating: String!
   }
   input CreateHallInput {
     name: String!
@@ -164,7 +152,7 @@ module.exports = gql`
   input CreateMovieInput {
     name: String!
     description: String!
-    duration: String!
+    duration: Int!
     language: String!
     releaseDate: String!
     country: String!
@@ -178,7 +166,7 @@ module.exports = gql`
     id: ID!
     name: String
     description: String
-    duration: String
+    duration: Int
     language: String
     releaseDate: String
     country: String

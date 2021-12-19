@@ -1,4 +1,7 @@
 const Movie = require("../../models/Movie");
+const Session = require("../../models/Session");
+const Ticket = require("../../models/Ticket");
+const SessionSeat = require("../../models/SessionSeat");
 const checkAuth = require("../../utils/auth");
 const { AuthenticationError, UserInputError } = require("apollo-server");
 const { validateCreateMovieInput } = require("../../utils/validators");
@@ -64,6 +67,16 @@ module.exports = {
           errors,
         });
       }
+
+      const existingMovie = await Movie.findOne({ name });
+      if (existingMovie) {
+        throw new UserInputError("This movie already exists", {
+          errors: {
+            email: "This movie already exists",
+          },
+        });
+      }
+
       const newMovie = new Movie({
         name,
         description,
@@ -91,6 +104,18 @@ module.exports = {
           throw new Error("Movie not found");
         }
         await movie.delete();
+
+        const sessions = await Session.find({ movieId: id });
+        sessions?.map(async (session) => {
+          await session?.delete();
+
+          const tickets = await Ticket.find({ sessionId: session.id });
+          tickets?.map(async (ticket) => await ticket?.delete());
+
+          const sessionSeats = await SessionSeat.find({ sessionId: session.id });
+          sessionSeats?.map(async (sessionSeat) => await sessionSeat?.delete());
+        });
+
         return "Movie deleted successfully";
       } catch (e) {
         throw new Error(e);
@@ -103,9 +128,13 @@ module.exports = {
         if (!movie) {
           throw new Error("Movie not found");
         }
-        const updatedMovie = await Movie.findByIdAndUpdate(id, updateMovieInput, {
-          new: true,
-        });
+        const updatedMovie = await Movie.findByIdAndUpdate(
+          id,
+          updateMovieInput,
+          {
+            new: true,
+          }
+        );
         return updatedMovie;
       } catch (e) {
         throw new Error(e);

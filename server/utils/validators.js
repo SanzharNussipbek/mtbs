@@ -75,7 +75,7 @@ module.exports.validateCreateMovieInput = (
   if (description?.trim() === "") {
     errors.description = "Description must not be empty";
   }
-  if (duration?.trim() === "") {
+  if (duration == null) {
     errors.duration = "Duration must not be empty";
   }
   if (language?.trim() === "") {
