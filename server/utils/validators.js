@@ -1,9 +1,10 @@
-const Hall = require("../models/Hall");
-const Movie = require("../models/Movie");
-const Ticket = require("../models/Ticket");
+const { Hall } = require("../models/Hall");
+const { Movie } = require("../models/Movie");
+const { Ticket } = require("../models/Ticket");
 const User = require("../models/User");
-const Session = require("../models/Session");
-const Seat = require("../models/Seat");
+const { Session } = require("../models/Session");
+const { Seat } = require("../models/Seat");
+const { SessionSeat } = require("../models/SessionSeat");
 
 module.exports.validateRegisterInput = (
   firstname,
@@ -55,7 +56,7 @@ module.exports.validateLoginInput = (email, password) => {
   };
 };
 
-module.exports.validateCreateMovieInput = (
+module.exports.validateCreateMovieInput = async (
   name,
   description,
   duration,
@@ -71,6 +72,11 @@ module.exports.validateCreateMovieInput = (
   const errors = {};
   if (name?.trim() === "") {
     errors.name = "Name must not be empty";
+  } else {
+    const movie = await Movie.findOne({ name }).exec();
+    if (movie !== null) {
+      errors.name = "Movie with this name already exists";
+    }
   }
   if (description?.trim() === "") {
     errors.description = "Description must not be empty";
@@ -109,16 +115,34 @@ module.exports.validateCreateMovieInput = (
   };
 };
 
-module.exports.validateCreateHallInput = (name, type, totalSeats) => {
+module.exports.validateCreateHallInput = async (name, type, seatIds) => {
   const errors = {};
   if (name?.trim() === "") {
     errors.name = "Hall name must not be empty";
+  } else {
+    const hall = await Hall.findOne({ name: name?.trim() }).exec();
+    if (hall !== null) {
+      errors.name = "Hall name is already used";
+    }
   }
+
   if (type?.trim() === "") {
     errors.type = "Hall type must not be empty";
+  } else if (
+    type?.trim() !== "" &&
+    type?.trim() !== "Standard" &&
+    type?.trim() !== "VIP" &&
+    type?.trim() !== "IMAX"
+  ) {
+    errors.type = "Hall type is invalid";
   }
-  if (totalSeats == null) {
-    errors.totalSeats = "Total number of seats must not be empty";
+
+  for (let i = 0; i < seatIds.length; i++) {
+    const seat = await Seat.findById(seatIds[i]);
+    if (!seat) {
+      errors.seatIds = "Seat IDs are invalid";
+      break;
+    }
   }
 
   return {
@@ -135,12 +159,17 @@ module.exports.validateCreateSeatInput = async (seatNumber, hallId) => {
   } else {
     const hall = await Hall.findById(hallId);
     if (!hall) {
-      errors.hallId = "Hall with such ID is not found";
+      errors.hallId = "Hall not found";
     }
   }
 
   if (seatNumber == null) {
-    errors.duration = "Seat number must not be empty";
+    errors.seatNumber = "Seat number must not be empty";
+  } else {
+    const seat = await Seat.findOne({ seatNumber }).exec();
+    if (seat !== null) {
+      errors.seatNumber = "Seat number is already used";
+    }
   }
 
   return {
@@ -158,21 +187,21 @@ module.exports.validateCreateSessionInput = async (
 ) => {
   const errors = {};
 
-  if (movieId?.trim() === "") {
+  if (movieId == null) {
     errors.movieId = "Movie ID must not be empty";
   } else {
     const movie = await Movie.findById(movieId);
     if (!movie) {
-      errors.movieId = "Movie with such ID is not found";
+      errors.movieId = "Movie not found";
     }
   }
 
-  if (hallId?.trim() === "") {
+  if (hallId == null) {
     errors.hallId = "Hall ID must not be empty";
   } else {
     const hall = await Hall.findById(hallId);
     if (!hall) {
-      errors.hallId = "Hall with such ID is not found";
+      errors.hallId = "Hall not found";
     }
   }
 
@@ -196,38 +225,18 @@ module.exports.validateCreateSessionInput = async (
 
 module.exports.validateCreateSessionSeatInput = async (
   seatId,
-  sessionId,
-  ticketId,
   type,
   status,
   price
 ) => {
   const errors = {};
 
-  if (seatId?.trim() === "") {
+  if (seatId == null) {
     errors.seatId = "Seat ID must not be empty";
   } else {
     const seat = await Seat.findById(seatId);
     if (!seat) {
-      errors.seatId = "Seat with such ID is not found";
-    }
-  }
-
-  if (sessionId?.trim() === "") {
-    errors.sessionId = "Session ID must not be empty";
-  } else {
-    const session = await Session.findById(sessionId);
-    if (!session) {
-      errors.sessionId = "Session with such ID is not found";
-    }
-  }
-
-  if (ticketId?.trim() === "") {
-    errors.ticketId = "Ticket ID must not be empty";
-  } else {
-    const ticket = await Ticket.findById(ticketId);
-    if (!ticket) {
-      errors.ticketId = "Ticket with such ID is not found";
+      errors.seatId = "Seat not found";
     }
   }
 
@@ -251,6 +260,7 @@ module.exports.validateCreateSessionSeatInput = async (
 
 module.exports.validateCreateTicketInput = async (
   sessionId,
+  seatIds,
   userId,
   price,
   status
@@ -262,16 +272,28 @@ module.exports.validateCreateTicketInput = async (
   } else {
     const user = await User.findById(userId);
     if (!user) {
-      errors.userId = "User with such ID is not found";
+      errors.userId = "User not found";
     }
   }
 
-  if (sessionId?.trim() === "") {
-    errors.sessionId = "Session ID must not be empty";
+  if (sessionId == null) {
+    errors.sessionId = "Session must not be empty";
   } else {
     const session = await Session.findById(sessionId);
     if (!session) {
-      errors.sessionId = "Session with such ID is not found";
+      errors.sessionId = "Session not found";
+    }
+  }
+
+  if (!seatIds || seatIds?.length == 0) {
+    errors.movie = "Seats must not be empty";
+  } else {
+    for (let i = 0; i < seatIds.length; i++) {
+      const sessionSeat = await SessionSeat.findById(seatIds[i]);
+      if (!sessionSeat) {
+        errors.seatIds = "Seat IDs are invalid";
+        break;
+      }
     }
   }
 

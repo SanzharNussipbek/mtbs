@@ -8,4 +8,5 @@ const PostSchema = new Schema({
   createdAt: String,
 });
 
-module.exports = model("Post", PostSchema);
+const Post = model("Post", PostSchema);
+module.exports = { Post, PostSchema };

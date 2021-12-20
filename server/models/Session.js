@@ -1,12 +1,14 @@
 const { model, Schema } = require("mongoose");
+const { MovieSchema } = require("./Movie");
+const { HallSchema } = require("./Hall");
 
 const SessionSchema = new Schema({
-  movieId: String,
-  hallId: String,
+  movie: MovieSchema,
+  hall: HallSchema,
   date: String,
   startTime: String,
   endTime: String,
-  createdAt: String,
 });
 
-module.exports = model("Session", SessionSchema);
+const Session = model("Session", SessionSchema);
+module.exports = { Session, SessionSchema };

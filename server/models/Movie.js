@@ -11,8 +11,8 @@ const MovieSchema = new Schema({
   director: String,
   cast: String,
   rating: String,
-  createdAt: String,
   imgUrl: String,
 });
 
-module.exports = model("Movie", MovieSchema);
+const Movie = model("Movie", MovieSchema);
+module.exports = { Movie, MovieSchema };

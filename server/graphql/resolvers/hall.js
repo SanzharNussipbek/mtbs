@@ -1,16 +1,17 @@
-const Hall = require("../../models/Hall");
-const Seat = require("../../models/Seat");
-const Session = require("../../models/Session");
-const Ticket = require("../../models/Ticket");
-const SessionSeat = require("../../models/SessionSeat");
+const { Hall } = require("../../models/Hall");
+const { Seat } = require("../../models/Seat");
+const { Session } = require("../../models/Session");
+const { SessionSeat } = require("../../models/SessionSeat");
+const { Ticket } = require("../../models/Ticket");
+const User = require("../../models/User");
 const { UserInputError } = require("apollo-server");
 const { validateCreateHallInput } = require("../../utils/validators");
 
 module.exports = {
   Query: {
-    async getHalls() {
+    async getAllHalls() {
       try {
-        const halls = await Hall.find()?.sort({ createdAt: -1 });
+        const halls = await Hall.find();
         return halls;
       } catch (e) {
         throw new Error(e);
@@ -29,23 +30,37 @@ module.exports = {
     },
   },
   Mutation: {
-    async createHall(_, { data: { name, type, totalSeats } }, context) {
-      const { valid, errors } = validateCreateHallInput(name, type, totalSeats);
+    async createHall(_, { data: { name, type, seatIds } }, context) {
+      const { valid, errors } = await validateCreateHallInput(
+        name,
+        type,
+        seatIds
+      );
+
       if (!valid) {
         throw new UserInputError("Errors", {
           errors,
         });
       }
+
+      let seats = [];
+      for(let i = 0; i < seatIds?.length; i++) {
+        const seat = await Seat.findById(id);
+        seats.push(sessionSeat);
+      }
+
       const newHall = new Hall({
         name,
         type,
-        totalSeats,
-        createdAt: new Date().toISOString(),
+        seats,
       });
 
       const hall = await newHall.save();
 
-      return hall;
+      return {
+        ...hall._doc,
+        id: hall.id,
+      };
     },
     async deleteHall(_, { id }, context) {
       try {
@@ -53,21 +68,37 @@ module.exports = {
         if (!hall) {
           throw new Error("Hall not found");
         }
-        await hall.delete();
 
-        const seats = await Seat.find({ hallId: id });
-        seats?.map(async (seat) => await seat?.delete());
-
-        const sessions = await Session.find({ hallId: id });
-        sessions?.map(async (session) => {
-          await session?.delete();
-
-          const tickets = await Ticket.find({ sessionId: session.id });
-          tickets?.map(async (ticket) => await ticket?.delete());
-
-          const sessionSeats = await SessionSeat.find({ sessionId: session.id });
-          sessionSeats?.map(async (sessionSeat) => await sessionSeat?.delete());
+        hall.seats?.map(async (seat) => {
+          const theSeat = await Seat.findById(seat?.id);
+          await theSeat?.delete();
         });
+
+        const sessions = await Session.find();
+        sessions
+          ?.filter((session) => session?.hall?.id == hall.id)
+          ?.map(async (session) => {
+            const tickets = await Ticket.find();
+            tickets
+              ?.filter((ticket) => ticket?.session?.id == session?.id)
+              ?.map(async (ticket) => {
+                const user = await User.findById(ticket?.userId);
+                const newTickets = user?.tickets?.filter(
+                  (id) => id !== ticket?.id
+                );
+                await User.findByIdAndUpdate(user.id, { tickets: newTickets });
+                await ticket?.delete();
+              });
+
+            session?.seats?.map(async (seat) => {
+              const theSeat = await SessionSeat.findById(seat?.id);
+              await theSeat?.delete();
+            });
+
+            await session?.delete();
+          });
+
+        await hall.delete();
 
         return "Hall deleted successfully";
       } catch (e) {
@@ -77,13 +108,36 @@ module.exports = {
     async updateHall(_, { data }, context) {
       try {
         const { id, ...updateHallInput } = data;
+
         const hall = await Hall.findById(id);
         if (!hall) {
           throw new Error("Hall not found");
         }
-        const updatedHall = await Hall.findByIdAndUpdate(id, updateHallInput, {
+
+        let seats = [];
+        for(let i = 0; i < updateHallInput?.seatIds?.length; i++) {
+          const seat = await Seat.findById(id);
+          seats.push(sessionSeat);
+        }
+
+        const newHall = {
+          name: updateHallInput?.name,
+          type: updateHallInput?.type,
+          seats: seats,
+        };
+
+        const updatedHall = await Hall.findByIdAndUpdate(id, newHall, {
           new: true,
         });
+
+        const sessions = await Session.find();
+        sessions
+          ?.filter((session) => session?.hall?.id == updatedHall?.id)
+          ?.map(async (session) => {
+            const newSession = { ...session, hall: updatedHall };
+            await Session.findByIdAndUpdate(newSession?.id, newSession);
+          });
+
         return updatedHall;
       } catch (e) {
         throw new Error(e);

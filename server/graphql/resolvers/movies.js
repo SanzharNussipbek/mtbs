@@ -1,16 +1,17 @@
-const Movie = require("../../models/Movie");
-const Session = require("../../models/Session");
-const Ticket = require("../../models/Ticket");
-const SessionSeat = require("../../models/SessionSeat");
+const { Movie } = require("../../models/Movie");
+const { Session } = require("../../models/Session");
+const { SessionSeat } = require("../../models/SessionSeat");
+const { Ticket } = require("../../models/Ticket");
+const User = require("../../models/User");
 const checkAuth = require("../../utils/auth");
 const { AuthenticationError, UserInputError } = require("apollo-server");
 const { validateCreateMovieInput } = require("../../utils/validators");
 
 module.exports = {
   Query: {
-    async getMovies() {
+    async getAllMovies() {
       try {
-        const movies = await Movie.find()?.sort({ createdAt: -1 });
+        const movies = await Movie.find();
         return movies;
       } catch (e) {
         throw new Error(e);
@@ -48,8 +49,7 @@ module.exports = {
       },
       context
     ) {
-      // const user = checkAuth(context);
-      const { valid, errors } = validateCreateMovieInput(
+      const { valid, errors } = await validateCreateMovieInput(
         name,
         description,
         duration,
@@ -89,32 +89,47 @@ module.exports = {
         cast,
         rating,
         imgUrl,
-        createdAt: new Date().toISOString(),
       });
 
       const movie = await newMovie.save();
 
-      return movie;
+      return {
+        ...movie._doc,
+        id: movie.id,
+      };
     },
     async deleteMovie(_, { id }, context) {
       try {
-        // const user = checkAuth(context);
         const movie = await Movie.findById(id);
         if (!movie) {
           throw new Error("Movie not found");
         }
+
+        const sessions = await Session.find();
+        sessions
+          ?.filter((session) => session?.movie?.id == movie?.id)
+          ?.map(async (session) => {
+            const tickets = await Ticket.find();
+            tickets
+              ?.filter((ticket) => ticket?.session?.id == session?.id)
+              ?.map(async (ticket) => {
+                const user = await User.findById(ticket?.userId);
+                const newTickets = user?.tickets?.filter(
+                  (id) => id !== ticket?.id
+                );
+                await User.findByIdAndUpdate(user.id, { tickets: newTickets });
+                await ticket?.delete();
+              });
+
+            session?.seats?.map(async (seat) => {
+              const theSeat = await SessionSeat.findById(seat?.id);
+              await theSeat?.delete();
+            });
+
+            await session?.delete();
+          });
+
         await movie.delete();
-
-        const sessions = await Session.find({ movieId: id });
-        sessions?.map(async (session) => {
-          await session?.delete();
-
-          const tickets = await Ticket.find({ sessionId: session.id });
-          tickets?.map(async (ticket) => await ticket?.delete());
-
-          const sessionSeats = await SessionSeat.find({ sessionId: session.id });
-          sessionSeats?.map(async (sessionSeat) => await sessionSeat?.delete());
-        });
 
         return "Movie deleted successfully";
       } catch (e) {
@@ -135,6 +150,13 @@ module.exports = {
             new: true,
           }
         );
+        const sessions = await Session.find();
+        sessions
+          ?.filter((session) => session?.movie?.id == updatedMovie?.id)
+          ?.map(async (session) => {
+            const newSession = { ...session, movie: updatedMovie };
+            await Session.findByIdAndUpdate(newSession?.id, newSession);
+          });
         return updatedMovie;
       } catch (e) {
         throw new Error(e);

@@ -1,4 +1,4 @@
-const Post = require("../../models/Post");
+const { Post } = require("../../models/Post");
 const { UserInputError } = require("apollo-server");
 const { validateCreatePostInput } = require("../../utils/validators");
 
@@ -42,7 +42,10 @@ module.exports = {
 
       const post = await newPost.save();
 
-      return post;
+      return {
+        ...post._doc,
+        id: post.id,
+      };
     },
     async deletePost(_, { id }, context) {
       try {

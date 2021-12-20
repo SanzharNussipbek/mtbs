@@ -1,9 +1,9 @@
 const { model, Schema } = require("mongoose");
 
 const SeatSchema = new Schema({
-  seatNumber: Number,
   hallId: String,
-  createdAt: String,
+  seatNumber: Number
 });
 
-module.exports = model("Seat", SeatSchema);
+const Seat = model("Seat", SeatSchema);
+module.exports = { Seat, SeatSchema };

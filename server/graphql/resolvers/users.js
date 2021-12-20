@@ -26,6 +26,27 @@ const generateToken = (user) => {
 };
 
 module.exports = {
+  Query: {
+    async getAllUsers() {
+      try {
+        const users = await User.find();
+        return users;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    async getUser(_, { id }) {
+      try {
+        const user = await User.findById(id);
+        if (!user) {
+          throw new Error("User not found");
+        }
+        return user;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+  },
   Mutation: {
     async register(
       _,
@@ -113,8 +134,9 @@ module.exports = {
         token: token,
       };
     },
-    async updateUser(_, { updateUserInput }, context) {
-      const user = await User.findOne({ email: updateUserInput.email });
+    async updateUser(_, { data }, context) {
+      const { id, ...updateUserInput } = data;
+      const user = await User.findById(id);
       const signedUser = checkAuth(context);
 
       if (user?.id !== signedUser?.id) {
@@ -128,11 +150,14 @@ module.exports = {
       const updatedUser = await User.findOneAndUpdate(
         { id: signedUser.id },
         {
-          firstname: updateUserInput.firstname,
-          lastname: updateUserInput.lastname,
-          email: updateUserInput.email,
-          password: await bcrypt.hash(updateUserInput.password, 12),
-          phone: updateUserInput.phone,
+          firstname: updateUserInput?.firstname ?? user?.firstname,
+          lastname: updateUserInput?.lastname ?? user?.lastname,
+          email: updateUserInput?.email ?? user?.email,
+          password: await bcrypt.hash(
+            updateUserInput?.password ?? user?.password,
+            12
+          ),
+          phone: updateUserInput?.phone ?? user?.phone,
         },
         { new: true }
       );

@@ -13,6 +13,21 @@ module.exports = gql`
     tickets: [String]
     token: String!
   }
+  input RegisterInput {
+    email: String!
+    firstname: String!
+    lastname: String!
+    password: String!
+    confirmPassword: String!
+  }
+  input UpdateUserInput {
+    id: ID!
+    email: String
+    firstname: String
+    lastname: String
+    password: String
+    phone: String
+  }
   type Movie {
     id: ID!
     name: String!
@@ -26,150 +41,20 @@ module.exports = gql`
     cast: String!
     rating: String!
     imgUrl: String!
-    createdAt: String!
   }
-  type Seat {
-    id: ID!
-    seatNumber: Int!
-    hallId: ID!
-    createdAt: String!
-  }
-  type Hall {
+  input MovieInput {
     id: ID!
     name: String!
-    type: String!
-    totalSeats: Int!
-    createdAt: String!
-  }
-  type Ticket {
-    id: ID!
-    sessionId: ID!
-    userId: ID!
-    price: String!
-    status: String!
-    timestamp: String!
-    promocode: String
-    createdAt: String!
-  }
-  type Session {
-    id: ID!
-    movieId: ID!
-    hallId: ID!
-    date: String!
-    startTime: String!
-    endTime: String!
-    createdAt: String!
-  }
-  type SessionSeat {
-    id: ID!
-    seatId: ID!
-    sessionId: String!
-    ticketId: String!
-    type: String!
-    status: String!
-    price: String!
-    createdAt: String!
-  }
-  type Post {
-    id: ID!
-    title: String!
-    body: String!
-    author: String!
-    imgUrl: String
-    createdAt: String!
-  }
-  input CreatePostInput {
-    title: String!
-    body: String!
-    author: String!
-    imgUrl: String
-    createdAt: String!
-  }
-  input UpdatePostInput {
-    id: ID!
-    title: String
-    body: String
-    author: String
-    imgUrl: String
-  }
-  input RegisterInput {
-    email: String!
-    firstname: String!
-    lastname: String!
-    password: String!
-    confirmPassword: String!
-  }
-  input UpdateUserInput {
-    email: String!
-    firstname: String
-    lastname: String
-    password: String
-    phone: String
-  }
-  input CreateHallInput {
-    name: String!
-    type: String!
-    totalSeats: Int!
-  }
-  input UpdateHallInput {
-    id: ID!
-    name: String
-    type: String
-    totalSeats: Int
-  }
-  input CreateSeatInput {
-    seatNumber: Int!
-    hallId: ID!
-  }
-  input UpdateSeatInput {
-    id: ID!
-    seatNumber: Int
-  }
-  input CreateSessionInput {
-    movieId: ID!
-    hallId: ID!
-    date: String!
-    startTime: String!
-    endTime: String!
-  }
-  input UpdateSessionInput {
-    id: ID!
-    movieId: ID
-    hallId: ID
-    date: String
-    startTime: String
-    endTime: String
-  }
-  input CreateSessionSeatInput {
-    seatId: ID!
-    sessionId: String!
-    ticketId: String!
-    type: String!
-    status: String!
-    price: String!
-  }
-  input UpdateSessionSeatInput {
-    id: ID!
-    seatId: ID
-    sessionId: String
-    ticketId: String
-    type: String
-    status: String
-    price: String
-  }
-  input CreateTicketInput {
-    sessionId: ID!
-    userId: ID!
-    price: String!
-    status: String!
-    promocode: String!
-  }
-  input UpdateTicketInput {
-    id: ID!
-    sessionId: ID
-    price: String
-    status: String
-    promocode: String
+    description: String!
+    duration: Int!
+    language: String!
+    releaseDate: String!
+    country: String!
+    genre: String!
+    director: String!
+    cast: String!
+    rating: String!
+    imgUrl: String!
   }
   input CreateMovieInput {
     name: String!
@@ -198,23 +83,188 @@ module.exports = gql`
     imgUrl: String
     rating: String
   }
+  type Seat {
+    id: ID!
+    seatNumber: Int!
+    hallId: ID!
+  }
+  input SeatInput {
+    id: ID!
+    seatNumber: Int!
+    hallId: ID!
+  }
+  input CreateSeatInput {
+    seatNumber: Int!
+    hallId: ID!
+  }
+  input UpdateSeatInput {
+    id: ID!
+    seatNumber: Int
+  }
+  type Hall {
+    id: ID!
+    name: String!
+    type: String!
+    seats: [Seat]!
+  }
+  input HallInput {
+    id: ID!
+    name: String!
+    type: String!
+    seats: [SeatInput]!
+  }
+  input CreateHallInput {
+    name: String!
+    type: String!
+    seatIds: [ID]!
+  }
+  input UpdateHallInput {
+    id: ID!
+    name: String
+    type: String
+    seatIds: [ID]
+  }
+  type Session {
+    id: ID!
+    movie: Movie!
+    hall: Hall!
+    date: String!
+    startTime: String!
+    endTime: String!
+  }
+  input SessionInput {
+    id: ID!
+    movie: ID!
+    hall: ID!
+    date: String!
+    startTime: String!
+    endTime: String!
+  }
+  input CreateSessionInput {
+    movieId: String!
+    hallId: String!
+    date: String!
+    startTime: String!
+    endTime: String!
+  }
+  input UpdateSessionInput {
+    id: ID!
+    movieId: ID!
+    hallId: ID!
+    date: String
+    startTime: String
+    endTime: String
+  }
+  type SessionSeat {
+    id: ID!
+    seat: Seat!
+    type: String!
+    status: String!
+    price: String!
+  }
+  input SessionSeatInput {
+    id: ID!
+    seat: SeatInput!
+    type: String!
+    status: String!
+    price: String!
+  }
+  input CreateSessionSeatInput {
+    seatId: ID!
+    type: String!
+    status: String!
+    price: String!
+  }
+  input UpdateSessionSeatInput {
+    id: ID!
+    seatId: ID
+    type: String
+    status: String
+    price: String
+  }
+  type Ticket {
+    id: ID!
+    session: Session!
+    seats: [SessionSeat]!
+    userId: ID!
+    price: String!
+    status: String!
+    timestamp: String!
+    promocode: String
+    createdAt: String!
+  }
+  input TicketInput {
+    id: ID!
+    session: SessionInput!
+    seats: [SessionSeatInput]!
+    userId: ID!
+    price: String!
+    status: String!
+    timestamp: String!
+    promocode: String
+    createdAt: String!
+  }
+  input CreateTicketInput {
+    sessionId: ID!
+    seatIds: [ID]!
+    userId: ID!
+    price: String!
+    status: String!
+    promocode: String!
+  }
+  input UpdateTicketInput {
+    id: ID!
+    sessionId: ID
+    seatIds: [ID]
+    price: String
+    status: String
+    promocode: String
+  }
+  type Post {
+    id: ID!
+    title: String!
+    body: String!
+    author: String!
+    imgUrl: String
+    createdAt: String!
+  }
+  input CreatePostInput {
+    title: String!
+    body: String!
+    author: String!
+    imgUrl: String
+    createdAt: String!
+  }
+  input UpdatePostInput {
+    id: ID!
+    title: String
+    body: String
+    author: String
+    imgUrl: String
+  }
   type Query {
-    getMovies: [Movie]
+    getAllUsers: [User]
+    getUser(id: ID!): User
+
+    getAllMovies: [Movie]
     getMovie(id: ID!): Movie
 
-    getHalls: [Hall]
+    getAllHalls: [Hall]
     getHall(id: ID!): Hall
 
-    getSeats: [Seat]
+    getAllSeats: [Seat]
+    getHallSeats(hallId: ID!): [Seat]
     getSeat(id: ID!): Seat
 
-    getSessions: [Session]
+    getAllSessions: [Session]
+    getUserSessions(userId: ID!): [Session]
     getSession(id: ID!): Session
 
-    getSessionSeats: [SessionSeat]
-    getSessionSeat(id: ID!): SessionSeat
+    getAllSessionSeats: [SessionSeat]
+    getOneSessionSeat(id: ID!): SessionSeat
 
-    getTickets: [Ticket]
+    getAllTickets: [Ticket]
+    getUserTickets(userId: ID!): [Ticket]
     getTicket(id: ID!): Ticket
 
     getPosts: [Post]
@@ -223,7 +273,7 @@ module.exports = gql`
   type Mutation {
     register(registerInput: RegisterInput): User!
     login(email: String!, password: String!): User!
-    updateUser(updateUserInput: UpdateUserInput): User!
+    updateUser(data: UpdateUserInput): User!
 
     createMovie(data: CreateMovieInput): Movie!
     updateMovie(data: UpdateMovieInput): Movie!

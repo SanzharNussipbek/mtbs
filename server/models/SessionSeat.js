@@ -1,13 +1,12 @@
 const { model, Schema } = require("mongoose");
+const { SeatSchema } = require("./Seat");
 
 const SessionSeatSchema = new Schema({
-  seatId: String,
-  sessionId: String,
-  ticketId: String,
-  type: String,
+  seat: SeatSchema,
+  type: { type: String },
   status: String,
   price: String,
-  createdAt: String,
 });
 
-module.exports = model("SessionSeat", SessionSeatSchema);
+const SessionSeat = model("SessionSeat", SessionSeatSchema);
+module.exports = { SessionSeat, SessionSeatSchema };
