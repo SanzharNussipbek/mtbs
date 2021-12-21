@@ -12,7 +12,6 @@ module.exports = {
     async getAllSessions() {
       try {
         const sessions = await Session.find();
-        console.log(sessions);
         return sessions;
       } catch (e) {
         throw new Error(e);
