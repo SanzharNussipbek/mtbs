@@ -74,7 +74,8 @@ import MovieScreen from '../screens/Movie/MovieScreen';
          name="Home"
          component={HomeScreen}
          options={{
-           title: 'MTBS',
+           title: 'Home',
+           headerTitle: 'MTBS',
            tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
          }}
        />
@@ -82,7 +83,8 @@ import MovieScreen from '../screens/Movie/MovieScreen';
          name="News"
          component={NewsScreen}
          options={{
-           title: 'MTBS',
+           title: 'News',
+           headerTitle: 'MTBS',
            tabBarIcon: ({ color }) => <TabBarIcon name="newspaper-o" color={color} />,
          }}
        />
@@ -90,7 +92,8 @@ import MovieScreen from '../screens/Movie/MovieScreen';
          name="Tickets"
          component={TicketsScreen}
          options={{
-           title: 'MTBS',
+           title: 'Tickets',
+           headerTitle: 'MTBS',
            tabBarIcon: ({ color }) => <TabBarIcon name="ticket" color={color} />,
          }}
        />
@@ -98,7 +101,8 @@ import MovieScreen from '../screens/Movie/MovieScreen';
          name="Profile"
          component={ProfileScreen}
          options={{
-           title: 'MTBS',
+           title: 'Profile',
+           headerTitle: 'MTBS',
            tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
          }}
        />
