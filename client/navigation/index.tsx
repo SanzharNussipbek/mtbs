@@ -22,7 +22,7 @@ import RegisterScreen from '../screens/RegisterScreen';
  import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
  import LinkingConfiguration from './LinkingConfiguration';
 import ProfileScreen from '../screens/ProfileScreen';
-import MovieScreen from '../screens/MovieScreen';
+import MovieScreen from '../screens/Movie/MovieScreen';
 
  export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
    return (
@@ -43,10 +43,10 @@ import MovieScreen from '../screens/MovieScreen';
  function RootNavigator() {
    return (
      <Stack.Navigator>
-       <Stack.Screen name="Login" component={LoginScreen} />
-       <Stack.Screen name="Register" component={RegisterScreen} />
-       <Stack.Screen name="Movie" component={MovieScreen} options={{ title: 'Movie' }} />
+       {/* <Stack.Screen name="Login" component={LoginScreen} /> */}
+       {/* <Stack.Screen name="Register" component={RegisterScreen} /> */}
        <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
+       <Stack.Screen name="Movie" component={MovieScreen} options={{ title: 'Movie' }} />
        <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
        {/* <Stack.Group screenOptions={{ presentation: 'modal' }}>
          <Stack.Screen name="Modal" component={ModalScreen} />
@@ -74,7 +74,7 @@ import MovieScreen from '../screens/MovieScreen';
          name="Home"
          component={HomeScreen}
          options={{
-           title: 'Home',
+           title: 'MTBS',
            tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
          }}
        />
@@ -82,7 +82,7 @@ import MovieScreen from '../screens/MovieScreen';
          name="News"
          component={NewsScreen}
          options={{
-           title: 'News',
+           title: 'MTBS',
            tabBarIcon: ({ color }) => <TabBarIcon name="newspaper-o" color={color} />,
          }}
        />
@@ -90,7 +90,7 @@ import MovieScreen from '../screens/MovieScreen';
          name="Tickets"
          component={TicketsScreen}
          options={{
-           title: 'Tickets',
+           title: 'MTBS',
            tabBarIcon: ({ color }) => <TabBarIcon name="ticket" color={color} />,
          }}
        />
@@ -98,7 +98,7 @@ import MovieScreen from '../screens/MovieScreen';
          name="Profile"
          component={ProfileScreen}
          options={{
-           title: 'Profile',
+           title: 'MTBS',
            tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
          }}
        />

@@ -6,6 +6,7 @@ export const styles = StyleSheet.create({
     minWidth: 150,
     flexDirection: 'column',
     marginRight: 16,
+    marginBottom: 16,
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
   },

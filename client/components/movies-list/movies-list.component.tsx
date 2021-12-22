@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { Alert, FlatList } from "react-native";
 
-import { Text, View } from "../Themed";
+import { View } from "../Themed";
 import { GET_ALL_MOVIES_MUTATION } from "../../utils/gql";
 import MoviesListItem from "../movies-list-item/movies-list-item.component";
 
@@ -26,19 +26,11 @@ const MoviesList: React.FC = () => {
   return movies.length ? (
     <View style={styles.container}>
       <FlatList
-        horizontal
-        scrollEnabled
-        showsHorizontalScrollIndicator={false}
+        numColumns={2}
         data={movies}
-        renderItem={({item, index}) => <MoviesListItem movie={item} key={index} />}
-        keyExtractor={(movie: any) => movie.id}
-      />
-      <FlatList
-        horizontal
-        scrollEnabled
-        showsHorizontalScrollIndicator={false}
-        data={movies}
-        renderItem={({item, index}) => <MoviesListItem movie={item} key={index} />}
+        renderItem={({ item, index }) => (
+          <MoviesListItem movie={item} key={index} />
+        )}
         keyExtractor={(movie: any) => movie.id}
       />
     </View>
