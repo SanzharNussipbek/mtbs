@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Image, ScrollView, Pressable } from "react-native";
+import { Image, ScrollView, Pressable } from "react-native";
 
 import { Text, View } from "../../components/Themed";
 import { RootStackScreenProps } from "../../types";

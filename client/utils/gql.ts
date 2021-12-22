@@ -1,6 +1,19 @@
 import { gql } from "graphql-tag";
 // import { gql } from "@apollo/client";
 
+export const GET_POSTS = gql`
+    {
+      getPosts {
+        id
+        title
+        author
+        body
+        imgUrl
+        createdAt
+      }
+  }
+`;
+
 export const GET_ALL_MOVIES_MUTATION = gql`
     {
       getAllMovies {

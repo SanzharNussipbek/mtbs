@@ -23,6 +23,7 @@ import RegisterScreen from '../screens/RegisterScreen';
  import LinkingConfiguration from './LinkingConfiguration';
 import ProfileScreen from '../screens/ProfileScreen';
 import MovieScreen from '../screens/Movie/MovieScreen';
+import PostScreen from '../screens/Post/PostScreen';
 
  export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
    return (
@@ -47,6 +48,7 @@ import MovieScreen from '../screens/Movie/MovieScreen';
        {/* <Stack.Screen name="Register" component={RegisterScreen} /> */}
        <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
        <Stack.Screen name="Movie" component={MovieScreen} options={{ title: 'Movie' }} />
+       <Stack.Screen name="Post" component={PostScreen} options={{ title: 'Post' }} />
        <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
        {/* <Stack.Group screenOptions={{ presentation: 'modal' }}>
          <Stack.Screen name="Modal" component={ModalScreen} />

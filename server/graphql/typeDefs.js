@@ -233,7 +233,6 @@ module.exports = gql`
     body: String!
     author: String!
     imgUrl: String
-    createdAt: String!
   }
   input UpdatePostInput {
     id: ID!
@@ -299,8 +298,8 @@ module.exports = gql`
     updateTicket(data: UpdateTicketInput): Ticket!
     deleteTicket(id: ID!): String!
 
-    createPost(data: CreatePostInput): Ticket!
-    updatePost(data: UpdatePostInput): Ticket!
+    createPost(data: CreatePostInput): Post!
+    updatePost(data: UpdatePostInput): Post!
     deletePost(id: ID!): String!
   }
 `;
