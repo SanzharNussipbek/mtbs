@@ -22,14 +22,8 @@ export default function MovieScreen(props: RootStackScreenProps<"Movie">) {
 
   const [isHidden, setIsHidden] = useState(true);
 
-  const [showDescription, setShowDescription] = useState(false);
-
   const handleGoBack = () => {
     navigation.navigate("Root");
-  };
-
-  const toggleDescription = () => {
-    setShowDescription((value) => !value);
   };
 
   const toggleHidden = () => {

@@ -4,6 +4,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    width: '100%',
   },
   list: {
     width: '100%',

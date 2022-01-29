@@ -6,14 +6,36 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 16,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
+  backButton: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 70,
+    height: 40,
+    width: '100%',
+    justifyContent: 'flex-start',
+  },
+  header: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: -50,
+    height: 114,
+    paddingTop: 64,
+    zIndex: 5,
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0, 0.65)",
   },
   poster: {
     width: "100%",
     flexDirection: "column",
-    marginBottom: 32,
+    marginBottom: 16,
+  },
+  title: {
+    color: '#fff',
+    textAlign: 'center',
   },
   img: {
     height: 600,
@@ -24,12 +46,12 @@ export const styles = StyleSheet.create({
     flexDirection: "column",
   },
   blockTitle: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 12,
   },
   descriptionText: {
-    fontSize: 14,
+    fontSize: 18,
     marginBottom: 16,
   },
   descriptionBtn: {
@@ -49,11 +71,11 @@ export const styles = StyleSheet.create({
     marginBottom: 8,
   },
   infoTitle: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: "bold",
     marginRight: 4,
   },
   infoText: {
-    fontSize: 14,
+    fontSize: 18,
   },
 });

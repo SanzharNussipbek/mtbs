@@ -4,30 +4,32 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    overflow: 'hidden',
     marginBottom: 24,
+    width: '100%',
   },
-  img: {
-    height: 100,
+  poster: {
+    height: '100%',
     width: 80,
     marginRight: 8,
+  },
+  img: {
+    width: '100%',
+    height: '100%',
     borderRadius: 4,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
     marginBottom: 4,
     flex: 1,
-    width: 250,
   },
   text: {
-    flexDirection: 'column',
+    width: '100%',
+    maxWidth: '100%',
+    flex: 1,
   },
   body: {
-    fontSize: 12,
-    color: '#fff',
     flex: 1,
-    width: 250,
+    fontSize: 14,
   },
 });

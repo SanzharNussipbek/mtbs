@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Image, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { Text } from "native-base";
 
-import { Text, View } from "../Themed";
+import { View } from "../Themed";
+import { Post } from "../../types/types";
 
 import { styles } from "./posts-list-item.styles";
 
 type Props = {
-  post: any;
+  post: Post;
 };
 
 const PostsListItem: React.FC<Props> = ({ post }) => {
@@ -18,15 +20,17 @@ const PostsListItem: React.FC<Props> = ({ post }) => {
   };
 
   return post ? (
-    <TouchableOpacity onPress={onPress}>
-      <View style={styles.container}>
+    <TouchableOpacity onPress={onPress} style={styles.container}>
+      <View style={styles.poster}>
         <Image style={styles.img} source={{ uri: post?.imgUrl }} />
-        <View style={styles.text}>
-          <Text style={styles.title} numberOfLines={1}>
-            {post?.title}
-          </Text>
-          <Text style={styles.body} numberOfLines={4}>{post?.body}</Text>
-        </View>
+      </View>
+      <View style={styles.text}>
+        <Text style={styles.title} isTruncated color='white'>
+          {post?.title}
+        </Text>
+        <Text style={styles.body} noOfLines={4} isTruncated color='white'>
+          {post?.body}
+        </Text>
       </View>
     </TouchableOpacity>
   ) : null;
