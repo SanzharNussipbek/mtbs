@@ -61,9 +61,7 @@ function RootNavigator() {
       <Stack.Screen
         name='Loading'
         component={LoadingScreen}
-        options={{
-          headerShown: false,
-        }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name='Login'
@@ -83,17 +81,17 @@ function RootNavigator() {
       <Stack.Screen
         name='Movie'
         component={MovieScreen}
-        options={{ title: "Movie", headerLeft: () => null }}
+        options={{ title: "About the movie", headerShown: false }}
       />
       <Stack.Screen
         name='Post'
         component={PostScreen}
-        options={{ title: "Post", headerLeft: () => null }}
+        options={{ title: "Post", headerShown: false }}
       />
       <Stack.Screen
         name='NotFound'
         component={NotFoundScreen}
-        options={{ title: "Oops!", headerLeft: () => null }}
+        options={{ title: "Oops!", headerShown: false }}
       />
       {/* <Stack.Group screenOptions={{ presentation: 'modal' }}>
          <Stack.Screen name="Modal" component={ModalScreen} />
@@ -124,7 +122,10 @@ function BottomTabNavigator() {
         options={{
           title: "Home",
           headerTitle: "MTBS",
-          tabBarIcon: ({ color }) => <TabBarIcon name='home' color={color} />,
+          tabBarActiveTintColor: "#f472b6",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name='home' color={focused ? "#f472b6" : color} />
+          ),
         }}
       />
       <BottomTab.Screen
@@ -133,8 +134,12 @@ function BottomTabNavigator() {
         options={{
           title: "News",
           headerTitle: "MTBS",
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name='newspaper-o' color={color} />
+          tabBarActiveTintColor: "#f472b6",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name='newspaper-o'
+              color={focused ? "#f472b6" : color}
+            />
           ),
         }}
       />
@@ -144,7 +149,10 @@ function BottomTabNavigator() {
         options={{
           title: "Tickets",
           headerTitle: "MTBS",
-          tabBarIcon: ({ color }) => <TabBarIcon name='ticket' color={color} />,
+          tabBarActiveTintColor: "#f472b6",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name='ticket' color={focused ? "#f472b6" : color} />
+          ),
         }}
       />
       <BottomTab.Screen
@@ -153,7 +161,10 @@ function BottomTabNavigator() {
         options={{
           title: "Profile",
           headerTitle: "MTBS",
-          tabBarIcon: ({ color }) => <TabBarIcon name='user' color={color} />,
+          tabBarActiveTintColor: "#f472b6",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name='user' color={focused ? "#f472b6" : color} />
+          ),
         }}
       />
     </BottomTab.Navigator>

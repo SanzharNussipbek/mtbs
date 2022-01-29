@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
@@ -6,20 +6,46 @@ export const styles = StyleSheet.create({
     flexDirection: "column",
     paddingHorizontal: 8,
     paddingVertical: 16,
+    position: "relative",
+  },
+  header: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: -50,
+    height: 114,
+    paddingTop: 64,
+    zIndex: 5,
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "rgba(0,0,0, 0.65)",
   },
   title: {
-    fontSize: 20,
-    fontWeight: "bold",
+    color: '#fff',
+    textAlign: 'center',
   },
-  poster: {
+  hero: {
     width: "100%",
     flexDirection: "column",
-    marginBottom: 32,
+    marginBottom: 16,
+  },
+  poster: {
+    position: "relative",
+    flexDirection: "column",
+    width: "100%",
   },
   img: {
     height: 600,
+    borderRadius: 16,
+    transform: [
+      {
+        translateY: -50,
+      },
+    ],
     width: "100%",
-    marginBottom: 8,
+    marginBottom: -42,
   },
   block: {
     flexDirection: "column",
@@ -30,7 +56,7 @@ export const styles = StyleSheet.create({
     marginBottom: 12,
   },
   descriptionText: {
-    fontSize: 14,
+    fontSize: 18,
     marginBottom: 16,
   },
   descriptionBtn: {
@@ -46,15 +72,19 @@ export const styles = StyleSheet.create({
     marginBottom: 32,
   },
   infoRow: {
-    flexDirection: 'row',
-    marginBottom: 8,
+    flexDirection: "row",
+    marginBottom: 12,
   },
   infoTitle: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: "bold",
-    marginRight: 4,
+    marginRight: 8,
+    minWidth: 120,
+    textAlign: 'right',
   },
   infoText: {
-    fontSize: 14,
+    flex: 1,
+    fontSize: 18,
+    flexWrap: 'wrap',
   },
 });

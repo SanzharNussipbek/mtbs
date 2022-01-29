@@ -1,81 +1,117 @@
 import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import { Image, ScrollView, Pressable } from "react-native";
+import {
+  Button,
+  Heading,
+  Text as NativeText,
+  ChevronLeftIcon,
+} from "native-base";
 
-import { Text, View } from "../../components/Themed";
+import { Movie } from "../../types/types";
 import { RootStackScreenProps } from "../../types";
+import { Text, View } from "../../components/Themed";
+
 import NotFoundScreen from "../NotFoundScreen";
 
 import { styles } from "./MovieScreen.styles";
 
 export default function MovieScreen(props: RootStackScreenProps<"Movie">) {
-  const movie = props?.route?.params?.movie;
+  const navigation = useNavigation();
+  const movie: Movie = props?.route?.params?.movie;
+
+  const [isHidden, setIsHidden] = useState(true);
 
   const [showDescription, setShowDescription] = useState(false);
 
+  const handleGoBack = () => {
+    navigation.navigate("Root");
+  };
+
+  const toggleDescription = () => {
+    setShowDescription((value) => !value);
+  };
+
+  const toggleHidden = () => {
+    setIsHidden((value) => !value);
+  };
+
   return movie ? (
     <ScrollView style={styles.container}>
-      <View style={styles.poster}>
-        <Image style={styles.img} source={{ uri: movie?.imgUrl }} />
-        <Text style={styles.title}>{movie?.name}</Text>
-      </View>
-      <View style={styles.block}>
-        {showDescription ? (
-          <>
-            <Text style={styles.blockTitle}>Description</Text>
-            <Text style={styles.descriptionText}>{movie?.description}</Text>
-          </>
-        ) : null}
-        <Pressable
-          onPress={() => setShowDescription((value) => !value)}
-          style={styles.descriptionBtn}
+      <View style={styles.header}>
+        <Button
+          size={"lg"}
+          variant='ghost'
+          colorScheme='secondary'
+          leftIcon={<ChevronLeftIcon style={{ marginRight: -10 }} />}
+          onPress={handleGoBack}
         >
-          <Text
-            style={{
-              color: "white",
-              fontSize: 14,
-              fontWeight: "bold",
-            }}
-          >
-            {showDescription ? "Hide description" : "Show description"}
-          </Text>
-        </Pressable>
+          Back
+        </Button>
+        <Heading color='white' style={{ flex: 1 }}>
+          About the movie
+        </Heading>
+      </View>
+      <View style={styles.hero}>
+        <Image style={styles.img} source={{ uri: movie?.imgUrl }} />
+        <Heading size='xl' style={styles.title}>
+          {movie?.name}
+        </Heading>
       </View>
       <View style={styles.block}>
-        <Text style={styles.blockTitle}>Details</Text>
-        <View style={styles.block}>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoTitle}>Genre:</Text>
-            <Text style={styles.infoText}>{movie?.genre}</Text>
+        <NativeText
+          color={"muted.50"}
+          noOfLines={3}
+          isTruncated={isHidden}
+          style={styles.descriptionText}
+        >
+          {movie?.description}
+        </NativeText>
+        {!isHidden ? (
+          <View style={styles.block}>
+            <View style={styles.infoRow}>
+              <Text style={styles.infoTitle}>Genre:</Text>
+              <Text style={styles.infoText}>{movie?.genre}</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Text style={styles.infoTitle}>Country:</Text>
+              <Text style={styles.infoText}>{movie?.country}</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Text style={styles.infoTitle}>Duration:</Text>
+              <Text style={styles.infoText}>{`${movie?.duration} min`}</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Text style={styles.infoTitle}>Language:</Text>
+              <Text style={styles.infoText}>{movie?.language}</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Text style={styles.infoTitle}>Director:</Text>
+              <Text style={styles.infoText}>{movie?.director}</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Text style={styles.infoTitle}>Rating:</Text>
+              <Text style={styles.infoText}>{movie?.rating}</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Text style={styles.infoTitle}>Release Date:</Text>
+              <Text style={styles.infoText}>{movie?.releaseDate}</Text>
+            </View>
+            <View style={styles.infoRow}>
+              <Text style={styles.infoTitle}>Cast:</Text>
+              <Text style={styles.infoText}>{movie?.cast}</Text>
+            </View>
           </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoTitle}>Country:</Text>
-            <Text style={styles.infoText}>{movie?.country}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoTitle}>Duration:</Text>
-            <Text style={styles.infoText}>{`${movie?.duration} min`}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoTitle}>Language:</Text>
-            <Text style={styles.infoText}>{movie?.language}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoTitle}>Director:</Text>
-            <Text style={styles.infoText}>{movie?.director}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoTitle}>Rating:</Text>
-            <Text style={styles.infoText}>{movie?.rating}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoTitle}>Release Date:</Text>
-            <Text style={styles.infoText}>{movie?.releaseDate}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoTitle}>Cast:</Text>
-            <Text style={styles.infoText}>{movie?.cast}</Text>
-          </View>
-        </View>
+        ) : null}
+        <Button
+          size={"lg"}
+          variant='outline'
+          colorScheme='secondary'
+          onPress={toggleHidden}
+          mb={8}
+        >
+          {isHidden ? "Show details" : "Hide details"}
+        </Button>
       </View>
     </ScrollView>
   ) : (

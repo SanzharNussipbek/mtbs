@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
   },
   moviesList: {
     width: '100%',
+    marginBottom: 16,
   },
   title: {
     fontSize: 20,

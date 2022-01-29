@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
-import { Alert, FlatList } from "react-native";
+import { Stack, Heading } from "native-base";
+import { Alert, ScrollView } from "react-native";
 
 import { View } from "../Themed";
+import { Movie } from "../../types/types";
 import { GET_ALL_MOVIES_MUTATION } from "../../utils/gql";
+
 import MoviesListItem from "../movies-list-item/movies-list-item.component";
+import Loader from "../loader/loader.component";
 
 import { styles } from "./movies-list.styles";
 
 const MoviesList: React.FC = () => {
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState<Movie[]>([]);
   const { loading, error, data } = useQuery(GET_ALL_MOVIES_MUTATION);
 
   useEffect(() => {
@@ -23,18 +27,36 @@ const MoviesList: React.FC = () => {
     setMovies(data?.getAllMovies);
   }, [data]);
 
-  return movies.length ? (
-    <View style={styles.container}>
-      <FlatList
-        numColumns={2}
-        data={movies}
-        renderItem={({ item, index }) => (
-          <MoviesListItem movie={item} key={index} />
-        )}
-        keyExtractor={(movie: any) => movie.id}
-      />
-    </View>
-  ) : null;
+  return !movies.length || loading ? (
+    <Loader />
+  ) : (
+    <ScrollView style={styles.container}>
+      <View style={styles.moviesList}>
+        <Heading size='xl' color={"secondary.500"} mb={4}>
+          Today on screen
+        </Heading>
+        <ScrollView horizontal>
+          <Stack space={4} direction={"row"}>
+            {movies.map((movie, index) => (
+              <MoviesListItem movie={movie} key={index} />
+            ))}
+          </Stack>
+        </ScrollView>
+      </View>
+      <View style={styles.moviesList}>
+        <Heading size='xl' color={"secondary.500"} mb={4}>
+          Coming soon
+        </Heading>
+        <ScrollView horizontal>
+          <Stack space={4} direction={"row"}>
+            {movies.map((movie, index) => (
+              <MoviesListItem movie={movie} key={index} />
+            ))}
+          </Stack>
+        </ScrollView>
+      </View>
+    </ScrollView>
+  );
 };
 
 export default MoviesList;

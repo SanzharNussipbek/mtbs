@@ -19,7 +19,7 @@ export default function App() {
     return (
       <SafeAreaProvider>
         <ApolloProvider client={client}>
-          <NativeBaseProvider>
+          <NativeBaseProvider disableContrastText>
             <Navigation colorScheme={colorScheme} />
             <StatusBar />
           </NativeBaseProvider>
