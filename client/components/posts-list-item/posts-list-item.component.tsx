@@ -17,8 +17,6 @@ const PostsListItem: React.FC<Props> = ({ post }) => {
     navigation.navigate("Post", { post });
   };
 
-  console.log(post);
-
   return post ? (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>

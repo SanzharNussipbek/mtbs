@@ -20,6 +20,7 @@
  // };
 
  export type RootStackParamList = {
+   Loading: undefined;
    Root: undefined;
    Login: undefined;
    Register: undefined;

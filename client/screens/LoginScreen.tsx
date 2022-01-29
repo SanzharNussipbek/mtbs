@@ -6,15 +6,17 @@ import { useMutation } from "@apollo/client";
 import { LOGIN_MUTATION } from "../utils/gql";
 
 const LoginScreen = () => {
+  const navigation = useNavigation();
+
   const [errors, setErrors] = useState<any | null>(null);
   const [values, setValues] = useState({
     email: "",
     password: "",
   });
-  const navigation = useNavigation();
 
   const [login, { loading }] = useMutation(LOGIN_MUTATION, {
     update(_, { data: { login: userData } }) {
+      AsyncStorage.setItem("user", JSON.stringify(userData, null, 2));
       AsyncStorage.setItem("token", userData?.token).then(() => {
         navigation.navigate("Root");
       });
@@ -83,7 +85,7 @@ const LoginScreen = () => {
         />
         <Pressable
           onPress={onSubmit}
-          // disabled={loading}
+          disabled={loading}
           style={{
             backgroundColor: "#e33062",
             height: 50,
@@ -106,7 +108,6 @@ const LoginScreen = () => {
 
         <Pressable
           onPress={() => {
-            console.warn("nbavigate");
             navigation.navigate("Register");
           }}
           style={{
