@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { StyleSheet, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { FontAwesome } from "@expo/vector-icons";
-import { Heading, Pressable, Text as NativeText } from "native-base";
 
-import { Text, View } from "../components/Themed";
-import { RootTabScreenProps } from "../types";
 import { User } from "../types/types";
+import { RootTabScreenProps } from "../types";
+import { Text, View } from "../components/Themed";
+
 import ProfileMenu from "../components/profile-menu/profile-menu.component";
 
 export default function ProfileScreen({
@@ -15,9 +14,8 @@ export default function ProfileScreen({
   const [user, setUser] = useState<User | null>(null);
 
   AsyncStorage.getItem("user", (err, result) => {
-    if (!result || err) return;
-    const data = JSON.parse(result ?? "");
-    if (!data?.length) return;
+    if (!result) return;
+    const data = JSON.parse(result);
     setUser(data);
   });
 
