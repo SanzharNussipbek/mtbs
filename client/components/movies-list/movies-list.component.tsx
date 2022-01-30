@@ -14,6 +14,9 @@ import { styles } from "./movies-list.styles";
 
 const MoviesList: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
+  const [currentMovies, setCurrentMovies] = useState<Movie[]>([]);
+  const [comingSoonMovies, setComingSoonMovies] = useState<Movie[]>([]);
+
   const { loading, error, data } = useQuery(GET_ALL_MOVIES_MUTATION);
 
   useEffect(() => {
@@ -30,6 +33,16 @@ const MoviesList: React.FC = () => {
     setMovies(data?.getAllMovies);
   }, [data]);
 
+  useEffect(() => {
+    if (!movies?.length) return;
+    setCurrentMovies(
+      movies.filter((movie: Movie) => new Date(movie.releaseDate) < new Date())
+    );
+    setComingSoonMovies(
+      movies.filter((movie: Movie) => new Date(movie.releaseDate) > new Date())
+    );
+  }, [movies]);
+
   return !movies.length || loading ? (
     <Loader />
   ) : (
@@ -40,7 +53,7 @@ const MoviesList: React.FC = () => {
         </Heading>
         <ScrollView horizontal>
           <Stack space={4} direction={"row"}>
-            {movies.map((movie, index) => (
+            {currentMovies.map((movie, index) => (
               <MoviesListItem movie={movie} key={index} />
             ))}
           </Stack>
@@ -52,7 +65,7 @@ const MoviesList: React.FC = () => {
         </Heading>
         <ScrollView horizontal>
           <Stack space={4} direction={"row"}>
-            {movies.map((movie, index) => (
+            {comingSoonMovies.map((movie, index) => (
               <MoviesListItem movie={movie} key={index} />
             ))}
           </Stack>
