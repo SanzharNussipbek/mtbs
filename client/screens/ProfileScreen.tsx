@@ -15,8 +15,9 @@ export default function ProfileScreen({
   const [user, setUser] = useState<User | null>(null);
 
   AsyncStorage.getItem("user", (err, result) => {
+    if (!result || err) return;
     const data = JSON.parse(result ?? "");
-    if (!data) return;
+    if (!data?.length) return;
     setUser(data);
   });
 

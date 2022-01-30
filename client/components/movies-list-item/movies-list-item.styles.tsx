@@ -17,5 +17,18 @@ export const styles = StyleSheet.create({
     height: 280,
     width: '100%',
     marginBottom: 8,
+    borderRadius: 4,
+  },
+  skeletonContainer: {
+    position: 'relative',
+  },
+  skeleton: {
+    height: 280,
+    width: '100%',
+    marginBottom: 8,
+    borderRadius: 4,
+    position: 'absolute',
+    left: 0,
+    top: 0,
   },
 });

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { Stack, Heading } from "native-base";
-import { Alert, ScrollView } from "react-native";
+import { Alert, ScrollView, Image } from "react-native";
 
 import { View } from "../Themed";
 import { Movie } from "../../types/types";
 import { GET_ALL_MOVIES_MUTATION } from "../../utils/gql";
 
-import MoviesListItem from "../movies-list-item/movies-list-item.component";
 import Loader from "../loader/loader.component";
+import MoviesListItem from "../movies-list-item/movies-list-item.component";
 
 import { styles } from "./movies-list.styles";
 
@@ -24,6 +24,9 @@ const MoviesList: React.FC = () => {
 
   useEffect(() => {
     if (!data) return;
+    data?.getAllMovies?.map(async (movie: Movie) => {
+      await Image.prefetch(movie.imgUrl);
+    });
     setMovies(data?.getAllMovies);
   }, [data]);
 
