@@ -39,10 +39,11 @@ export default function MovieScreen(props: RootStackScreenProps<"Movie">) {
           colorScheme='secondary'
           leftIcon={<ChevronLeftIcon style={{ marginRight: -10 }} />}
           onPress={handleGoBack}
+          style={styles.backButton}
         >
           Back
         </Button>
-        <Heading color='white' style={{ flex: 1 }}>
+        <Heading color='white' style={{ flex: 1, textAlign: 'center'}}>
           About the movie
         </Heading>
       </View>

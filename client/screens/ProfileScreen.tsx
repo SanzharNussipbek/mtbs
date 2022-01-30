@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Image, Pressable } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FontAwesome } from "@expo/vector-icons";
+import { Heading, Pressable, Text as NativeText } from "native-base";
 
 import { Text, View } from "../components/Themed";
 import { RootTabScreenProps } from "../types";
 import { User } from "../types/types";
+import ProfileMenu from "../components/profile-menu/profile-menu.component";
 
 export default function ProfileScreen({
   navigation,
@@ -20,103 +23,62 @@ export default function ProfileScreen({
   return user ? (
     <View style={styles.container}>
       <View style={styles.profile}>
-        <Image
-          style={styles.img}
-          source={require("client/assets/images/profile.png")}
-        />
-        <Text style={styles.title}>{`${user.firstname} ${user.lastname}`}</Text>
+        <View style={styles.avatar}>
+          <Image
+            style={styles.img}
+            source={require("../assets/images/profile.png")}
+          />
+        </View>
+        <View style={styles.userInfo}>
+          <Text
+            style={styles.title}
+          >{`${user.firstname} ${user.lastname}`}</Text>
+          <Text style={styles.subtitle}>{`${user.email}`}</Text>
+          {user.phone ? (
+            <Text style={styles.subtitle}>{`${user.phone}`}</Text>
+          ) : null}
+        </View>
       </View>
-      <View style={styles.container}>
-        <Pressable
-          style={{
-            backgroundColor: "#e33062",
-            height: 50,
-            borderRadius: 5,
-            alignItems: "center",
-            justifyContent: "center",
-            minWidth: 200,
-          }}
-        >
-          <Text
-            style={{
-              color: "white",
-              fontSize: 18,
-              fontWeight: "bold",
-            }}
-          >
-            Profile
-          </Text>
-        </Pressable>
-        <Pressable
-          style={{
-            backgroundColor: "#e33062",
-            height: 50,
-            borderRadius: 5,
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: 16,
-            minWidth: 200,
-          }}
-        >
-          <Text
-            style={{
-              color: "white",
-              fontSize: 18,
-              fontWeight: "bold",
-            }}
-          >
-            Settings
-          </Text>
-        </Pressable>
-        <Pressable
-          style={{
-            backgroundColor: "#e33062",
-            height: 50,
-            borderRadius: 5,
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: 32,
-            minWidth: 200,
-          }}
-        >
-          <Text
-            style={{
-              color: "white",
-              fontSize: 18,
-              fontWeight: "bold",
-            }}
-          >
-            Logout
-          </Text>
-        </Pressable>
-      </View>
+      <ProfileMenu />
     </View>
   ) : null;
 }
 
 const styles = StyleSheet.create({
   profile: {
-    flex: 1,
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "center",
+    flexDirection: "row",
+    height: 100,
   },
   container: {
     flex: 1,
-    alignItems: "center",
+    height: "100%",
+    alignItems: "flex-start",
     justifyContent: "flex-start",
+    padding: 16,
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
+  subtitle: {
+    fontSize: 16,
   },
   img: {
+    width: "100%",
+    height: "100%",
+  },
+  avatar: {
     width: 100,
-    height: 100,
-    marginBottom: 16,
+    height: "100%",
+    marginRight: 16,
+  },
+  userInfo: {
+    flex: 1,
+    height: "100%",
+    flexDirection: "column",
+    width: "100%",
+    justifyContent: "center",
   },
 });

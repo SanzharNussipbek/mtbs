@@ -8,6 +8,16 @@ export const styles = StyleSheet.create({
     paddingVertical: 16,
     position: "relative",
   },
+  backButton: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 70,
+    height: 40,
+    width: 90,
+    justifyContent: 'flex-start',
+    zIndex: 6,
+  },
   header: {
     position: "absolute",
     left: 0,
@@ -19,7 +29,6 @@ export const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
     backgroundColor: "rgba(0,0,0, 0.65)",
   },
   title: {

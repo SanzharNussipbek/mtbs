@@ -12,8 +12,9 @@ export const styles = StyleSheet.create({
     right: 0,
     top: 70,
     height: 40,
-    width: '100%',
+    width: 90,
     justifyContent: 'flex-start',
+    zIndex: 6,
   },
   header: {
     position: "absolute",
