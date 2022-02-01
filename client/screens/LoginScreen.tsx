@@ -4,6 +4,8 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMutation } from "@apollo/client";
 import { LOGIN_MUTATION } from "../utils/gql";
+import { Button } from "native-base";
+import Loader from "../components/loader/loader.component";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -53,82 +55,67 @@ const LoginScreen = () => {
         height: "100%",
       }}
     >
-      <View style={{ width: "100%" }}>
-        <TextInput
-          placeholder='Email'
-          autoCapitalize='none'
-          value={values.email}
-          onChangeText={(value: string) =>
-            setValues({ ...values, email: value })
-          }
-          style={{
-            color: "white",
-            fontSize: 18,
-            width: "100%",
-            marginVertical: 25,
-          }}
-        />
-        <TextInput
-          placeholder='Password'
-          autoCapitalize='none'
-          value={values.password}
-          onChangeText={(value: string) =>
-            setValues({ ...values, password: value })
-          }
-          secureTextEntry
-          style={{
-            color: "white",
-            fontSize: 18,
-            width: "100%",
-            marginVertical: 25,
-          }}
-        />
-        <Pressable
-          onPress={onSubmit}
-          disabled={loading}
-          style={{
-            backgroundColor: "#e33062",
-            height: 50,
-            borderRadius: 5,
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: 30,
-          }}
-        >
-          <Text
+      {loading ? (
+        <Loader />
+      ) : (
+        <View style={{ width: "100%" }}>
+          <TextInput
+            placeholder='Email'
+            autoCapitalize='none'
+            value={values.email}
+            onChangeText={(value: string) =>
+              setValues({ ...values, email: value })
+            }
             style={{
               color: "white",
               fontSize: 18,
-              fontWeight: "bold",
+              width: "100%",
+              marginVertical: 25,
+            }}
+          />
+          <TextInput
+            placeholder='Password'
+            autoCapitalize='none'
+            value={values.password}
+            onChangeText={(value: string) =>
+              setValues({ ...values, password: value })
+            }
+            secureTextEntry
+            style={{
+              color: "white",
+              fontSize: 18,
+              width: "100%",
+              marginVertical: 25,
+            }}
+          />
+          <Button
+            size='lg'
+            variant='solid'
+            colorScheme='secondary'
+            onPress={onSubmit}
+            style={{
+              borderRadius: 5,
+              marginTop: 30,
             }}
           >
             Login
-          </Text>
-        </Pressable>
-
-        <Pressable
-          onPress={() => {
-            navigation.navigate("Register");
-          }}
-          style={{
-            height: 50,
-            borderRadius: 5,
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: 30,
-          }}
-        >
-          <Text
+          </Button>
+          <Button
+            size='lg'
+            variant='ghost'
+            colorScheme='secondary'
+            onPress={() => {
+              navigation.navigate("Register");
+            }}
             style={{
-              color: "#e33062",
-              fontSize: 18,
-              fontWeight: "bold",
+              borderRadius: 5,
+              marginTop: 30,
             }}
           >
             New here? Register
-          </Text>
-        </Pressable>
-      </View>
+          </Button>
+        </View>
+      )}
     </View>
   );
 };
