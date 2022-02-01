@@ -12,6 +12,7 @@ const MovieSchema = new Schema({
   cast: String,
   rating: String,
   imgUrl: String,
+  trailerUrl: String,
 });
 
 const Movie = model("Movie", MovieSchema);

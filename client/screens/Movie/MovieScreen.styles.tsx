@@ -39,6 +39,7 @@ export const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "column",
     marginBottom: 16,
+    position: 'relative',
   },
   poster: {
     position: "relative",
@@ -55,6 +56,15 @@ export const styles = StyleSheet.create({
     ],
     width: "100%",
     marginBottom: -42,
+  },
+  playBtn: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 50,
+    position: 'absolute',
+    bottom: 96,
+    right: 16,
   },
   block: {
     flexDirection: "column",

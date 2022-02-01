@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Image, ScrollView, Pressable } from "react-native";
+import { Image, ScrollView, Linking } from "react-native";
 import {
   Button,
   Heading,
   Text as NativeText,
   ChevronLeftIcon,
+  IconButton,
 } from "native-base";
+import { FontAwesome } from "@expo/vector-icons";
 
 import { Movie } from "../../types/types";
 import { RootStackScreenProps } from "../../types";
@@ -30,6 +32,14 @@ export default function MovieScreen(props: RootStackScreenProps<"Movie">) {
     setIsHidden((value) => !value);
   };
 
+  const handleOpenTrailer = useCallback(async () => {
+    const supported = await Linking.canOpenURL(movie?.trailerUrl);
+
+    if (supported) {
+      await Linking.openURL(movie?.trailerUrl);
+    }
+  }, [movie?.trailerUrl]);
+
   return movie ? (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -43,7 +53,7 @@ export default function MovieScreen(props: RootStackScreenProps<"Movie">) {
         >
           Back
         </Button>
-        <Heading color='white' style={{ flex: 1, textAlign: 'center'}}>
+        <Heading color='white' style={{ flex: 1, textAlign: "center" }}>
           About the movie
         </Heading>
       </View>
@@ -52,6 +62,14 @@ export default function MovieScreen(props: RootStackScreenProps<"Movie">) {
         <Heading size='xl' style={styles.title}>
           {movie?.name}
         </Heading>
+        <IconButton
+          size={12}
+          variant='solid'
+          colorScheme='danger'
+          style={styles.playBtn}
+          onPress={handleOpenTrailer}
+          icon={<FontAwesome size={20} color="black" name='play' style={{ marginLeft: 4 }} />}
+        />
       </View>
       <View style={styles.block}>
         <NativeText

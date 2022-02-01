@@ -67,7 +67,8 @@ module.exports.validateCreateMovieInput = async (
   director,
   cast,
   rating,
-  imgUrl
+  imgUrl,
+  trailerUrl,
 ) => {
   const errors = {};
   if (name?.trim() === "") {
@@ -107,6 +108,9 @@ module.exports.validateCreateMovieInput = async (
   }
   if (imgUrl?.trim() === "") {
     errors.imgUrl = "Image URL must not be empty";
+  }
+  if (trailerUrl?.trim() === "") {
+    errors.trailerUrl = "Trailer URL must not be empty";
   }
 
   return {

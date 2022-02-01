@@ -4,6 +4,8 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     minWidth: 150,
+    maxWidth: 150,
+    width: 150,
     flexDirection: 'column',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',

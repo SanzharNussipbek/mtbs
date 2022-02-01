@@ -41,6 +41,7 @@ module.exports = gql`
     cast: String!
     rating: String!
     imgUrl: String!
+    trailerUrl: String!
   }
   input MovieInput {
     id: ID!
@@ -55,6 +56,7 @@ module.exports = gql`
     cast: String!
     rating: String!
     imgUrl: String!
+    trailerUrl: String!
   }
   input CreateMovieInput {
     name: String!
@@ -68,6 +70,7 @@ module.exports = gql`
     cast: String!
     imgUrl: String!
     rating: String!
+    trailerUrl: String!
   }
   input UpdateMovieInput {
     id: ID!
@@ -82,6 +85,7 @@ module.exports = gql`
     cast: String
     imgUrl: String
     rating: String
+    trailerUrl: String
   }
   type Seat {
     id: ID!

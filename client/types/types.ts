@@ -21,6 +21,7 @@ export interface Movie {
   cast: string;
   rating: string;
   imgUrl: string;
+  trailerUrl: string;
 };
 
 export interface Post {

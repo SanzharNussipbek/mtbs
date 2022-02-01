@@ -45,6 +45,7 @@ module.exports = {
           cast,
           rating,
           imgUrl,
+          trailerUrl,
         },
       },
       context
@@ -60,7 +61,8 @@ module.exports = {
         director,
         cast,
         rating,
-        imgUrl
+        imgUrl,
+        trailerUrl,
       );
       if (!valid) {
         throw new UserInputError("Errors", {
@@ -89,6 +91,7 @@ module.exports = {
         cast,
         rating,
         imgUrl,
+        trailerUrl,
       });
 
       const movie = await newMovie.save();

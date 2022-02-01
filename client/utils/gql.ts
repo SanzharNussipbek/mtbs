@@ -29,6 +29,7 @@ export const GET_ALL_MOVIES_MUTATION = gql`
         cast
         rating
         imgUrl
+        trailerUrl
       }
   }
 `;
