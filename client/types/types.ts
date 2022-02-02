@@ -29,5 +29,6 @@ export interface Post {
   body: string;
   author: string;
   imgUrl: string;
+  sourceUrl: string;
   createdAt: string;
 }

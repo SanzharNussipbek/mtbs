@@ -25,8 +25,18 @@ module.exports = {
     },
   },
   Mutation: {
-    async createPost(_, { data: { title, body, author, imgUrl } }, context) {
-      const { valid, errors } = validateCreatePostInput(title, body, author);
+    async createPost(
+      _,
+      { data: { title, body, author, imgUrl, sourceUrl } },
+      context
+    ) {
+      const { valid, errors } = validateCreatePostInput(
+        title,
+        body,
+        author,
+        imgUrl,
+        sourceUrl
+      );
       if (!valid) {
         throw new UserInputError("Errors", {
           errors,
@@ -37,6 +47,7 @@ module.exports = {
         body,
         author,
         imgUrl,
+        sourceUrl,
         createdAt: new Date().toISOString(),
       });
 

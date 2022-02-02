@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { Image, ScrollView, Pressable } from "react-native";
+import React, { useCallback, useState } from "react";
+import { Image, ScrollView, Pressable, Linking } from "react-native";
 import {
   Button,
   Heading,
   Text as NativeText,
   ChevronLeftIcon,
+  Link,
 } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 
@@ -24,6 +25,14 @@ export default function PostScreen(props: RootStackScreenProps<"Post">) {
     navigation.navigate("Root");
   };
 
+  const handleOpenSource = useCallback(async () => {
+    const supported = await Linking.canOpenURL(post?.sourceUrl);
+
+    if (supported) {
+      await Linking.openURL(post?.sourceUrl);
+    }
+  }, [post?.sourceUrl]);
+
   return post ? (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -37,7 +46,7 @@ export default function PostScreen(props: RootStackScreenProps<"Post">) {
         >
           Back
         </Button>
-        <Heading color='white' style={{ flex: 1, textAlign: 'center' }}>
+        <Heading color='white' style={{ flex: 1, textAlign: "center" }}>
           Post
         </Heading>
       </View>
@@ -50,7 +59,9 @@ export default function PostScreen(props: RootStackScreenProps<"Post">) {
       <View style={styles.block}>
         <View style={styles.infoRow}>
           <Text style={styles.infoTitle}>Author:</Text>
-          <Text style={styles.infoText}>{post?.author}</Text>
+          <Text style={styles.infoText} onPress={handleOpenSource}>
+            {post?.author}
+          </Text>
         </View>
       </View>
       <View style={styles.block}>

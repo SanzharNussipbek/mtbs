@@ -229,14 +229,16 @@ module.exports = gql`
     title: String!
     body: String!
     author: String!
-    imgUrl: String
+    imgUrl: String!
+    sourceUrl: String!
     createdAt: String!
   }
   input CreatePostInput {
     title: String!
     body: String!
     author: String!
-    imgUrl: String
+    imgUrl: String!
+    sourceUrl: String!
   }
   input UpdatePostInput {
     id: ID!
@@ -244,6 +246,7 @@ module.exports = gql`
     body: String
     author: String
     imgUrl: String
+    sourceUrl: String
   }
   type Query {
     getAllUsers: [User]

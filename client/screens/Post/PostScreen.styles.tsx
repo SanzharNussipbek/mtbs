@@ -53,7 +53,9 @@ export const styles = StyleSheet.create({
   },
   descriptionText: {
     fontSize: 18,
-    marginBottom: 16,
+    marginBottom: 32,
+    textAlign: 'justify',
+    lineHeight: 24,
   },
   descriptionBtn: {
     backgroundColor: "transparent",
@@ -78,5 +80,7 @@ export const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 18,
+    textDecorationLine: 'underline',
+    color: '#db2777',
   },
 });

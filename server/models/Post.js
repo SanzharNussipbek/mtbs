@@ -5,6 +5,7 @@ const PostSchema = new Schema({
   body: String,
   author: String,
   imgUrl: String,
+  sourceUrl: String,
   createdAt: String,
 });
 

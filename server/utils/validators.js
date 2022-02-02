@@ -68,7 +68,7 @@ module.exports.validateCreateMovieInput = async (
   cast,
   rating,
   imgUrl,
-  trailerUrl,
+  trailerUrl
 ) => {
   const errors = {};
   if (name?.trim() === "") {
@@ -315,7 +315,13 @@ module.exports.validateCreateTicketInput = async (
   };
 };
 
-module.exports.validateCreatePostInput = async (title, body, author) => {
+module.exports.validateCreatePostInput = async (
+  title,
+  body,
+  author,
+  imgUrl,
+  sourceUrl
+) => {
   const errors = {};
 
   if (title?.trim() === "") {
@@ -328,6 +334,14 @@ module.exports.validateCreatePostInput = async (title, body, author) => {
 
   if (author?.trim() === "") {
     errors.author = "Author must not be empty";
+  }
+
+  if (imgUrl?.trim() === "") {
+    errors.imgUrl = "Image URL must not be empty";
+  }
+
+  if (sourceUrl?.trim() === "") {
+    errors.sourceUrl = "Source URL must not be empty";
   }
 
   return {
