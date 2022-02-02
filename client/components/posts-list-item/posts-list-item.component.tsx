@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Image, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Text } from "native-base";
+import { Skeleton, Text } from "native-base";
 
 import { View } from "../Themed";
 import { Post } from "../../types/types";
@@ -14,6 +14,7 @@ type Props = {
 
 const PostsListItem: React.FC<Props> = ({ post }) => {
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(true);
 
   const onPress = () => {
     navigation.navigate("Post", { post });
@@ -22,7 +23,18 @@ const PostsListItem: React.FC<Props> = ({ post }) => {
   return post ? (
     <TouchableOpacity onPress={onPress} style={styles.container}>
       <View style={styles.poster}>
-        <Image style={styles.img} source={{ uri: post?.imgUrl }} />
+        {loading ? (
+          <View style={styles.skeletonContainer}>
+            <Skeleton style={styles.skeleton} />
+          </View>
+        ) : null}
+        <Image
+          style={styles.img}
+          source={{ uri: post?.imgUrl, cache: "force-cache" }}
+          onLoadStart={() => setLoading(true)}
+          onLoadEnd={() => setLoading(false)}
+          onLoad={() => setLoading(false)}
+        />
       </View>
       <View style={styles.text}>
         <Text style={styles.title} isTruncated color='white'>

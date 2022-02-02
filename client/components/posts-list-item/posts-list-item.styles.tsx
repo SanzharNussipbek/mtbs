@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
   },
   img: {
     width: '100%',
-    height: '100%',
+    height: 105,
     borderRadius: 4,
   },
   title: {
@@ -31,5 +31,16 @@ export const styles = StyleSheet.create({
   body: {
     flex: 1,
     fontSize: 14,
+  },
+  skeletonContainer: {
+    position: 'relative',
+  },
+  skeleton: {
+    width: '100%',
+    height: 105,
+    borderRadius: 4,
+    position: 'absolute',
+    left: 0,
+    top: 0,
   },
 });

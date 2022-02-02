@@ -315,7 +315,7 @@ module.exports.validateCreateTicketInput = async (
   };
 };
 
-module.exports.validateCreatePostInput = async (
+module.exports.validateCreatePostInput = (
   title,
   body,
   author,
