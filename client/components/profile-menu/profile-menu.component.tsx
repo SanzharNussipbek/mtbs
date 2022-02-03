@@ -11,7 +11,16 @@ import { styles } from "./profile-menu.styles";
 const ProfileMenu: React.FC = () => {
   const navigation = useNavigation();
 
-  const handlePress = (name: string) => {};
+  const handlePress = (name: string) => {
+    switch(name){
+      case "EDIT_PROFILE":
+        navigation.navigate("EditProfile");
+        return;
+      case "SETTTINGS":
+        // navigation.navigate("Settings");
+        return;
+    }
+  };
 
   const handleLogout = () => {
     AsyncStorage.removeItem("user");

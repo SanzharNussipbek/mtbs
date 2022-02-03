@@ -82,3 +82,36 @@ export const REGISTER_MUTATION = gql`
     }
   }
 `;
+
+export const UPDATE_USER_MUTATION = gql`
+  mutation updateUser(
+    $id: ID!
+    $email: String
+    $firstname: String
+    $lastname: String
+    $password: String
+    $phone: String
+  ) {
+    updateUser(
+      data: {
+        id: $id
+        email: $email
+        firstname: $firstname
+        lastname: $lastname
+        password: $password
+        phone: $phone
+      }
+    ) {
+      id
+      firstname
+      lastname
+      email
+      password
+      createdAt
+      status
+      phone
+      tickets
+      token
+    }
+  }
+`;

@@ -148,7 +148,7 @@ module.exports = {
       }
 
       const updatedUser = await User.findOneAndUpdate(
-        { id: signedUser.id },
+        { id: id },
         {
           firstname: updateUserInput?.firstname ?? user?.firstname,
           lastname: updateUserInput?.lastname ?? user?.lastname,

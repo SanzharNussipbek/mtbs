@@ -25,8 +25,9 @@
    Login: undefined;
    Register: undefined;
    NotFound: undefined;
-   Movie: { movie: any }
-   Post: { post: any }
+   Movie: { movie: any };
+   Post: { post: any };
+   EditProfile: undefined;
  };
 
  export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

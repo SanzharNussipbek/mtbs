@@ -17,22 +17,18 @@ import { ColorSchemeName, Pressable } from "react-native";
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
 import LoginScreen from "../screens/LoginScreen";
-import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import HomeScreen from "../screens/HomeScreen";
 import NewsScreen from "../screens/NewsScreen";
 import TicketsScreen from "../screens/TicketsScreen";
-import {
-  RootStackParamList,
-  RootTabParamList,
-  RootTabScreenProps,
-} from "../types";
+import { RootStackParamList, RootTabParamList } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import ProfileScreen from "../screens/ProfileScreen";
 import MovieScreen from "../screens/Movie/MovieScreen";
 import PostScreen from "../screens/Post/PostScreen";
 import LoadingScreen from "../screens/LoadingScreen";
+import EditProfileScreen from "../screens/EditProfile/EditProfileScreen";
 
 export default function Navigation({
   colorScheme,
@@ -87,6 +83,11 @@ function RootNavigator() {
         name='Post'
         component={PostScreen}
         options={{ title: "Post", headerShown: false }}
+      />
+      <Stack.Screen
+        name='EditProfile'
+        component={EditProfileScreen}
+        options={{ title: "Edit Profile" }}
       />
       <Stack.Screen
         name='NotFound'

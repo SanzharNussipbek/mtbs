@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -13,11 +13,23 @@ export default function ProfileScreen({
 }: RootTabScreenProps<"Profile">) {
   const [user, setUser] = useState<User | null>(null);
 
-  AsyncStorage.getItem("user", (err, result) => {
-    if (!result) return;
-    const data = JSON.parse(result);
-    setUser(data);
-  });
+  useEffect(() => {
+    AsyncStorage.getItem("user", (err, result) => {
+      if (!result) {
+        handleLogout();
+        return;
+      }
+      if (err) console.log(JSON.stringify(err, null, 2));
+      const data = JSON.parse(result);
+      setUser(data);
+    });
+  }, []);
+
+  const handleLogout = () => {
+    AsyncStorage.removeItem("user");
+    AsyncStorage.removeItem("token");
+    navigation.navigate("Login");
+  };
 
   return user ? (
     <View style={styles.container}>

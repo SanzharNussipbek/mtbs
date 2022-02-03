@@ -155,6 +155,13 @@ const RegisterScreen = () => {
               borderRadius: 5,
               marginTop: 30,
             }}
+            isDisabled={
+              !values.firstname?.length ||
+              !values.lastname?.length ||
+              !values.email?.length ||
+              !values.password?.length ||
+              !values.confirmPassword?.length
+            }
           >
             Register
           </Button>

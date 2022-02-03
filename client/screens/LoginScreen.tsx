@@ -97,6 +97,7 @@ const LoginScreen = () => {
               borderRadius: 5,
               marginTop: 30,
             }}
+            isDisabled={!values.email?.length || !values.password?.length}
           >
             Login
           </Button>
