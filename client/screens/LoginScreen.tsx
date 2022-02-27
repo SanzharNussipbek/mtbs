@@ -6,9 +6,12 @@ import { useMutation } from "@apollo/client";
 import { LOGIN_MUTATION } from "../utils/gql";
 import { Button } from "native-base";
 import Loader from "../components/loader/loader.component";
+import { useAppDispatch } from "../hooks";
+import { loginUser } from "../redux/user/user.actions";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
 
   const [errors, setErrors] = useState<any | null>(null);
   const [values, setValues] = useState({
@@ -18,6 +21,7 @@ const LoginScreen = () => {
 
   const [login, { loading }] = useMutation(LOGIN_MUTATION, {
     update(_, { data: { login: userData } }) {
+      dispatch(loginUser(userData));
       AsyncStorage.setItem("user", JSON.stringify(userData, null, 2));
       AsyncStorage.setItem("token", userData?.token).then(() => {
         navigation.navigate("Root");

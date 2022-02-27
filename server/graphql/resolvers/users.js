@@ -150,14 +150,18 @@ module.exports = {
       const updatedUser = await User.findOneAndUpdate(
         { id: id },
         {
-          firstname: updateUserInput?.firstname ?? user?.firstname,
-          lastname: updateUserInput?.lastname ?? user?.lastname,
-          email: updateUserInput?.email ?? user?.email,
-          password: await bcrypt.hash(
-            updateUserInput?.password ?? user?.password,
-            12
-          ),
-          phone: updateUserInput?.phone ?? user?.phone,
+          firstname: updateUserInput?.firstname?.length
+            ? updateUserInput?.firstname
+            : user?.firstname,
+          lastname: updateUserInput?.lastname?.length
+            ? updateUserInput?.lastname
+            : user?.lastname,
+          email: updateUserInput?.email?.length
+            ? updateUserInput?.email
+            : user?.email,
+          phone: updateUserInput?.phone?.length
+            ? updateUserInput?.phone
+            : user?.phone,
         },
         { new: true }
       );

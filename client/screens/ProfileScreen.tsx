@@ -1,35 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { StyleSheet, Image } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { User } from "../types/types";
+import { useAppSelector } from "../hooks";
 import { RootTabScreenProps } from "../types";
 import { Text, View } from "../components/Themed";
+import { selectUser } from "../redux/user/user.selector";
 
 import ProfileMenu from "../components/profile-menu/profile-menu.component";
 
 export default function ProfileScreen({
   navigation,
 }: RootTabScreenProps<"Profile">) {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    AsyncStorage.getItem("user", (err, result) => {
-      if (!result) {
-        handleLogout();
-        return;
-      }
-      if (err) console.log(JSON.stringify(err, null, 2));
-      const data = JSON.parse(result);
-      setUser(data);
-    });
-  }, []);
-
-  const handleLogout = () => {
-    AsyncStorage.removeItem("user");
-    AsyncStorage.removeItem("token");
-    navigation.navigate("Login");
-  };
+  const user = useAppSelector(selectUser);
 
   return user ? (
     <View style={styles.container}>

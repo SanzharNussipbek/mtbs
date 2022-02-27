@@ -5,14 +5,17 @@ import { Heading, Pressable, Text as NativeText } from "native-base";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { Text, View } from "../Themed";
+import { useAppDispatch } from "../../hooks";
+import { logoutUser } from "../../redux/user/user.actions";
 
 import { styles } from "./profile-menu.styles";
 
 const ProfileMenu: React.FC = () => {
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
 
   const handlePress = (name: string) => {
-    switch(name){
+    switch (name) {
       case "EDIT_PROFILE":
         navigation.navigate("EditProfile");
         return;
@@ -23,7 +26,7 @@ const ProfileMenu: React.FC = () => {
   };
 
   const handleLogout = () => {
-    AsyncStorage.removeItem("user");
+    dispatch(logoutUser());
     AsyncStorage.removeItem("token");
     navigation.navigate("Login");
   };
@@ -40,7 +43,7 @@ const ProfileMenu: React.FC = () => {
           </Text>
         </View>
         <View style={styles.menuItemBody}>
-          <Heading color='secondary.500' size='md' style={styles.menuItemText}>
+          <Heading color="secondary.500" size="md" style={styles.menuItemText}>
             Edit profile
           </Heading>
         </View>
@@ -55,7 +58,7 @@ const ProfileMenu: React.FC = () => {
           </Text>
         </View>
         <View style={styles.menuItemBody}>
-          <Heading color='secondary.500' size='md' style={styles.menuItemText}>
+          <Heading color="secondary.500" size="md" style={styles.menuItemText}>
             Settings
           </Heading>
         </View>
@@ -67,7 +70,7 @@ const ProfileMenu: React.FC = () => {
           </Text>
         </View>
         <View style={styles.menuItemBody}>
-          <Heading color='secondary.500' size='md' style={styles.menuItemText}>
+          <Heading color="secondary.500" size="md" style={styles.menuItemText}>
             FAQ
           </Heading>
         </View>
@@ -82,7 +85,7 @@ const ProfileMenu: React.FC = () => {
           </Text>
         </View>
         <View style={styles.menuItemBody}>
-          <Heading color='secondary.500' size='md' style={styles.menuItemText}>
+          <Heading color="secondary.500" size="md" style={styles.menuItemText}>
             Logout
           </Heading>
         </View>

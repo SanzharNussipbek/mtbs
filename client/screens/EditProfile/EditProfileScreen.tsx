@@ -9,6 +9,9 @@ import SnackBar from "react-native-snackbar-component";
 import { User } from "../../types/types";
 import { RootStackScreenProps } from "../../types";
 import { UPDATE_USER_MUTATION } from "../../utils/gql";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { updateUser } from "../../redux/user/user.actions";
+import { selectUser } from "../../redux/user/user.selector";
 
 import { styles } from "./EditProfileScreen.styles";
 
@@ -20,45 +23,34 @@ const EmptyUserData: Partial<User> = {
   phone: "",
 };
 
-// TODO: UPDATE USER IN PROFILE
-
 export default function EditProfileScreen(
   props: RootStackScreenProps<"EditProfile">
 ) {
   const navigation = useNavigation();
-  const [user, setUser] = useState<User | null>(null);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
+  
   const [errors, setErrors] = useState<Partial<User>>(EmptyUserData);
-  const [values, setValues] = useState<Partial<User>>(EmptyUserData);
+  const [values, setValues] = useState<Partial<User>>({
+    id: user?.id,
+    firstname: user?.firstname,
+    lastname: user?.lastname,
+    email: user?.email,
+    phone: user?.phone,
+  });
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarStatus, setSnackbarStatus] = useState<"SUCCESS" | "ERROR">(
     "SUCCESS"
   );
 
-  useEffect(() => {
-    AsyncStorage.getItem("user", (err, result) => {
-      if (!result) {
-        handleLogout();
-        return;
-      }
-      const data: User = JSON.parse(result);
-      setUser(data);
-      setValues({
-        id: data?.id,
-        firstname: data?.firstname,
-        lastname: data?.lastname,
-        email: data?.email,
-        phone: data?.phone,
-      });
-    });
-  }, []);
-
-  const [updateUser, { loading }] = useMutation(UPDATE_USER_MUTATION, {
+  const [updateUserService, { loading }] = useMutation(UPDATE_USER_MUTATION, {
     update(_, { data: { updateUser: userData } }) {
-      AsyncStorage.setItem("user", JSON.stringify(userData, null, 2));
-      setUser(userData);
+      dispatch(updateUser(userData));
       setSnackbarStatus("SUCCESS");
       setShowSnackbar(true);
-      // navigation.goBack();
+      AsyncStorage.setItem("token", userData?.token).then(() => {
+        navigation.navigate("Root");
+      });
     },
     onError(err) {
       setSnackbarStatus("ERROR");
@@ -70,19 +62,13 @@ export default function EditProfileScreen(
   });
 
   const onSubmit = () => {
-    updateUser({ variables: values });
-  };
-
-  const handleLogout = () => {
-    AsyncStorage.removeItem("user");
-    AsyncStorage.removeItem("token");
-    navigation.navigate("Login");
+    updateUserService({ variables: values });
   };
 
   return user ? (
     <View style={styles.container}>
       <SnackBar
-        position='top'
+        position="top"
         autoHidingTime={3000}
         visible={showSnackbar}
         backgroundColor={snackbarStatus === "SUCCESS" ? "#22c55e" : "#ef4444"}
@@ -109,11 +95,11 @@ export default function EditProfileScreen(
             _disabled={{
               color: "grey",
             }}
-            size='2xl'
+            size="2xl"
             color={"white"}
-            placeholder='Enter first name'
+            placeholder="Enter first name"
           />
-          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size='xs' />}>
+          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
             {errors?.firstname}
           </FormControl.ErrorMessage>
         </FormControl>
@@ -133,11 +119,11 @@ export default function EditProfileScreen(
             _disabled={{
               color: "grey",
             }}
-            size='2xl'
+            size="2xl"
             color={"white"}
-            placeholder='Enter last name'
+            placeholder="Enter last name"
           />
-          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size='xs' />}>
+          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
             {errors?.lastname}
           </FormControl.ErrorMessage>
         </FormControl>
@@ -155,12 +141,12 @@ export default function EditProfileScreen(
             _disabled={{
               color: "grey",
             }}
-            size='2xl'
-            type='email'
+            size="2xl"
+            type="email"
             color={"white"}
-            placeholder='Enter email'
+            placeholder="Enter email"
           />
-          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size='xs' />}>
+          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
             {errors?.email}
           </FormControl.ErrorMessage>
         </FormControl>
@@ -178,18 +164,18 @@ export default function EditProfileScreen(
             _disabled={{
               color: "grey",
             }}
-            size='2xl'
+            size="2xl"
             color={"white"}
-            placeholder='Enter phone number'
+            placeholder="Enter phone number"
           />
-          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size='xs' />}>
+          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
             {errors?.phone}
           </FormControl.ErrorMessage>
         </FormControl>
         <Button
-          size='lg'
-          variant='solid'
-          colorScheme='secondary'
+          size="lg"
+          variant="solid"
+          colorScheme="secondary"
           onPress={onSubmit}
           style={{
             borderRadius: 5,
