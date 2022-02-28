@@ -25,6 +25,15 @@ module.exports = {
         throw new Error(e);
       }
     },
+    async getSessionsByMovieId(_, { movieId }) {
+      try {
+        const movie = await Movie.findById(movieId);
+        const sessions = await Session.find({ movie });
+        return sessions;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
     async getSession(_, { id }) {
       try {
         const session = await Session.findById(id);
@@ -40,15 +49,13 @@ module.exports = {
   Mutation: {
     async createSession(
       _,
-      { data: { movieId, hallId, date, startTime, endTime } },
+      { data: { movieId, hallId, datetime } },
       context
     ) {
       const { valid, errors } = await validateCreateSessionInput(
         movieId,
         hallId,
-        date,
-        startTime,
-        endTime
+        datetime
       );
       if (!valid) {
         throw new UserInputError("Errors", {
@@ -61,9 +68,7 @@ module.exports = {
       const newSession = new Session({
         movie: movie,
         hall: hall,
-        date,
-        startTime,
-        endTime,
+        datetime,
       });
 
       const session = await newSession.save();

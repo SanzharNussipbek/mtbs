@@ -5,9 +5,7 @@ const { HallSchema } = require("./Hall");
 const SessionSchema = new Schema({
   movie: MovieSchema,
   hall: HallSchema,
-  date: String,
-  startTime: String,
-  endTime: String,
+  datetime: Number,
 });
 
 const Session = model("Session", SessionSchema);

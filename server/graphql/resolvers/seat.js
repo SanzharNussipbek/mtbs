@@ -64,6 +64,16 @@ module.exports = {
         id: seat.id,
       };
     },
+    async deleteAllSeats(_, {}, context) {
+      await Seat.deleteMany();
+      await Hall.updateMany(
+        {},
+        {
+          seats: [],
+        }
+      );
+      return "All seats are deleted successfully";
+    },
     async deleteSeat(_, { id }, context) {
       try {
         const seat = await Seat.findById(id);

@@ -136,6 +136,7 @@ module.exports.validateCreateHallInput = async (name, type, seatIds) => {
     type?.trim() !== "" &&
     type?.trim() !== "Standard" &&
     type?.trim() !== "VIP" &&
+    type?.trim() !== "Green" &&
     type?.trim() !== "IMAX"
   ) {
     errors.type = "Hall type is invalid";
@@ -170,8 +171,8 @@ module.exports.validateCreateSeatInput = async (seatNumber, hallId) => {
   if (seatNumber == null) {
     errors.seatNumber = "Seat number must not be empty";
   } else {
-    const seat = await Seat.findOne({ seatNumber }).exec();
-    if (seat !== null) {
+    const seat = await Seat.findOne({ seatNumber, hallId }).exec();
+    if (seat) {
       errors.seatNumber = "Seat number is already used";
     }
   }
@@ -209,16 +210,8 @@ module.exports.validateCreateSessionInput = async (
     }
   }
 
-  if (date?.trim() === "") {
-    errors.date = "Date must not be empty";
-  }
-
-  if (startTime?.trim() === "") {
-    errors.startTime = "Start time must not be empty";
-  }
-
-  if (endTime?.trim() === "") {
-    errors.endTime = "End time must not be empty";
+  if (date == null) {
+    errors.date = "Datetime must not be empty";
   }
 
   return {

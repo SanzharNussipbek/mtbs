@@ -64,8 +64,8 @@ const LoginScreen = () => {
       ) : (
         <View style={{ width: "100%" }}>
           <TextInput
-            placeholder='Email'
-            autoCapitalize='none'
+            placeholder="Email"
+            autoCapitalize="none"
             value={values.email}
             onChangeText={(value: string) =>
               setValues({ ...values, email: value })
@@ -78,8 +78,8 @@ const LoginScreen = () => {
             }}
           />
           <TextInput
-            placeholder='Password'
-            autoCapitalize='none'
+            placeholder="Password"
+            autoCapitalize="none"
             value={values.password}
             onChangeText={(value: string) =>
               setValues({ ...values, password: value })
@@ -93,9 +93,9 @@ const LoginScreen = () => {
             }}
           />
           <Button
-            size='lg'
-            variant='solid'
-            colorScheme='secondary'
+            size="lg"
+            variant="solid"
+            colorScheme="secondary"
             onPress={onSubmit}
             style={{
               borderRadius: 5,
@@ -106,9 +106,9 @@ const LoginScreen = () => {
             Login
           </Button>
           <Button
-            size='lg'
-            variant='ghost'
-            colorScheme='secondary'
+            size="lg"
+            variant="ghost"
+            colorScheme="secondary"
             onPress={() => {
               navigation.navigate("Register");
             }}

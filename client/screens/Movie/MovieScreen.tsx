@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Image, ScrollView, Linking } from "react-native";
+import { Image, ScrollView, Linking, Alert } from "react-native";
 import {
   Button,
   Heading,
@@ -10,13 +10,16 @@ import {
 } from "native-base";
 import { FontAwesome } from "@expo/vector-icons";
 
-import { Movie } from "../../types/types";
+import { Movie, Session } from "../../types/types";
 import { RootStackScreenProps } from "../../types";
 import { Text, View } from "../../components/Themed";
 
 import NotFoundScreen from "../NotFoundScreen";
 
 import { styles } from "./MovieScreen.styles";
+import { useQuery } from "@apollo/client";
+import { GET_SESSIONS_BY_MOVIE_ID } from "../../utils/gql";
+import SessionList from "../../components/session-list/session-list.component";
 
 export default function MovieScreen(props: RootStackScreenProps<"Movie">) {
   const navigation = useNavigation();
@@ -45,30 +48,37 @@ export default function MovieScreen(props: RootStackScreenProps<"Movie">) {
       <View style={styles.header}>
         <Button
           size={"lg"}
-          variant='ghost'
-          colorScheme='secondary'
+          variant="ghost"
+          colorScheme="secondary"
           leftIcon={<ChevronLeftIcon style={{ marginRight: -10 }} />}
           onPress={handleGoBack}
           style={styles.backButton}
         >
           Back
         </Button>
-        <Heading color='white' style={{ flex: 1, textAlign: "center" }}>
+        <Heading color="white" style={{ flex: 1, textAlign: "center" }}>
           About the movie
         </Heading>
       </View>
       <View style={styles.hero}>
         <Image style={styles.img} source={{ uri: movie?.imgUrl }} />
-        <Heading size='xl' style={styles.title}>
+        <Heading size="xl" style={styles.title}>
           {movie?.name}
         </Heading>
         <IconButton
           size={12}
-          variant='solid'
-          colorScheme='danger'
+          variant="solid"
+          colorScheme="danger"
           style={styles.playBtn}
           onPress={handleOpenTrailer}
-          icon={<FontAwesome size={20} color="black" name='play' style={{ marginLeft: 4 }} />}
+          icon={
+            <FontAwesome
+              size={20}
+              color="black"
+              name="play"
+              style={{ marginLeft: 4 }}
+            />
+          }
         />
       </View>
       <View style={styles.block}>
@@ -118,14 +128,15 @@ export default function MovieScreen(props: RootStackScreenProps<"Movie">) {
         ) : null}
         <Button
           size={"lg"}
-          variant='outline'
-          colorScheme='secondary'
+          variant="outline"
+          colorScheme="secondary"
           onPress={toggleHidden}
           mb={8}
         >
           {isHidden ? "Show details" : "Hide details"}
         </Button>
       </View>
+      <SessionList movieId={movie?.id} />
     </ScrollView>
   ) : (
     NotFoundScreen

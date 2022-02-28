@@ -2,36 +2,52 @@ import { gql } from "graphql-tag";
 // import { gql } from "@apollo/client";
 
 export const GET_POSTS = gql`
-    {
-      getPosts {
-        id
-        title
-        author
-        body
-        imgUrl
-        sourceUrl
-        createdAt
-      }
+  {
+    getPosts {
+      id
+      title
+      author
+      body
+      imgUrl
+      sourceUrl
+      createdAt
+    }
   }
 `;
 
 export const GET_ALL_MOVIES_MUTATION = gql`
-    {
-      getAllMovies {
+  {
+    getAllMovies {
+      id
+      name
+      description
+      duration
+      language
+      releaseDate
+      country
+      genre
+      director
+      cast
+      rating
+      imgUrl
+      trailerUrl
+    }
+  }
+`;
+export const GET_SESSIONS_BY_MOVIE_ID = gql`
+  query getSessionsByMovieId($movieId: ID!) {
+    getSessionsByMovieId(movieId: $movieId) {
+      id
+      datetime
+      movie {
         id
         name
-        description
-        duration
-        language
-        releaseDate
-        country
-        genre
-        director
-        cast
-        rating
-        imgUrl
-        trailerUrl
       }
+      hall {
+        id
+        name
+      }
+    }
   }
 `;
 

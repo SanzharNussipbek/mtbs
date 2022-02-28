@@ -132,32 +132,24 @@ module.exports = gql`
     id: ID!
     movie: Movie!
     hall: Hall!
-    date: String!
-    startTime: String!
-    endTime: String!
+    datetime: Int!
   }
   input SessionInput {
     id: ID!
     movie: ID!
     hall: ID!
-    date: String!
-    startTime: String!
-    endTime: String!
+    datetime: Int!
   }
   input CreateSessionInput {
     movieId: String!
     hallId: String!
-    date: String!
-    startTime: String!
-    endTime: String!
+    datetime: Int!
   }
   input UpdateSessionInput {
     id: ID!
     movieId: ID!
     hallId: ID!
-    date: String
-    startTime: String
-    endTime: String
+    datetime: Int
   }
   type SessionSeat {
     id: ID!
@@ -265,6 +257,7 @@ module.exports = gql`
     getAllSessions: [Session]
     getUserSessions(userId: ID!): [Session]
     getSession(id: ID!): Session
+    getSessionsByMovieId(movieId: ID!): [Session]
 
     getAllSessionSeats: [SessionSeat]
     getOneSessionSeat(id: ID!): SessionSeat
@@ -292,6 +285,7 @@ module.exports = gql`
     createSeat(data: CreateSeatInput): Seat!
     updateSeat(data: UpdateSeatInput): Seat!
     deleteSeat(id: ID!): String!
+    deleteAllSeats: String!
 
     createSession(data: CreateSessionInput): Session!
     updateSession(data: UpdateSessionInput): Session!

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Image } from "react-native";
 
 import { useAppSelector } from "../hooks";
@@ -12,6 +12,11 @@ export default function ProfileScreen({
   navigation,
 }: RootTabScreenProps<"Profile">) {
   const user = useAppSelector(selectUser);
+
+  useEffect(() => {
+    if (user) return;
+    navigation.navigate("Login");
+  }, [user]);
 
   return user ? (
     <View style={styles.container}>
