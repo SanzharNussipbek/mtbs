@@ -1,5 +1,4 @@
 import { gql } from "graphql-tag";
-// import { gql } from "@apollo/client";
 
 export const GET_POSTS = gql`
   {
@@ -43,10 +42,27 @@ export const GET_SESSIONS_BY_MOVIE_ID = gql`
       movie {
         id
         name
+        description
+        duration
+        language
+        releaseDate
+        country
+        genre
+        director
+        cast
+        rating
+        imgUrl
+        trailerUrl
       }
       hall {
         id
         name
+        type
+        seats {
+          id
+          seatNumber
+          hallId
+        }
       }
       seats {
         id
@@ -138,6 +154,65 @@ export const UPDATE_USER_MUTATION = gql`
       phone
       tickets
       token
+    }
+  }
+`;
+
+export const GET_TICKETS_BY_USER_ID = gql`
+  query getTicketsByUserId($userId: ID!) {
+    getTicketsByUserId(userId: $userId) {
+      id
+      userId
+      price
+      status
+      createdAt
+      session {
+        id
+        datetime
+        movie {
+          id
+          name
+          description
+          duration
+          language
+          releaseDate
+          country
+          genre
+          director
+          cast
+          rating
+          imgUrl
+          trailerUrl
+        }
+        hall {
+          id
+          name
+          type
+          seats {
+            id
+            seatNumber
+            hallId
+          }
+        }
+        seats {
+          id
+          status
+          seat {
+            id
+            seatNumber
+            hallId
+          }
+        }
+      }
+      seats {
+        id
+        status
+        seat {
+          id
+          seatNumber
+          hallId
+        }
+      }
     }
   }
 `;

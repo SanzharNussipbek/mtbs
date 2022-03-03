@@ -52,6 +52,7 @@ export interface Hall {
 }
 
 export interface SessionSeat {
+  id: string;
   seat: Seat;
   type: string;
   status: string;
@@ -66,6 +67,7 @@ export interface Session {
 }
 
 export interface Ticket {
+  id: string;
   session: Session;
   seats: SessionSeat[];
   userId: string;

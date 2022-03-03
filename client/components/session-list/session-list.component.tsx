@@ -37,7 +37,6 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
 
   const handleClick = (session: Session) => {
     if (new Date(session.datetime * 1000) < new Date()) return;
-    console.log(session);
   };
 
   return loading ? (
