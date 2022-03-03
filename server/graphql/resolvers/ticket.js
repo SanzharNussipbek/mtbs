@@ -15,14 +15,6 @@ module.exports = {
         throw new Error(e);
       }
     },
-    async getUserTickets(_, { userId }) {
-      try {
-        const tickets = await Ticket.find({ userId })?.sort({ createdAt: -1 });
-        return tickets;
-      } catch (e) {
-        throw new Error(e);
-      }
-    },
     async getTicket(_, { id }) {
       try {
         const ticket = await Ticket.findById(id);
@@ -34,19 +26,26 @@ module.exports = {
         throw new Error(e);
       }
     },
+    async getTicketsByUserId(_, { userId }) {
+      try {
+        const tickets = await Ticket.find({ userId })?.sort({ createdAt: -1 });
+        return tickets;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
   },
   Mutation: {
     async createTicket(
       _,
-      { data: { sessionId, seatIds, userId, price, status, promocode } },
+      { data: { sessionId, seatIds, userId, price, promocode } },
       context
     ) {
       const { valid, errors } = await validateCreateTicketInput(
         sessionId,
         seatIds,
         userId,
-        price,
-        status
+        price
       );
       if (!valid) {
         throw new UserInputError("Errors", {
@@ -58,7 +57,15 @@ module.exports = {
 
       let seats = [];
       for (let i = 0; i < seatIds?.length; i++) {
-        const sessionSeat = await SessionSeat.findById(seatIds[i]);
+        const sessionSeat = await SessionSeat.findByIdAndUpdate(
+          seatIds[i],
+          {
+            status: "BOOKED",
+          },
+          {
+            new: true,
+          }
+        );
         seats.push(sessionSeat);
       }
 
@@ -67,7 +74,7 @@ module.exports = {
         seats,
         userId,
         price,
-        status,
+        status: "BOOKED",
         promocode,
         createdAt: new Date().toISOString(),
       });
@@ -95,6 +102,11 @@ module.exports = {
         const newTickets = user?.tickets?.filter((id) => id !== ticket?.id);
         await User.findByIdAndUpdate(user.id, { tickets: newTickets });
 
+        const session = await Session.findById(ticket.sessionId);
+        session?.seats?.map(async (seat) => {
+          await SessionSeat.findByIdAndUpdate(seat?.id, { status: "VACANT" });
+        });
+        
         await ticket.delete();
         return "Ticket deleted successfully";
       } catch (e) {

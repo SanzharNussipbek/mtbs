@@ -34,6 +34,7 @@ export const GET_ALL_MOVIES_MUTATION = gql`
     }
   }
 `;
+
 export const GET_SESSIONS_BY_MOVIE_ID = gql`
   query getSessionsByMovieId($movieId: ID!) {
     getSessionsByMovieId(movieId: $movieId) {
@@ -46,6 +47,15 @@ export const GET_SESSIONS_BY_MOVIE_ID = gql`
       hall {
         id
         name
+      }
+      seats {
+        id
+        status
+        seat {
+          id
+          seatNumber
+          hallId
+        }
       }
     }
   }

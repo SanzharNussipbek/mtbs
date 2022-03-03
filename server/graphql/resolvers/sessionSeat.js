@@ -1,4 +1,5 @@
 const { SessionSeat } = require("../../models/SessionSeat");
+const { Session } = require("../../models/Session");
 const { Seat } = require("../../models/Seat");
 const { Ticket } = require("../../models/Ticket");
 const { UserInputError } = require("apollo-server");
@@ -14,7 +15,7 @@ module.exports = {
         throw new Error(e);
       }
     },
-    async getOneSessionSeat(_, { id }) {
+    async getSessionSeat(_, { id }) {
       try {
         const sessionSeat = await SessionSeat.findById(id);
         if (!sessionSeat) {
@@ -27,17 +28,8 @@ module.exports = {
     },
   },
   Mutation: {
-    async createSessionSeat(
-      _,
-      { data: { seatId, type, status, price } },
-      context
-    ) {
-      const { valid, errors } = await validateCreateSessionSeatInput(
-        seatId,
-        type,
-        status,
-        price
-      );
+    async createSessionSeat(_, { data: { seatId, status } }, context) {
+      const { valid, errors } = await validateCreateSessionSeatInput(seatId);
       if (!valid) {
         throw new UserInputError("Errors", {
           errors,
@@ -47,9 +39,7 @@ module.exports = {
 
       const newSessionSeat = new SessionSeat({
         seat,
-        type,
         status,
-        price,
       });
 
       const sessionSeat = await newSessionSeat.save();
@@ -59,6 +49,10 @@ module.exports = {
         id: sessionSeat.id,
       };
     },
+    async deleteAllSessionSeats(_, {}, context) {
+      await SessionSeat.deleteMany();
+      return "All session seats are deleted successfully";
+    },
     async deleteSessionSeat(_, { id }, context) {
       try {
         const sessionSeat = await SessionSeat.findById(id);
@@ -66,6 +60,16 @@ module.exports = {
           throw new Error("Session seat not found");
         }
         await sessionSeat.delete();
+        const sessions = await Session.find();
+        sessions
+          ?.filter((session) => session?.seats?.indexOf(sessionSeat) !== -1)
+          ?.map(async (session) => {
+            const newSession = {
+              ...session,
+              seats: session.seats.filter((s) => s.id !== sessionSeat.id),
+            };
+            await Session.findByIdAndUpdate(newSession?.id, newSession);
+          });
         return "Session seat deleted successfully";
       } catch (e) {
         throw new Error(e);
@@ -110,17 +114,17 @@ module.exports = {
             new: true,
           }
         );
-        const tickets = await Ticket.find();
-        tickets
-          ?.filter((ticket) => ticket?.seats?.indexOf(sessionSeat) !== -1)
-          ?.map(async (ticket) => {
-            const newTicket = {
-              ...ticket,
-              seats: ticket.seats.map((s) =>
+        const sessions = await Session.find();
+        sessions
+          ?.filter((session) => session?.seats?.indexOf(sessionSeat) !== -1)
+          ?.map(async (session) => {
+            const newSession = {
+              ...session,
+              seats: session.seats.map((s) =>
                 s.id === updatedSessionSeat.id ? updatedSessionSeat : s
               ),
             };
-            await Ticket.findByIdAndUpdate(newTicket?.id, newTicket);
+            await Session.findByIdAndUpdate(newSession?.id, newSession);
           });
 
         return updatedSessionSeat;

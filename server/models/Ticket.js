@@ -8,7 +8,6 @@ const TicketSchema = new Schema({
   userId: String,
   price: String,
   status: String,
-  timestamp: String,
   promocode: String,
   createdAt: String,
 });

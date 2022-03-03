@@ -186,9 +186,7 @@ module.exports.validateCreateSeatInput = async (seatNumber, hallId) => {
 module.exports.validateCreateSessionInput = async (
   movieId,
   hallId,
-  date,
-  startTime,
-  endTime
+  datetime
 ) => {
   const errors = {};
 
@@ -210,8 +208,16 @@ module.exports.validateCreateSessionInput = async (
     }
   }
 
-  if (date == null) {
-    errors.date = "Datetime must not be empty";
+  const session = await Session.findOne({ datetime });
+
+  if (datetime == null) {
+    errors.datetime = "Datetime must not be empty";
+  } else if (
+    session !== null &&
+    session?.hall?.id === hallId &&
+    session?.movie?.id === movieId
+  ) {
+    errors.datetime = "This session already exists";
   }
 
   return {
@@ -220,12 +226,7 @@ module.exports.validateCreateSessionInput = async (
   };
 };
 
-module.exports.validateCreateSessionSeatInput = async (
-  seatId,
-  type,
-  status,
-  price
-) => {
+module.exports.validateCreateSessionSeatInput = async (seatId) => {
   const errors = {};
 
   if (seatId == null) {
@@ -235,18 +236,6 @@ module.exports.validateCreateSessionSeatInput = async (
     if (!seat) {
       errors.seatId = "Seat not found";
     }
-  }
-
-  if (type?.trim() === "") {
-    errors.type = "Type must not be empty";
-  }
-
-  if (status?.trim() === "") {
-    errors.status = "Status must not be empty";
-  }
-
-  if (price?.trim() === "") {
-    errors.price = "Price must not be empty";
   }
 
   return {
@@ -259,8 +248,7 @@ module.exports.validateCreateTicketInput = async (
   sessionId,
   seatIds,
   userId,
-  price,
-  status
+  price
 ) => {
   const errors = {};
 
@@ -273,13 +261,12 @@ module.exports.validateCreateTicketInput = async (
     }
   }
 
+  const session = await Session.findById(sessionId);
+
   if (sessionId == null) {
     errors.sessionId = "Session must not be empty";
-  } else {
-    const session = await Session.findById(sessionId);
-    if (!session) {
-      errors.sessionId = "Session not found";
-    }
+  } else if (!session) {
+    errors.sessionId = "Session not found";
   }
 
   if (!seatIds || seatIds?.length == 0) {
@@ -290,12 +277,11 @@ module.exports.validateCreateTicketInput = async (
       if (!sessionSeat) {
         errors.seatIds = "Seat IDs are invalid";
         break;
+      } else if (sessionSeat.status !== "VACANT") {
+        errors.seatIds = `Oops.. seat ${sessionSeat.seat.seatNumber} is already booked`;
+        break;
       }
     }
-  }
-
-  if (status?.trim() === "") {
-    errors.status = "Status must not be empty";
   }
 
   if (price?.trim() === "") {

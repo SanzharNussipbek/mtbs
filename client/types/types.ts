@@ -51,9 +51,26 @@ export interface Hall {
   seats: Seat[];
 }
 
+export interface SessionSeat {
+  seat: Seat;
+  type: string;
+  status: string;
+}
+
 export interface Session {
   id: string;
   datetime: number;
   movie: Movie;
   hall: Hall;
+  seats: SessionSeat[];
+}
+
+export interface Ticket {
+  session: Session;
+  seats: SessionSeat[];
+  userId: string;
+  price: string;
+  status: string;
+  createdAt: string;
+  promocode?: string;
 }

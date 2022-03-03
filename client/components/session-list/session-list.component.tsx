@@ -65,6 +65,7 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
               <Flex direction="row" style={styles.groupBody}>
                 {hallSessions.map((session: Session) => (
                   <SessionTimeItem
+                    key={session.id}
                     datetime={session.datetime}
                     onClick={() => handleClick(session)}
                   />

@@ -3,6 +3,7 @@ const { SessionSeat } = require("../../models/SessionSeat");
 const { Ticket } = require("../../models/Ticket");
 const { Movie } = require("../../models/Movie");
 const { Hall } = require("../../models/Hall");
+const { Seat } = require("../../models/Seat");
 const User = require("../../models/User");
 const { UserInputError } = require("apollo-server");
 const { validateCreateSessionInput } = require("../../utils/validators");
@@ -12,23 +13,6 @@ module.exports = {
     async getAllSessions() {
       try {
         const sessions = await Session.find();
-        return sessions;
-      } catch (e) {
-        throw new Error(e);
-      }
-    },
-    async getUserSessions(_, { userId }) {
-      try {
-        const sessions = await Session.find({ userId });
-        return sessions;
-      } catch (e) {
-        throw new Error(e);
-      }
-    },
-    async getSessionsByMovieId(_, { movieId }) {
-      try {
-        const movie = await Movie.findById(movieId);
-        const sessions = await Session.find({ movie });
         return sessions;
       } catch (e) {
         throw new Error(e);
@@ -45,13 +29,26 @@ module.exports = {
         throw new Error(e);
       }
     },
+    async getSessionsByUserId(_, { userId }) {
+      try {
+        const sessions = await Session.find({ userId });
+        return sessions;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    async getSessionsByMovieId(_, { movieId }) {
+      try {
+        const movie = await Movie.findById(movieId);
+        const sessions = await Session.find({ movie });
+        return sessions;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
   },
   Mutation: {
-    async createSession(
-      _,
-      { data: { movieId, hallId, datetime } },
-      context
-    ) {
+    async createSession(_, { data: { movieId, hallId, datetime } }, context) {
       const { valid, errors } = await validateCreateSessionInput(
         movieId,
         hallId,
@@ -64,18 +61,36 @@ module.exports = {
       }
       const movie = await Movie.findById(movieId);
       const hall = await Hall.findById(hallId);
+      const seats = await Seat.find({ hallId });
+
+      let sessionSeats = [];
+      for (let i = 0; i < seats?.length; i++) {
+        const seat = seats[i];
+        const newSessionSeat = new SessionSeat({
+          seat: seat,
+          status: "VACANT",
+        });
+        const sessionSeat = await newSessionSeat.save();
+        sessionSeats.push(sessionSeat);
+      }
 
       const newSession = new Session({
         movie: movie,
         hall: hall,
+        seats: sessionSeats,
         datetime,
       });
 
       const session = await newSession.save();
+
       return {
         ...session._doc,
         id: session.id,
       };
+    },
+    async deleteAllSessions(_, {}, context) {
+      await Session.deleteMany();
+      return "All sessions are deleted successfully";
     },
     async deleteSession(_, { id }, context) {
       try {
@@ -95,8 +110,7 @@ module.exports = {
           });
 
         session?.seats?.map(async (seat) => {
-          const theSeat = await SessionSeat.findById(seat?.id);
-          await theSeat?.delete();
+          await SessionSeat.findByIdAndDelete(seat?.id);
         });
 
         await session.delete();
@@ -108,7 +122,7 @@ module.exports = {
     },
     async updateSession(
       _,
-      { data: { id, movieId, hallId, date, startTime, endTime } },
+      { data: { id, movieId, hallId, datetime } },
       context
     ) {
       try {
@@ -117,28 +131,13 @@ module.exports = {
           throw new Error("Session not found");
         }
 
-        const { valid, errors } = await validateCreateSessionInput(
-          movieId,
-          hallId,
-          date,
-          startTime,
-          endTime
-        );
-        if (!valid) {
-          throw new UserInputError("Errors", {
-            errors,
-          });
-        }
-
         const movie = await Movie.findById(movieId);
         const hall = await Hall.findById(hallId);
 
         const updateSessionInput = {
           movie,
           hall,
-          date,
-          startTime,
-          endTime,
+          datetime,
         };
         const updatedSession = await Session.findByIdAndUpdate(
           id,

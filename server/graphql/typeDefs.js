@@ -133,12 +133,14 @@ module.exports = gql`
     movie: Movie!
     hall: Hall!
     datetime: Int!
+    seats: [SessionSeat]!
   }
   input SessionInput {
     id: ID!
     movie: ID!
     hall: ID!
     datetime: Int!
+    seats: [SessionSeatInput]!
   }
   input CreateSessionInput {
     movieId: String!
@@ -150,33 +152,30 @@ module.exports = gql`
     movieId: ID!
     hallId: ID!
     datetime: Int
+    seats: [ID]!
   }
   type SessionSeat {
     id: ID!
     seat: Seat!
     type: String!
     status: String!
-    price: String!
   }
   input SessionSeatInput {
     id: ID!
     seat: SeatInput!
-    type: String!
-    status: String!
-    price: String!
+    type: String
+    status: String
   }
   input CreateSessionSeatInput {
     seatId: ID!
-    type: String!
-    status: String!
-    price: String!
+    type: String
+    status: String
   }
   input UpdateSessionSeatInput {
     id: ID!
     seatId: ID
     type: String
     status: String
-    price: String
   }
   type Ticket {
     id: ID!
@@ -185,7 +184,6 @@ module.exports = gql`
     userId: ID!
     price: String!
     status: String!
-    timestamp: String!
     promocode: String
     createdAt: String!
   }
@@ -196,7 +194,6 @@ module.exports = gql`
     userId: ID!
     price: String!
     status: String!
-    timestamp: String!
     promocode: String
     createdAt: String!
   }
@@ -205,8 +202,8 @@ module.exports = gql`
     seatIds: [ID]!
     userId: ID!
     price: String!
-    status: String!
-    promocode: String!
+    status: String
+    promocode: String
   }
   input UpdateTicketInput {
     id: ID!
@@ -251,20 +248,20 @@ module.exports = gql`
     getHall(id: ID!): Hall
 
     getAllSeats: [Seat]
-    getHallSeats(hallId: ID!): [Seat]
     getSeat(id: ID!): Seat
+    getSeatsByHallId(hallId: ID!): [Seat]
 
     getAllSessions: [Session]
-    getUserSessions(userId: ID!): [Session]
     getSession(id: ID!): Session
+    getSessionsByUserId(userId: ID!): [Session]
     getSessionsByMovieId(movieId: ID!): [Session]
 
     getAllSessionSeats: [SessionSeat]
-    getOneSessionSeat(id: ID!): SessionSeat
+    getSessionSeat(id: ID!): SessionSeat
 
     getAllTickets: [Ticket]
-    getUserTickets(userId: ID!): [Ticket]
     getTicket(id: ID!): Ticket
+    getTicketsByUserId(userId: ID!): [Ticket]
 
     getPosts: [Post]
     getPost(id: ID!): Post
@@ -290,10 +287,12 @@ module.exports = gql`
     createSession(data: CreateSessionInput): Session!
     updateSession(data: UpdateSessionInput): Session!
     deleteSession(id: ID!): String!
+    deleteAllSessions: String!
 
     createSessionSeat(data: CreateSessionSeatInput): SessionSeat!
     updateSessionSeat(data: UpdateSessionSeatInput): SessionSeat!
     deleteSessionSeat(id: ID!): String!
+    deleteAllSessionSeats: String!
 
     createTicket(data: CreateTicketInput): Ticket!
     updateTicket(data: UpdateTicketInput): Ticket!

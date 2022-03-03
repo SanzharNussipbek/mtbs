@@ -5,7 +5,6 @@ const SessionSeatSchema = new Schema({
   seat: SeatSchema,
   type: { type: String },
   status: String,
-  price: String,
 });
 
 const SessionSeat = model("SessionSeat", SessionSeatSchema);

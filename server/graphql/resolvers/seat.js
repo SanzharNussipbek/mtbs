@@ -14,14 +14,6 @@ module.exports = {
         throw new Error(e);
       }
     },
-    async getHallSeats(_, { hallId }) {
-      try {
-        const seats = await Seat.find({ hallId });
-        return seats;
-      } catch (e) {
-        throw new Error(e);
-      }
-    },
     async getSeat(_, { id }) {
       try {
         const seat = await Seat.findById(id);
@@ -29,6 +21,14 @@ module.exports = {
           throw new Error("Seat not found");
         }
         return seat;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    async getSeatsByHallId(_, { hallId }) {
+      try {
+        const seats = await Seat.find({ hallId });
+        return seats;
       } catch (e) {
         throw new Error(e);
       }
