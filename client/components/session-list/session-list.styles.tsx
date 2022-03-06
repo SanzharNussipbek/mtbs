@@ -1,22 +1,38 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   sessionList: {
-
+    flex: 1,
+    width: "100%",
+    paddingBottom: 64,
   },
-  title: {
-
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
   },
+  title: {},
   main: {
-
+    flex: 1,
+    width: "100%",
   },
   group: {
-
+    flex: 1,
+    width: "100%",
   },
   groupTitle: {
-
+    flex: 1,
+    width: "100%",
   },
   groupBody: {
-    flexWrap: 'wrap'
+    flex: 1,
+    width: "100%",
+    flexWrap: "wrap",
+  },
+  list: {
+    flex: 1,
+    width: "100%",
+    marginTop: 24,
   },
 });
