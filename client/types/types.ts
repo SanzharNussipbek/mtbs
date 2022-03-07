@@ -1,4 +1,4 @@
-export type HallType = "Standard" | "VIP" | "IMAX" | "Greeen";
+export type HallType = "Standard" | "VIP" | "IMAX" | "Green";
 
 export interface User {
   id: string;

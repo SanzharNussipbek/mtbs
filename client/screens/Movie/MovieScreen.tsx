@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Image, ScrollView, Linking, Alert } from "react-native";
 import {
@@ -6,19 +6,16 @@ import {
   Heading,
   Text as NativeText,
   ChevronLeftIcon,
-  IconButton,
 } from "native-base";
 import { FontAwesome } from "@expo/vector-icons";
 
-import { Movie, Session } from "../../types/types";
+import { Movie } from "../../types/types";
 import { RootStackScreenProps } from "../../types";
 import { Text, View } from "../../components/Themed";
 
 import NotFoundScreen from "../NotFoundScreen";
 
 import { styles } from "./MovieScreen.styles";
-import { useQuery } from "@apollo/client";
-import { GET_SESSIONS_BY_MOVIE_ID } from "../../utils/gql";
 import SessionList from "../../components/session-list/session-list.component";
 
 export default function MovieScreen(props: RootStackScreenProps<"Movie">) {
@@ -65,21 +62,20 @@ export default function MovieScreen(props: RootStackScreenProps<"Movie">) {
         <Heading size="xl" style={styles.title}>
           {movie?.name}
         </Heading>
-        <IconButton
-          size={12}
+        <Button
+          size="12"
           variant="solid"
           colorScheme="danger"
           style={styles.playBtn}
           onPress={handleOpenTrailer}
-          icon={
-            <FontAwesome
-              size={20}
-              color="black"
-              name="play"
-              style={{ marginLeft: 4 }}
-            />
-          }
-        />
+        >
+          <FontAwesome
+            size={20}
+            color="black"
+            name="play"
+            style={{ marginLeft: 4 }}
+          />
+        </Button>
       </View>
       <View style={styles.block}>
         <NativeText

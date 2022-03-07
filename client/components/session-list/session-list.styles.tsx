@@ -30,9 +30,4 @@ export const styles = StyleSheet.create({
     width: "100%",
     flexWrap: "wrap",
   },
-  list: {
-    flex: 1,
-    width: "100%",
-    marginTop: 24,
-  },
 });

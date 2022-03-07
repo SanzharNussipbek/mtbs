@@ -88,6 +88,38 @@ module.exports = {
         id: session.id,
       };
     },
+    async createSessions(_, { data }, context) {
+      if (!data.sessions.length) return [];
+      let sessions = [];
+      for (let i = 0; i < data.sessions.length; i++) {
+        const sessionData = data.sessions[i];
+        const movie = await Movie.findById(sessionData.movieId);
+        const hall = await Hall.findById(sessionData.hallId);
+        const seats = await Seat.find({ hallId: sessionData.hallId });
+        let sessionSeats = [];
+        for (let i = 0; i < seats?.length; i++) {
+          const seat = seats[i];
+          const newSessionSeat = new SessionSeat({
+            seat: seat,
+            status: "VACANT",
+          });
+          const sessionSeat = await newSessionSeat.save();
+          sessionSeats.push(sessionSeat);
+        }
+
+        const newSession = new Session({
+          movie: movie,
+          hall: hall,
+          seats: sessionSeats,
+          datetime: sessionData.datetime,
+        });
+
+        const session = await newSession.save();
+        sessions.push(session);
+      }
+
+      return sessions;
+    },
     async deleteAllSessions(_, {}, context) {
       await Session.deleteMany();
       return "All sessions are deleted successfully";

@@ -90,20 +90,24 @@ module.exports = gql`
   type Seat {
     id: ID!
     seatNumber: Int!
+    rowNumber: Int!
     hallId: ID!
   }
   input SeatInput {
     id: ID!
     seatNumber: Int!
+    rowNumber: Int!
     hallId: ID!
   }
   input CreateSeatInput {
     seatNumber: Int!
+    rowNumber: Int!
     hallId: ID!
   }
   input UpdateSeatInput {
     id: ID!
     seatNumber: Int
+    rowNumber: Int
   }
   type Hall {
     id: ID!
@@ -237,6 +241,12 @@ module.exports = gql`
     imgUrl: String
     sourceUrl: String
   }
+  input CreateSeatsInput {
+    seats: [CreateSeatInput]!
+  }
+  input CreateSessionsInput {
+    sessions: [CreateSessionInput]!
+  }
   type Query {
     getAllUsers: [User]
     getUser(id: ID!): User
@@ -283,11 +293,13 @@ module.exports = gql`
     updateSeat(data: UpdateSeatInput): Seat!
     deleteSeat(id: ID!): String!
     deleteAllSeats: String!
+    createSeats(data: CreateSeatsInput): [Seat]!
 
     createSession(data: CreateSessionInput): Session!
     updateSession(data: UpdateSessionInput): Session!
     deleteSession(id: ID!): String!
     deleteAllSessions: String!
+    createSessions(data: CreateSessionsInput): [Session]!
 
     createSessionSeat(data: CreateSessionSeatInput): SessionSeat!
     updateSessionSeat(data: UpdateSessionSeatInput): SessionSeat!

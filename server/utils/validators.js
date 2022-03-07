@@ -156,7 +156,7 @@ module.exports.validateCreateHallInput = async (name, type, seatIds) => {
   };
 };
 
-module.exports.validateCreateSeatInput = async (seatNumber, hallId) => {
+module.exports.validateCreateSeatInput = async (seatNumber, rowNumber, hallId) => {
   const errors = {};
 
   if (hallId?.trim() === "") {
@@ -170,10 +170,12 @@ module.exports.validateCreateSeatInput = async (seatNumber, hallId) => {
 
   if (seatNumber == null) {
     errors.seatNumber = "Seat number must not be empty";
+  } else if (rowNumber == null) {
+    errors.rowNumber = "Row number must not be empty";
   } else {
-    const seat = await Seat.findOne({ seatNumber, hallId }).exec();
+    const seat = await Seat.findOne({ seatNumber, rowNumber, hallId }).exec();
     if (seat) {
-      errors.seatNumber = "Seat number is already used";
+      errors.seatNumber = "Seat is already used";
     }
   }
 

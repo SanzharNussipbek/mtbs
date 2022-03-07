@@ -12,6 +12,7 @@ import Loader from "../loader/loader.component";
 import SessionTimeItem from "../session-time-item/session-time-item.component";
 
 import { styles } from "./session-list.styles";
+import { useNavigation } from "@react-navigation/native";
 
 type Props = {
   movieId: string;
@@ -19,6 +20,7 @@ type Props = {
 
 const SessionList: React.FC<Props> = ({ movieId }) => {
   const layout = useWindowDimensions();
+  const navigation = useNavigation();
 
   const [index, setIndex] = useState(0);
   const [checked, setChecked] = useState(false);
@@ -51,6 +53,7 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
 
   const handleClick = (session: Session) => {
     if (new Date(session.datetime * 1000) < new Date()) return;
+    navigation.navigate("Session", { session });
   };
 
   const handleToggleSwitch = () => {
@@ -61,6 +64,7 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
     if (checked) {
       setSessions(sessions.filter((s) => s.hall.name === "Green"));
     } else {
+      if (!data) return;
       setSessions(data.getSessionsByMovieId);
     }
   }, [checked]);
@@ -120,7 +124,7 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
                       new Date().getDate()
               )
               .sort(function (a, b) {
-                return b.datetime - a.datetime;
+                return a.datetime - b.datetime;
               });
             return hallSessions?.length ? (
               <Flex
@@ -131,11 +135,11 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
               >
                 <Heading
                   size="sm"
-                  color={"white"}
+                  color={hall.type === "Green" ? "emerald.300" : "white"}
                   style={styles.groupTitle}
                   mb={4}
                 >
-                  {`${hall.name} hall`}
+                  {`${hall.name} hall (${hall.type})`}
                 </Heading>
                 <Flex direction="row" style={styles.groupBody}>
                   {hallSessions.map((session: Session) => (

@@ -35,9 +35,35 @@ module.exports = {
     },
   },
   Mutation: {
-    async createSeat(_, { data: { seatNumber, hallId } }, context) {
+    async createSeats(_, { data }, context) {
+      if (data?.length === 0) return [];
+      let seats = [];
+      for (let i = 0; i < data.seats.length; i++) {
+        const seatData = data.seats[i];
+        const newSeat = new Seat({
+          seatNumber: seatData.seatNumber,
+          rowNumber: seatData.rowNumber,
+          hallId: seatData.hallId,
+        });
+
+        const seat = await newSeat.save();
+        seats.push(seat);
+      }
+      const hallId = data.seats[0].hallId;
+      const newHall = await Hall.findByIdAndUpdate(
+        hallId,
+        {
+          seats: seats,
+        },
+        { new: true }
+      );
+
+      return seats;
+    },
+    async createSeat(_, { data: { seatNumber, rowNumber, hallId } }, context) {
       const { valid, errors } = await validateCreateSeatInput(
         seatNumber,
+        rowNumber,
         hallId
       );
       if (!valid) {
@@ -47,6 +73,7 @@ module.exports = {
       }
       const newSeat = new Seat({
         seatNumber,
+        rowNumber,
         hallId,
       });
 
