@@ -42,6 +42,7 @@ export interface Seat {
   id: string;
   hallId: string;
   seatNumber: number;
+  rowNumber: number;
 }
 
 export interface Hall {

@@ -13,6 +13,7 @@ import MoviesListItem from "../movies-list-item/movies-list-item.component";
 import { styles } from "./movies-list.styles";
 
 const MoviesList: React.FC = () => {
+
   const [movies, setMovies] = useState<Movie[]>([]);
   const [currentMovies, setCurrentMovies] = useState<Movie[]>([]);
   const [comingSoonMovies, setComingSoonMovies] = useState<Movie[]>([]);

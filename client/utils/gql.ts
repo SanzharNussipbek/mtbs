@@ -61,6 +61,7 @@ export const GET_SESSIONS_BY_MOVIE_ID = gql`
         seats {
           id
           seatNumber
+          rowNumber
           hallId
         }
       }
@@ -70,6 +71,7 @@ export const GET_SESSIONS_BY_MOVIE_ID = gql`
         seat {
           id
           seatNumber
+          rowNumber
           hallId
         }
       }
@@ -191,6 +193,7 @@ export const GET_TICKETS_BY_USER_ID = gql`
           seats {
             id
             seatNumber
+            rowNumber
             hallId
           }
         }
@@ -200,6 +203,7 @@ export const GET_TICKETS_BY_USER_ID = gql`
           seat {
             id
             seatNumber
+            rowNumber
             hallId
           }
         }
@@ -210,6 +214,7 @@ export const GET_TICKETS_BY_USER_ID = gql`
         seat {
           id
           seatNumber
+          rowNumber
           hallId
         }
       }
