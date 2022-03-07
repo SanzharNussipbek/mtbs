@@ -75,6 +75,11 @@ export const GET_SESSIONS_BY_MOVIE_ID = gql`
           hallId
         }
       }
+      rates {
+        ADULT
+        CHILD
+        STUDENT
+      }
     }
   }
 `;
@@ -206,6 +211,11 @@ export const GET_TICKETS_BY_USER_ID = gql`
             rowNumber
             hallId
           }
+        }
+        rates {
+          ADULT
+          CHILD
+          STUDENT
         }
       }
       seats {

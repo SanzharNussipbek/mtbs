@@ -48,11 +48,16 @@ module.exports = {
     },
   },
   Mutation: {
-    async createSession(_, { data: { movieId, hallId, datetime } }, context) {
+    async createSession(
+      _,
+      { data: { movieId, hallId, datetime, rates } },
+      context
+    ) {
       const { valid, errors } = await validateCreateSessionInput(
         movieId,
         hallId,
-        datetime
+        datetime,
+        rates
       );
       if (!valid) {
         throw new UserInputError("Errors", {
@@ -69,6 +74,7 @@ module.exports = {
         const newSessionSeat = new SessionSeat({
           seat: seat,
           status: "VACANT",
+          type: "",
         });
         const sessionSeat = await newSessionSeat.save();
         sessionSeats.push(sessionSeat);
@@ -79,6 +85,7 @@ module.exports = {
         hall: hall,
         seats: sessionSeats,
         datetime,
+        rates,
       });
 
       const session = await newSession.save();
@@ -112,6 +119,7 @@ module.exports = {
           hall: hall,
           seats: sessionSeats,
           datetime: sessionData.datetime,
+          rates: sessionData.rates,
         });
 
         const session = await newSession.save();

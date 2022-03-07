@@ -28,7 +28,7 @@ module.exports = {
     },
   },
   Mutation: {
-    async createSessionSeat(_, { data: { seatId, status } }, context) {
+    async createSessionSeat(_, { data: { seatId } }, context) {
       const { valid, errors } = await validateCreateSessionSeatInput(seatId);
       if (!valid) {
         throw new UserInputError("Errors", {
@@ -39,7 +39,8 @@ module.exports = {
 
       const newSessionSeat = new SessionSeat({
         seat,
-        status,
+        status: 'VACANT',
+        type: '',
       });
 
       const sessionSeat = await newSessionSeat.save();

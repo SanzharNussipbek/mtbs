@@ -132,12 +132,23 @@ module.exports = gql`
     type: String
     seatIds: [ID]
   }
+  type SessionRates {
+    ADULT: Int!
+    STUDENT: Int
+    CHILD: Int
+  }
+  input CreateSessionRatesInput {
+    ADULT: Int!
+    STUDENT: Int
+    CHILD: Int
+  }
   type Session {
     id: ID!
     movie: Movie!
     hall: Hall!
     datetime: Int!
     seats: [SessionSeat]!
+    rates: SessionRates!
   }
   input SessionInput {
     id: ID!
@@ -145,18 +156,21 @@ module.exports = gql`
     hall: ID!
     datetime: Int!
     seats: [SessionSeatInput]!
+    rates: CreateSessionRatesInput!
   }
   input CreateSessionInput {
     movieId: String!
     hallId: String!
     datetime: Int!
+    rates: CreateSessionRatesInput!
   }
   input UpdateSessionInput {
     id: ID!
-    movieId: ID!
-    hallId: ID!
+    movieId: ID
+    hallId: ID
     datetime: Int
-    seats: [ID]!
+    seats: [ID]
+    rates: CreateSessionRatesInput
   }
   type SessionSeat {
     id: ID!

@@ -8,6 +8,11 @@ const SessionSchema = new Schema({
   hall: HallSchema,
   datetime: Number,
   seats: [SessionSeatSchema],
+  rates: {
+    ADULT: Number,
+    STUDENT: Number,
+    CHILD: Number,
+  }
 });
 
 const Session = model("Session", SessionSchema);

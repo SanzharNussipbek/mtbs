@@ -1,38 +1,52 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pressable, Text, Modal, Button, View } from "native-base";
 
-import { SessionSeat } from "../../types/types";
+import { SeatType, SessionRates, SessionSeat } from "../../types/types";
 
 import { styles } from "../session-seat-item/session-seat-item.styles";
 
 type Props = {
+  rates: SessionRates;
   sessionSeat: SessionSeat;
+  onChange: (seat: SessionSeat, remove?: boolean) => void;
 };
 
-const RATES = ["ADULT", "STUDENT", "KID"];
-
-const SessionSeatItem: React.FC<Props> = ({ sessionSeat }) => {
+const SessionSeatItem: React.FC<Props> = ({ sessionSeat, rates, onChange }) => {
   const [showModal, setShowModal] = useState(false);
-  const [rate, setRate] = useState<string | null>(null);
+  const [rate, setRate] = useState<SeatType | null>(null);
+  const [seat, setSeat] = useState<SessionSeat>(sessionSeat);
 
   const handleClick = () => {
     setShowModal(true);
   };
 
-  const handleCancel = () => {
+  const handleClear = () => {
+    setShowModal(false);
+    setRate(null);
+  };
+
+  const handleClose = () => {
     setShowModal(false);
   };
 
-  const handleChooseRate = (value: string) => {
-    if (rate === value) {
-      setRate(null);
+  const handleChooseRate = (value: SeatType) => {
+    setRate(rate === value ? null : value);
+    setShowModal(false);
+  };
+
+  useEffect(() => {
+    setSeat({ ...seat, type: rate === null ? "" : rate });
+  }, [rate]);
+
+  useEffect(() => {
+    if (rate === null) {
+      onChange(seat, true);
     } else {
-      setRate(value);
+      onChange(seat);
     }
-    setShowModal(false);
-  };
+  }, [seat]);
 
-  return (
+  return sessionSeat ? (
     <Pressable onPress={handleClick} style={styles.container}>
       <View
         style={{
@@ -51,36 +65,79 @@ const SessionSeatItem: React.FC<Props> = ({ sessionSeat }) => {
           {sessionSeat?.seat?.seatNumber}
         </Text>
       </View>
-      <Modal isOpen={showModal} onClose={handleCancel}>
+      <Modal isOpen={showModal} onClose={handleClose}>
         <Modal.Content maxWidth="400px">
           <Modal.CloseButton />
           <Modal.Header>Choose the rate:</Modal.Header>
           <Modal.Body>
             <Button.Group space={2} direction="column">
-              {RATES.map((value) => (
-                <Button
-                  variant={value === rate ? "subtle" : "outline"}
-                  colorScheme="secondary"
-                  onPress={() => handleChooseRate(value)}
-                >
-                  {value}
-                </Button>
-              ))}
+              <Button
+                colorScheme="secondary"
+                onPress={() => handleChooseRate("ADULT")}
+                variant={
+                  rates.ADULT === 0
+                    ? "ghost"
+                    : rate === "ADULT"
+                    ? "subtle"
+                    : "outline"
+                }
+                disabled={rates.ADULT === 0}
+              >
+                {rates.ADULT === 0 ? "ADULT" : `ADULT $${rates.ADULT}`}
+              </Button>
+              <Button
+                colorScheme="secondary"
+                onPress={() => handleChooseRate("STUDENT")}
+                variant={
+                  rates.STUDENT === 0
+                    ? "ghost"
+                    : rate === "STUDENT"
+                    ? "subtle"
+                    : "outline"
+                }
+                disabled={rates.STUDENT === 0}
+              >
+                {rates.STUDENT === 0 ? "STUDENT" : `STUDENT $${rates.STUDENT}`}
+              </Button>
+              <Button
+                colorScheme="secondary"
+                onPress={() => handleChooseRate("CHILD")}
+                variant={
+                  rates.CHILD === 0
+                    ? "ghost"
+                    : rate === "CHILD"
+                    ? "subtle"
+                    : "outline"
+                }
+                disabled={rates.CHILD === 0}
+              >
+                {rates.CHILD === 0 ? "CHILD" : `CHILD $${rates.CHILD}`}
+              </Button>
             </Button.Group>
           </Modal.Body>
           <Modal.Footer>
-            <Button
-              variant="ghost"
-              colorScheme="blueGray"
-              onPress={handleCancel}
-            >
-              Cancel
-            </Button>
+            {rate === null ? (
+              <Button
+                variant="ghost"
+                colorScheme="blueGray"
+                onPress={handleClose}
+              >
+                Cancel
+              </Button>
+            ) : (
+              <Button
+                variant="ghost"
+                colorScheme="blueGray"
+                onPress={handleClear}
+              >
+                Clear
+              </Button>
+            )}
           </Modal.Footer>
         </Modal.Content>
       </Modal>
     </Pressable>
-  );
+  ) : null;
 };
 
 export default SessionSeatItem;

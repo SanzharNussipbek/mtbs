@@ -156,7 +156,11 @@ module.exports.validateCreateHallInput = async (name, type, seatIds) => {
   };
 };
 
-module.exports.validateCreateSeatInput = async (seatNumber, rowNumber, hallId) => {
+module.exports.validateCreateSeatInput = async (
+  seatNumber,
+  rowNumber,
+  hallId
+) => {
   const errors = {};
 
   if (hallId?.trim() === "") {
@@ -188,7 +192,8 @@ module.exports.validateCreateSeatInput = async (seatNumber, rowNumber, hallId) =
 module.exports.validateCreateSessionInput = async (
   movieId,
   hallId,
-  datetime
+  datetime,
+  rates
 ) => {
   const errors = {};
 
@@ -220,6 +225,11 @@ module.exports.validateCreateSessionInput = async (
     session?.movie?.id === movieId
   ) {
     errors.datetime = "This session already exists";
+  }
+  if (rates == null) {
+    errors.rates = "Rates must not be empty";
+  } else if (rates?.ADULT == null) {
+    errors.rates = "Adult rates must not be empty";
   }
 
   return {

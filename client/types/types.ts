@@ -1,4 +1,5 @@
 export type HallType = "Standard" | "VIP" | "IMAX" | "Green";
+export type SeatType = "ADULT" | "STUDENT" | "CHILD";
 
 export interface User {
   id: string;
@@ -55,8 +56,14 @@ export interface Hall {
 export interface SessionSeat {
   id: string;
   seat: Seat;
-  type: string;
+  type: SeatType | '';
   status: string;
+}
+
+export interface SessionRates {
+  ADULT: number;
+  CHILD: number;
+  STUDENT: number;
 }
 
 export interface Session {
@@ -65,6 +72,7 @@ export interface Session {
   movie: Movie;
   hall: Hall;
   seats: SessionSeat[];
+  rates: SessionRates;
 }
 
 export interface Ticket {
