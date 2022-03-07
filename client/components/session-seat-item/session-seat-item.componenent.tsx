@@ -17,6 +17,7 @@ const SessionSeatItem: React.FC<Props> = ({ sessionSeat, rates, onChange }) => {
   const [seat, setSeat] = useState<SessionSeat>(sessionSeat);
 
   const handleClick = () => {
+    if (seat.status !== "VACANT") return;
     setShowModal(true);
   };
 
@@ -58,10 +59,18 @@ const SessionSeatItem: React.FC<Props> = ({ sessionSeat, rates, onChange }) => {
           alignItems: "center",
           justifyContent: "center",
           borderColor: rate?.length ? "#831843" : "grey",
-          backgroundColor: rate?.length ? "#9d174d" : "transparent",
+          backgroundColor:
+            seat.status === "VACANT"
+              ? rate?.length
+                ? "#9d174d"
+                : "#27272a"
+              : "#71717a",
         }}
       >
-        <Text color="white" style={styles.seatNum}>
+        <Text
+          color={seat.status === "VACANT" ? "white" : "black"}
+          style={styles.seatNum}
+        >
           {sessionSeat?.seat?.seatNumber}
         </Text>
       </View>
