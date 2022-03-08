@@ -31,6 +31,7 @@ import LoadingScreen from "../screens/LoadingScreen";
 import EditProfileScreen from "../screens/EditProfile/EditProfileScreen";
 import SessionScreen from "../screens/Session/SessionScreen";
 import SessionTicketScreen from "../screens/SessionTicket/SessionTicketScreen";
+import FaqScreen from "../screens/Faq/FaqScreen";
 
 export default function Navigation({
   colorScheme,
@@ -100,6 +101,11 @@ function RootNavigator() {
         name='EditProfile'
         component={EditProfileScreen}
         options={{ title: "Edit Profile" }}
+      />
+      <Stack.Screen
+        name='FAQ'
+        component={FaqScreen}
+        options={{ title: "FAQ" }}
       />
       <Stack.Screen
         name='NotFound'

@@ -22,6 +22,9 @@ const ProfileMenu: React.FC = () => {
       case "SETTTINGS":
         // navigation.navigate("Settings");
         return;
+      case "FAQ":
+        navigation.navigate("FAQ");
+        return;
     }
   };
 
