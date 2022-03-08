@@ -8,7 +8,7 @@ export interface User {
   password: string;
   email: string;
   phone: string;
-  tickets: [string];
+  tickets: Ticket[];
   status: string;
   createdAt: string;
 }

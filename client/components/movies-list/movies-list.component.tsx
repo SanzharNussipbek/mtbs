@@ -18,12 +18,15 @@ const MoviesList: React.FC = () => {
   const [currentMovies, setCurrentMovies] = useState<Movie[]>([]);
   const [comingSoonMovies, setComingSoonMovies] = useState<Movie[]>([]);
 
-  const { loading, error, data } = useQuery(GET_ALL_MOVIES_MUTATION);
+  const { loading, error, data } = useQuery(GET_ALL_MOVIES_MUTATION, {
+    onError(err) {
+      Alert.alert("ERROR", err.message);
+    },
+  });
 
   useEffect(() => {
     if (!error) return;
-    console.log(JSON.stringify(error, null, 2));
-    Alert.alert(error.graphQLErrors[0].message);
+    Alert.alert("ERROR", error?.message);
   }, [error]);
 
   useEffect(() => {

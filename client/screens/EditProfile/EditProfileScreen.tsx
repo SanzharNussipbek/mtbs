@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import { useMutation } from "@apollo/client";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -55,8 +55,8 @@ export default function EditProfileScreen(
     onError(err) {
       setSnackbarStatus("ERROR");
       setShowSnackbar(true);
-      console.log(JSON.stringify(err, null, 2));
       setErrors(err?.graphQLErrors[0]?.extensions?.errors as Partial<User>);
+      // Alert.alert("ERROR", err?.message);
     },
     variables: values,
   });

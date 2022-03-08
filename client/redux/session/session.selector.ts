@@ -7,3 +7,8 @@ export const selectSession = createSelector(
   [sessionState],
   (sessionState) => sessionState.session
 );
+
+export const selectSessionSeats = createSelector(
+  [sessionState],
+  (sessionState) => sessionState.sessionSeats
+);

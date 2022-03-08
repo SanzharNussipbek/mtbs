@@ -80,7 +80,7 @@ export default function MovieScreen(props: RootStackScreenProps<"Movie">) {
       <View style={styles.block}>
         <NativeText
           color={"muted.50"}
-          noOfLines={3}
+          noOfLines={isHidden ? 3 : undefined}
           isTruncated={isHidden}
           style={styles.descriptionText}
         >

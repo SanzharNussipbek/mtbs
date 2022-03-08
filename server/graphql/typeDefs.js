@@ -27,6 +27,7 @@ module.exports = gql`
     lastname: String
     password: String
     phone: String
+    tickets: [String]
   }
   type Movie {
     id: ID!
@@ -195,12 +196,15 @@ module.exports = gql`
     type: String
     status: String
   }
+  input UpdateSessionSeatsInput {
+    seats: [UpdateSessionSeatInput]!
+  }
   type Ticket {
     id: ID!
     session: Session!
     seats: [SessionSeat]!
     userId: ID!
-    price: String!
+    price: Int!
     status: String!
     promocode: String
     createdAt: String!
@@ -210,7 +214,7 @@ module.exports = gql`
     session: SessionInput!
     seats: [SessionSeatInput]!
     userId: ID!
-    price: String!
+    price: Int!
     status: String!
     promocode: String
     createdAt: String!
@@ -219,7 +223,7 @@ module.exports = gql`
     sessionId: ID!
     seatIds: [ID]!
     userId: ID!
-    price: String!
+    price: Int!
     status: String
     promocode: String
   }
@@ -227,7 +231,7 @@ module.exports = gql`
     id: ID!
     sessionId: ID
     seatIds: [ID]
-    price: String
+    price: Int
     status: String
     promocode: String
   }
@@ -317,11 +321,13 @@ module.exports = gql`
 
     createSessionSeat(data: CreateSessionSeatInput): SessionSeat!
     updateSessionSeat(data: UpdateSessionSeatInput): SessionSeat!
+    updateSessionSeats(data: UpdateSessionSeatsInput): [SessionSeat]!
     deleteSessionSeat(id: ID!): String!
     deleteAllSessionSeats: String!
 
     createTicket(data: CreateTicketInput): Ticket!
     updateTicket(data: UpdateTicketInput): Ticket!
+    payForTicket(data: UpdateTicketInput): Ticket!
     deleteTicket(id: ID!): String!
 
     createPost(data: CreatePostInput): Post!

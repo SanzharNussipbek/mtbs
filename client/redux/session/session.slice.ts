@@ -1,13 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Session } from "../../types/types";
+import { Session, SessionSeat } from "../../types/types";
 import reducers from './session.reducer';
 
 export interface SessionState {
   session: Session | null;
+  sessionSeats: SessionSeat[];
 };
 
 export const initialState: SessionState = {
   session: null,
+  sessionSeats: [],
 };
 
 export const sessionSlice = createSlice({
@@ -18,6 +20,7 @@ export const sessionSlice = createSlice({
 
 export const {
   setSession,
+  setSessionSeats,
 } = sessionSlice.actions;
 
 export default sessionSlice.reducer;

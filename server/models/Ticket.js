@@ -6,7 +6,7 @@ const TicketSchema = new Schema({
   session: SessionSchema,
   seats: [SessionSeatSchema],
   userId: String,
-  price: String,
+  price: Number,
   status: String,
   promocode: String,
   createdAt: String,

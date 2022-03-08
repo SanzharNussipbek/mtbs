@@ -29,6 +29,7 @@ import { Movie, Post, Session } from './types/types';
    Movie: { movie: Movie };
    Post: { post: Post };
    Session: { session: Session };
+   SessionTicket: undefined;
    EditProfile: undefined;
  };
 

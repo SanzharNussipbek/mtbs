@@ -296,7 +296,7 @@ module.exports.validateCreateTicketInput = async (
     }
   }
 
-  if (price?.trim() === "") {
+  if (price === null) {
     errors.price = "Price must not be empty";
   }
 

@@ -13,12 +13,15 @@ import { styles } from "./post-list.styles";
 
 const PostsList: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const { loading, error, data } = useQuery(GET_POSTS);
+  const { loading, error, data } = useQuery(GET_POSTS, {
+    onError(err) {
+      Alert.alert("ERROR", err.message);
+    },
+  });
 
   useEffect(() => {
     if (!error) return;
-    console.log(JSON.stringify(error, null, 2));
-    Alert.alert(error.graphQLErrors[0].message);
+    Alert.alert("ERROR", error?.message);
   }, [error]);
 
   useEffect(() => {

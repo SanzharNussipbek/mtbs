@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { Flex, Heading, HStack, Switch, Text } from "native-base";
-import { useWindowDimensions } from "react-native";
+import { Alert, useWindowDimensions } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 
 import { View } from "../Themed";
@@ -33,6 +33,9 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
   ]);
 
   const { loading, error, data } = useQuery(GET_SESSIONS_BY_MOVIE_ID, {
+    onError(err) {
+      Alert.alert("ERROR", err.message);
+    },
     variables: {
       movieId,
     },
@@ -40,8 +43,7 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
 
   useEffect(() => {
     if (!error) return;
-    console.log(JSON.stringify(error, null, 2));
-    // Alert.alert(error.graphQLErrors[0].message);
+    Alert.alert("ERROR", error?.message);
   }, [error]);
 
   useEffect(() => {

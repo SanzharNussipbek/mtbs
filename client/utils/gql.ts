@@ -165,6 +165,12 @@ export const UPDATE_USER_MUTATION = gql`
   }
 `;
 
+export const DELETE_TICKET_BY_ID = gql`
+  mutation deleteTicket($id: ID!) {
+    deleteTicket(id: $id)
+  }
+`;
+
 export const GET_TICKETS_BY_USER_ID = gql`
   query getTicketsByUserId($userId: ID!) {
     getTicketsByUserId(userId: $userId) {
@@ -220,6 +226,106 @@ export const GET_TICKETS_BY_USER_ID = gql`
       }
       seats {
         id
+        status
+        seat {
+          id
+          seatNumber
+          rowNumber
+          hallId
+        }
+      }
+    }
+  }
+`;
+
+export const UPDATE_SESSION_SEATS_MUTATION = gql`
+  input UpdateSessionSeatInput {
+    id: ID!
+    type: String
+    status: String
+  }
+  input UpdateSessionSeatsInput {
+    seats: [UpdateSessionSeatInput]!
+  }
+  mutation updateSessionSeats($data: UpdateSessionSeatsInput!) {
+    updateSessionSeats(data: $data) {
+      id
+      type
+      status
+      seat {
+        id
+        seatNumber
+        rowNumber
+        hallId
+      }
+    }
+  }
+`;
+
+export const CREATE_TICKET_MUTATION = gql`
+  input CreateTicketInput {
+    sessionId: ID!
+    seatIds: [ID]!
+    userId: ID!
+    price: Int!
+  }
+
+  mutation createTicket($data: CreateTicketInput) {
+    createTicket(data: $data) {
+      id
+      userId
+      price
+      status
+      promocode
+      createdAt
+      session {
+        id
+        datetime
+        movie {
+          id
+          name
+          description
+          duration
+          language
+          releaseDate
+          country
+          genre
+          director
+          cast
+          rating
+          imgUrl
+          trailerUrl
+        }
+        hall {
+          id
+          name
+          type
+          seats {
+            id
+            seatNumber
+            rowNumber
+            hallId
+          }
+        }
+        seats {
+          id
+          status
+          seat {
+            id
+            seatNumber
+            rowNumber
+            hallId
+          }
+        }
+        rates {
+          ADULT
+          CHILD
+          STUDENT
+        }
+      }
+      seats {
+        id
+        type
         status
         seat {
           id

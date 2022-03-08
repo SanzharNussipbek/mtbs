@@ -53,7 +53,7 @@ module.exports = {
         });
       }
 
-      const session = await Session.findById(sessionId);
+      let session = await Session.findById(sessionId);
 
       let seats = [];
       for (let i = 0; i < seatIds?.length; i++) {
@@ -66,6 +66,16 @@ module.exports = {
             new: true,
           }
         );
+        const newSessionSeats = session.seats.map((s) =>
+          s.id === seatIds[i] ? sessionSeat : s
+        );
+        session = await Session.findByIdAndUpdate(
+          sessionId,
+          {
+            seats: newSessionSeats,
+          },
+          { new: true }
+        );
         seats.push(sessionSeat);
       }
 
@@ -75,7 +85,7 @@ module.exports = {
         userId,
         price,
         status: "BOOKED",
-        promocode,
+        promocode: promocode?.length ? promocode : "",
         createdAt: new Date().toISOString(),
       });
 
@@ -83,7 +93,7 @@ module.exports = {
 
       const user = await User.findById(ticket?.userId);
       let newTickets = user?.tickets;
-      newTickets?.push(ticket);
+      newTickets?.push(ticket.id);
       await User.findByIdAndUpdate(user?.id, { tickets: newTickets });
 
       return {
@@ -105,10 +115,36 @@ module.exports = {
         const session = await Session.findById(ticket.sessionId);
         session?.seats?.map(async (seat) => {
           await SessionSeat.findByIdAndUpdate(seat?.id, { status: "VACANT" });
+          return { ...seat, status: "VACANT" };
         });
-        
+
         await ticket.delete();
         return "Ticket deleted successfully";
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    async payForTicket(_, { data: { id, price } }, context) {
+      try {
+        const ticket = await Ticket.findById(id);
+        if (!ticket) {
+          throw new Error("Ticket not found");
+        }
+
+        const updateTicketInput = {
+          price,
+          status: "PAID",
+        };
+
+        const updatedTicket = await Ticket.findByIdAndUpdate(
+          id,
+          updateTicketInput,
+          {
+            new: true,
+          }
+        );
+
+        return updatedTicket;
       } catch (e) {
         throw new Error(e);
       }
@@ -151,6 +187,7 @@ module.exports = {
           userId,
           price,
           status,
+          promocode,
         };
 
         const updatedTicket = await Ticket.findByIdAndUpdate(
@@ -160,13 +197,6 @@ module.exports = {
             new: true,
           }
         );
-
-        const user = await User.findById(updatedTicket?.userId);
-        let newTickets = user?.tickets;
-        newTickets.map((ticket) =>
-          ticket?.id === updatedTicket?.id ? updatedTicket : ticket
-        );
-        await User.findByIdAndUpdate(user.id, { tickets: newTickets });
 
         return updatedTicket;
       } catch (e) {

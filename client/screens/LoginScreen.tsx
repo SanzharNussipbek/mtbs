@@ -28,6 +28,7 @@ const LoginScreen = () => {
       });
     },
     onError(err) {
+      Alert.alert("ERROR", err.message);
       setErrors(err?.graphQLErrors[0]?.extensions?.errors);
     },
     variables: values,
@@ -59,7 +60,7 @@ const LoginScreen = () => {
         height: "100%",
       }}
     >
-      {loading ? (
+      {loading && !errors ? (
         <Loader />
       ) : (
         <View style={{ width: "100%" }}>

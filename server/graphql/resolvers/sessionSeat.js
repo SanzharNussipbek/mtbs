@@ -39,8 +39,8 @@ module.exports = {
 
       const newSessionSeat = new SessionSeat({
         seat,
-        status: 'VACANT',
-        type: '',
+        status: "VACANT",
+        type: "",
       });
 
       const sessionSeat = await newSessionSeat.save();
@@ -76,11 +76,7 @@ module.exports = {
         throw new Error(e);
       }
     },
-    async updateSessionSeat(
-      _,
-      { data: { id, seatId, type, status, price } },
-      context
-    ) {
+    async updateSessionSeat(_, { data: { id, type, status } }, context) {
       try {
         const sessionSeat = await SessionSeat.findById(id);
         if (!sessionSeat) {
@@ -88,10 +84,8 @@ module.exports = {
         }
 
         const { valid, errors } = await validateCreateSessionSeatInput(
-          seatId,
           type,
-          status,
-          price
+          status
         );
         if (!valid) {
           throw new UserInputError("Errors", {
@@ -99,13 +93,9 @@ module.exports = {
           });
         }
 
-        const seat = await Seat.findById(seatId);
-
         const updateSessionSeatInput = {
-          seat,
           type,
           status,
-          price,
         };
 
         const updatedSessionSeat = await SessionSeat.findByIdAndUpdate(
@@ -129,6 +119,62 @@ module.exports = {
           });
 
         return updatedSessionSeat;
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    async updateSessionSeats(_, { data: { seats } }, context) {
+      try {
+        if (!seats.length) {
+          throw new Error("Seats not found");
+          return;
+        }
+        let updatedSessionSeats = [];
+        for (let i = 0; i < seats.length; i++) {
+          const { id, type, status } = seats[i];
+          const sessionSeat = await SessionSeat.findById(id);
+          if (!sessionSeat) {
+            throw new Error("Session Seat not found");
+          }
+
+          const { valid, errors } = await validateCreateSessionSeatInput(
+            type,
+            status
+          );
+          if (!valid) {
+            throw new UserInputError("Errors", {
+              errors,
+            });
+          }
+
+          const updateSessionSeatInput = {
+            type,
+            status,
+          };
+
+          const updatedSessionSeat = await SessionSeat.findByIdAndUpdate(
+            id,
+            updateSessionSeatInput,
+            {
+              new: true,
+            }
+          );
+          const sessions = await Session.find();
+          sessions
+            ?.filter((session) => session?.seats?.indexOf(sessionSeat) !== -1)
+            ?.map(async (session) => {
+              const newSession = {
+                ...session,
+                seats: session.seats.map((s) =>
+                  s.id === updatedSessionSeat.id ? updatedSessionSeat : s
+                ),
+              };
+              await Session.findByIdAndUpdate(newSession?.id, newSession);
+            });
+          updatedSessionSeats.push(updatedSessionSeat);
+        }
+
+        return updatedSessionSeats;
       } catch (e) {
         throw new Error(e);
       }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FlatList } from "react-native";
+import { Alert, FlatList } from "react-native";
 import { useQuery } from "@apollo/client";
 import { useNavigation } from "@react-navigation/native";
 import { useWindowDimensions } from "react-native";
@@ -31,6 +31,9 @@ const TicketList: React.FC = () => {
   ]);
 
   const { loading, error, data } = useQuery(GET_TICKETS_BY_USER_ID, {
+    onError(err) {
+      Alert.alert("ERROR", err.message);
+    },
     variables: {
       userId,
     },
@@ -46,7 +49,7 @@ const TicketList: React.FC = () => {
 
   useEffect(() => {
     if (!error) return;
-    console.log(JSON.stringify(error, null, 2));
+    Alert.alert("ERROR", error?.message);
   }, [error]);
 
   useEffect(() => {

@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
 import { Text, Flex, Button, Modal } from "native-base";
+import { useNavigation } from "@react-navigation/native";
 
 import { useAppDispatch } from "../../hooks";
 import { RootStackScreenProps } from "../../types";
 import { Session, SessionSeat } from "../../types/types";
-import { setSession } from "../../redux/session/session.slice";
+import {
+  updateSession,
+  updateSessionSeats,
+} from "../../redux/session/session.actions";
 
 import NotFoundScreen from "../NotFoundScreen";
 import SessionSeatList from "../../components/session-seat-list/session-seat-list.componenent";
@@ -15,13 +19,15 @@ import { styles } from "./SessionScreen.styles";
 
 export default function SessionScreen(props: RootStackScreenProps<"Session">) {
   const dispatch = useAppDispatch();
+  const navigation = useNavigation();
+
   const session: Session = props?.route?.params?.session;
 
   const [showModal, setShowModal] = useState(false);
   const [selectedSeats, setSelectedSeats] = useState<SessionSeat[]>([]);
 
   useEffect(() => {
-    dispatch(setSession(session));
+    dispatch(updateSession(session));
   }, [session]);
 
   const handleSelectSeats = (seats: SessionSeat[]) => {
@@ -40,6 +46,8 @@ export default function SessionScreen(props: RootStackScreenProps<"Session">) {
 
   const handleConfirm = () => {
     setShowModal(false);
+    dispatch(updateSessionSeats(selectedSeats));
+    navigation.navigate("SessionTicket");
   };
 
   return session ? (
@@ -65,6 +73,7 @@ export default function SessionScreen(props: RootStackScreenProps<"Session">) {
           <Modal.Body>
             {selectedSeats.map((s) => (
               <Text
+                key={s.id}
                 mb={4}
                 color="black"
               >{`Row: ${s.seat.rowNumber}, Seat: ${s.seat.seatNumber}, Rate: ${s.type}`}</Text>

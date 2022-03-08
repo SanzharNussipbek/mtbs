@@ -30,6 +30,7 @@ import PostScreen from "../screens/Post/PostScreen";
 import LoadingScreen from "../screens/LoadingScreen";
 import EditProfileScreen from "../screens/EditProfile/EditProfileScreen";
 import SessionScreen from "../screens/Session/SessionScreen";
+import SessionTicketScreen from "../screens/SessionTicket/SessionTicketScreen";
 
 export default function Navigation({
   colorScheme,
@@ -89,6 +90,11 @@ function RootNavigator() {
         name='Session'
         component={SessionScreen}
         options={{ title: "Session" }}
+      />
+      <Stack.Screen
+        name='SessionTicket'
+        component={SessionTicketScreen}
+        options={{ title: "Ticket", headerShown: false }}
       />
       <Stack.Screen
         name='EditProfile'
