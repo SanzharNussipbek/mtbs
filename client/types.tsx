@@ -31,6 +31,7 @@ import { Movie, Post, Session } from './types/types';
    Session: { session: Session };
    SessionTicket: undefined;
    EditProfile: undefined;
+   EditPassword: undefined;
    FAQ: undefined;
  };
 

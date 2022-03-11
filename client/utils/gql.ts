@@ -165,6 +165,29 @@ export const UPDATE_USER_MUTATION = gql`
   }
 `;
 
+export const CHANGE_PASSWORD_MUTATION = gql`
+  mutation changePassword(
+    $id: ID!
+    $oldPassword: String!
+    $newPassword: String!
+  ) {
+    changePassword(
+      data: { id: $id, oldPassword: $oldPassword, newPassword: $newPassword }
+    ) {
+      id
+      firstname
+      lastname
+      email
+      password
+      createdAt
+      status
+      phone
+      tickets
+      token
+    }
+  }
+`;
+
 export const DELETE_TICKET_BY_ID = gql`
   mutation deleteTicket($id: ID!) {
     deleteTicket(id: $id)

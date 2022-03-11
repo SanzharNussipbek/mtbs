@@ -173,5 +173,45 @@ module.exports = {
         token: token,
       };
     },
+    async changePassword(
+      _,
+      { data: { id, oldPassword, newPassword } },
+      context
+    ) {
+      const user = await User.findById(id);
+      const signedUser = checkAuth(context);
+
+      if (user?.id !== signedUser?.id) {
+        throw new UserInputError("User is not signed in");
+      }
+
+      if (!user) {
+        throw new UserInputError("User not found");
+      }
+
+      const match = await bcrypt.compare(oldPassword, user.password);
+      if (!match) {
+        errors.general = "Wrong credentials";
+        throw new UserInputError("Wrong credentials", {
+          errors,
+        });
+        return;
+      }
+      const password = await bcrypt.hash(newPassword, 12);
+      const updatedUser = await User.findOneAndUpdate(
+        { id: id },
+        {
+          password: password,
+        },
+        { new: true }
+      );
+
+      const token = generateToken(updatedUser);
+      return {
+        ...updatedUser._doc,
+        id: updatedUser.id,
+        token: token,
+      };
+    },
   },
 };

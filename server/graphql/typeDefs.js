@@ -25,9 +25,13 @@ module.exports = gql`
     email: String
     firstname: String
     lastname: String
-    password: String
     phone: String
     tickets: [String]
+  }
+  input ChangePasswordInput {
+    id: ID!
+    oldPassword: String!
+    newPassword: String!
   }
   type Movie {
     id: ID!
@@ -298,6 +302,7 @@ module.exports = gql`
     register(registerInput: RegisterInput): User!
     login(email: String!, password: String!): User!
     updateUser(data: UpdateUserInput): User!
+    changePassword(data: ChangePasswordInput): User!
 
     createMovie(data: CreateMovieInput): Movie!
     updateMovie(data: UpdateMovieInput): Movie!

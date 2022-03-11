@@ -28,8 +28,6 @@ const LoginScreen = () => {
       });
     },
     onError(err) {
-      console.log(JSON.stringify(err, null, 2));
-      Alert.alert("ERROR", err.message);
       setErrors(err?.graphQLErrors[0]?.extensions?.errors);
     },
     variables: values,

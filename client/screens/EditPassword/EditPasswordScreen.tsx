@@ -14,23 +14,25 @@ import SnackBar from "react-native-snackbar-component";
 
 import { User } from "../../types/types";
 import { RootStackScreenProps } from "../../types";
-import { UPDATE_USER_MUTATION } from "../../utils/gql";
+import {
+  CHANGE_PASSWORD_MUTATION,
+  UPDATE_USER_MUTATION,
+} from "../../utils/gql";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { updateUser } from "../../redux/user/user.actions";
 import { selectUser } from "../../redux/user/user.selector";
 
-import { styles } from "./EditProfileScreen.styles";
+import { styles } from "./EditPasswordScreen.styles";
 
-const EmptyUserData: Partial<User> = {
+const EmptyUserData = {
   id: "",
-  firstname: "",
-  lastname: "",
-  email: "",
-  phone: "",
+  oldPassword: "",
+  newPassword: "",
+  confirmPassword: "",
 };
 
-export default function EditProfileScreen(
-  props: RootStackScreenProps<"EditProfile">
+export default function EditPasswordScreen(
+  props: RootStackScreenProps<"EditPassword">
 ) {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
@@ -38,21 +40,23 @@ export default function EditProfileScreen(
   const cancelRef = React.useRef(null);
 
   const [showAlert, setShowAlert] = useState(false);
-  const [errors, setErrors] = useState<Partial<User>>(EmptyUserData);
-  const [values, setValues] = useState<Partial<User>>({
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+  const [errors, setErrors] = useState(EmptyUserData);
+  const [values, setValues] = useState({
     id: user?.id,
-    firstname: user?.firstname,
-    lastname: user?.lastname,
-    email: user?.email,
-    phone: user?.phone,
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarStatus, setSnackbarStatus] = useState<"SUCCESS" | "ERROR">(
     "SUCCESS"
   );
 
-  const [updateUserService, { loading }] = useMutation(UPDATE_USER_MUTATION, {
-    update(_, { data: { updateUser: userData } }) {
+  const [changePassword, { loading }] = useMutation(CHANGE_PASSWORD_MUTATION, {
+    update(_, { data: { changePassword: userData } }) {
+      setIsLoading(false);
       dispatch(updateUser(userData));
       setSnackbarStatus("SUCCESS");
       setShowSnackbar(true);
@@ -61,10 +65,11 @@ export default function EditProfileScreen(
       });
     },
     onError(err) {
+      setIsLoading(false);
       setSnackbarStatus("ERROR");
       setShowSnackbar(true);
-      setErrors(err?.graphQLErrors[0]?.extensions?.errors as Partial<User>);
-      // Alert.alert("ERROR", err?.message);
+      // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
+      Alert.alert("ERROR", err?.message);
     },
     variables: values,
   });
@@ -79,12 +84,17 @@ export default function EditProfileScreen(
 
   const handleConfirm = () => {
     setShowAlert(false);
-    updateUserService({ variables: values });
+    setIsLoading(true);
+    changePassword({ variables: values });
   };
 
-  const handleChangePassword = () => {
-    navigation.navigate("EditPassword");
-  };
+  useEffect(() => {
+    setIsSubmitDisabled(
+      values.oldPassword.length === 0 ||
+        values.newPassword.length === 0 ||
+        values.confirmPassword.length === 0
+    );
+  }, [values]);
 
   return user ? (
     <View style={styles.container}>
@@ -102,131 +112,101 @@ export default function EditProfileScreen(
       <View style={{ width: "100%" }}>
         <FormControl
           style={styles.formControl}
-          isInvalid={errors?.firstname?.length !== 0}
-          isDisabled={loading}
+          isInvalid={errors?.oldPassword?.length !== 0}
+          isDisabled={isLoading}
         >
           <FormControl.Label _text={styles.inputLabel}>
-            Firstname
+            Old Password
           </FormControl.Label>
           <Input
-            value={values.firstname}
+            value={values.oldPassword}
             onChangeText={(value: string) =>
-              setValues({ ...values, firstname: value })
+              setValues({ ...values, oldPassword: value })
             }
             _disabled={{
               color: "grey",
             }}
             size="2xl"
             color={"white"}
-            placeholder="Enter first name"
+            type="password"
           />
           <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-            {errors?.firstname}
+            {errors?.oldPassword}
           </FormControl.ErrorMessage>
         </FormControl>
         <FormControl
           style={styles.formControl}
-          isInvalid={errors?.lastname?.length !== 0}
-          isDisabled={loading}
+          isInvalid={errors?.newPassword?.length !== 0}
+          isDisabled={isLoading}
         >
           <FormControl.Label _text={styles.inputLabel}>
-            Lastname
+            New Password
           </FormControl.Label>
           <Input
-            value={values.lastname}
+            value={values.newPassword}
             onChangeText={(value: string) =>
-              setValues({ ...values, lastname: value })
+              setValues({ ...values, newPassword: value })
             }
             _disabled={{
               color: "grey",
             }}
             size="2xl"
             color={"white"}
-            placeholder="Enter last name"
+            type="password"
           />
           <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-            {errors?.lastname}
+            {errors?.newPassword}
           </FormControl.ErrorMessage>
         </FormControl>
         <FormControl
           style={styles.formControl}
-          isInvalid={errors?.email?.length !== 0}
-          isDisabled={loading}
+          isInvalid={
+            errors?.confirmPassword?.length !== 0 ||
+            (values.confirmPassword.length > 0 &&
+              values.newPassword.length > 0 &&
+              values.newPassword !== values.confirmPassword)
+          }
+          isDisabled={isLoading}
         >
-          <FormControl.Label _text={styles.inputLabel}>Email</FormControl.Label>
+          <FormControl.Label _text={styles.inputLabel}>
+            Confirm Password
+          </FormControl.Label>
           <Input
-            value={values.email}
+            value={values.confirmPassword}
             onChangeText={(value: string) =>
-              setValues({ ...values, email: value })
+              setValues({ ...values, confirmPassword: value })
             }
             _disabled={{
               color: "grey",
             }}
             size="2xl"
-            type="email"
+            type="password"
             color={"white"}
-            placeholder="Enter email"
           />
           <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-            {errors?.email}
+            {errors?.confirmPassword
+              ? errors?.confirmPassword
+              : values.confirmPassword.length > 0 &&
+                values.newPassword.length > 0 &&
+                values.newPassword !== values.confirmPassword
+              ? "Passwords do not match."
+              : ""}
           </FormControl.ErrorMessage>
         </FormControl>
-        <FormControl
-          style={styles.formControl}
-          isInvalid={errors?.phone?.length !== 0}
-          isDisabled={loading}
+        <Button
+          size="lg"
+          variant="solid"
+          colorScheme={isSubmitDisabled ? "muted" : "secondary"}
+          onPress={onSubmit}
+          style={{
+            borderRadius: 5,
+            marginTop: 64,
+          }}
+          isLoading={isLoading}
+          disabled={isSubmitDisabled}
         >
-          <FormControl.Label _text={styles.inputLabel}>Phone</FormControl.Label>
-          <Input
-            value={values.phone}
-            onChangeText={(value: string) =>
-              setValues({ ...values, phone: value })
-            }
-            _disabled={{
-              color: "grey",
-            }}
-            size="2xl"
-            color={"white"}
-            placeholder="Enter phone number"
-          />
-          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-            {errors?.phone}
-          </FormControl.ErrorMessage>
-        </FormControl>
-        <Button.Group direction="column">
-          <Button
-            size="lg"
-            variant="solid"
-            colorScheme="secondary"
-            onPress={onSubmit}
-            style={{
-              borderRadius: 5,
-              marginTop: 64,
-            }}
-            isLoading={loading}
-            isDisabled={
-              values.firstname === user.firstname &&
-              values.lastname === user.lastname &&
-              values.email === user.email &&
-              values.phone === user.phone
-            }
-          >
-            Submit
-          </Button>
-          <Button
-            size="lg"
-            variant="outline"
-            colorScheme="secondary"
-            onPress={handleChangePassword}
-            style={{
-              borderRadius: 5,
-              marginTop: 64,
-            }}
-            isLoading={loading}
-          >
-            Change Password
-          </Button>
-        </Button.Group>
+          Submit
+        </Button>
       </View>
       <AlertDialog
         leastDestructiveRef={cancelRef}
@@ -235,9 +215,9 @@ export default function EditProfileScreen(
       >
         <AlertDialog.Content>
           <AlertDialog.CloseButton />
-          <AlertDialog.Header>Edit Profile</AlertDialog.Header>
+          <AlertDialog.Header>Change Passsword</AlertDialog.Header>
           <AlertDialog.Body>
-            Are you sure you want to edit your profile details ?
+            Are you sure you want to change your password ?
           </AlertDialog.Body>
           <AlertDialog.Footer>
             <Button.Group space={2}>

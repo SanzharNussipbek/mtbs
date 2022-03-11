@@ -29,6 +29,7 @@ import MovieScreen from "../screens/Movie/MovieScreen";
 import PostScreen from "../screens/Post/PostScreen";
 import LoadingScreen from "../screens/LoadingScreen";
 import EditProfileScreen from "../screens/EditProfile/EditProfileScreen";
+import EditPasswordScreen from "../screens/EditPassword/EditPasswordScreen";
 import SessionScreen from "../screens/Session/SessionScreen";
 import SessionTicketScreen from "../screens/SessionTicket/SessionTicketScreen";
 import FaqScreen from "../screens/Faq/FaqScreen";
@@ -101,6 +102,11 @@ function RootNavigator() {
         name='EditProfile'
         component={EditProfileScreen}
         options={{ title: "Edit Profile" }}
+      />
+      <Stack.Screen
+        name='EditPassword'
+        component={EditPasswordScreen}
+        options={{ title: "Change Password" }}
       />
       <Stack.Screen
         name='FAQ'
