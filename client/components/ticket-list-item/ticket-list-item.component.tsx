@@ -22,9 +22,10 @@ import { styles } from "./ticket-list-item.styles";
 
 type Props = {
   ticket: Ticket;
+  hideActions?: boolean;
 };
 
-const TicketListItem: React.FC<Props> = ({ ticket }) => {
+const TicketListItem: React.FC<Props> = ({ ticket, hideActions = false }) => {
   const ticketDate = new Date(ticket.session.datetime * 1000);
   const isUsed = ticketDate.valueOf() < new Date().valueOf();
   const canCancel = differenceInMinutes(ticketDate, new Date()) > 30;
@@ -139,11 +140,13 @@ const TicketListItem: React.FC<Props> = ({ ticket }) => {
               </Text>
               {ticket.seats.map((s) => (
                 <Text key={s.id} mb={4} color="black">
-                  {`Row: ${s.seat.rowNumber}, Seat: ${s.seat.seatNumber}, Rate: ${s.type}`}
+                  {`Row: ${s.seat.rowNumber}, Seat: ${s.seat.seatNumber}${
+                    s.type?.length ? `, Rate: ${s.type}` : ""
+                  }`}
                 </Text>
               ))}
             </Modal.Body>
-            {canCancel ? (
+            {canCancel && !hideActions ? (
               <Modal.Footer>
                 <Button.Group space={2}>
                   <Button

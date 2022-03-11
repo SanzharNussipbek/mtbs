@@ -3,7 +3,13 @@ import { Alert, View } from "react-native";
 import { useMutation } from "@apollo/client";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Button, FormControl, Input, WarningOutlineIcon } from "native-base";
+import {
+  AlertDialog,
+  Button,
+  FormControl,
+  Input,
+  WarningOutlineIcon,
+} from "native-base";
 import SnackBar from "react-native-snackbar-component";
 
 import { User } from "../../types/types";
@@ -29,7 +35,9 @@ export default function EditProfileScreen(
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
-  
+  const cancelRef = React.useRef(null);
+
+  const [showAlert, setShowAlert] = useState(false);
   const [errors, setErrors] = useState<Partial<User>>(EmptyUserData);
   const [values, setValues] = useState<Partial<User>>({
     id: user?.id,
@@ -62,6 +70,15 @@ export default function EditProfileScreen(
   });
 
   const onSubmit = () => {
+    setShowAlert(true);
+  };
+
+  const handleClose = () => {
+    setShowAlert(false);
+  };
+
+  const handleConfirm = () => {
+    setShowAlert(false);
     updateUserService({ variables: values });
   };
 
@@ -192,6 +209,34 @@ export default function EditProfileScreen(
           Submit
         </Button>
       </View>
+      <AlertDialog
+        leastDestructiveRef={cancelRef}
+        isOpen={showAlert}
+        onClose={handleClose}
+      >
+        <AlertDialog.Content>
+          <AlertDialog.CloseButton />
+          <AlertDialog.Header>Edit Profile</AlertDialog.Header>
+          <AlertDialog.Body>
+            Are you sure you want to edit your profile details ?
+          </AlertDialog.Body>
+          <AlertDialog.Footer>
+            <Button.Group space={2}>
+              <Button
+                variant="unstyled"
+                colorScheme="coolGray"
+                onPress={handleClose}
+                ref={cancelRef}
+              >
+                Cancel
+              </Button>
+              <Button colorScheme="success" onPress={handleConfirm}>
+                Confirm
+              </Button>
+            </Button.Group>
+          </AlertDialog.Footer>
+        </AlertDialog.Content>
+      </AlertDialog>
     </View>
   ) : null;
 }

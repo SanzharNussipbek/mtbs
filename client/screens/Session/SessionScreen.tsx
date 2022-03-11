@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import { useAppDispatch } from "../../hooks";
 import { RootStackScreenProps } from "../../types";
-import { Session, SessionSeat } from "../../types/types";
+import { SeatType, Session, SessionSeat } from "../../types/types";
 import {
   updateSession,
   updateSessionSeats,
@@ -25,6 +25,7 @@ export default function SessionScreen(props: RootStackScreenProps<"Session">) {
 
   const [showModal, setShowModal] = useState(false);
   const [selectedSeats, setSelectedSeats] = useState<SessionSeat[]>([]);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
     dispatch(updateSession(session));
@@ -50,6 +51,18 @@ export default function SessionScreen(props: RootStackScreenProps<"Session">) {
     navigation.navigate("SessionTicket");
   };
 
+  useEffect(() => {
+    let price = 0;
+    for (let i = 0; i < selectedSeats.length; i++) {
+      const rate: SeatType | "" = selectedSeats[i].type;
+      if (rate === "") continue;
+      const seatPrice = session?.rates[rate];
+      if (!seatPrice) return;
+      price += seatPrice;
+    }
+    setTotalPrice(price);
+  }, [selectedSeats]);
+
   return session ? (
     <Flex
       flex={1}
@@ -72,12 +85,13 @@ export default function SessionScreen(props: RootStackScreenProps<"Session">) {
           <Modal.Header>Please confirm selection:</Modal.Header>
           <Modal.Body>
             {selectedSeats.map((s) => (
-              <Text
-                key={s.id}
-                mb={4}
-                color="black"
-              >{`Row: ${s.seat.rowNumber}, Seat: ${s.seat.seatNumber}, Rate: ${s.type}`}</Text>
+              <Text key={s.id} mb={4} color="black">
+                {`Row: ${s.seat.rowNumber}, Seat: ${s.seat.seatNumber}, Rate: ${s.type}`}
+              </Text>
             ))}
+            <Text mb={4} color="black">
+              {`Total: HK$${totalPrice}`}
+            </Text>
           </Modal.Body>
           <Modal.Footer>
             <Button.Group space={2}>

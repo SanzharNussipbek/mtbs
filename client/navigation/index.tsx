@@ -95,7 +95,7 @@ function RootNavigator() {
       <Stack.Screen
         name='SessionTicket'
         component={SessionTicketScreen}
-        options={{ title: "Ticket", headerShown: false }}
+        options={{ title: "Ticket", headerBackVisible: false }}
       />
       <Stack.Screen
         name='EditProfile'

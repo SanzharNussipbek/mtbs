@@ -238,6 +238,73 @@ export const GET_TICKETS_BY_USER_ID = gql`
   }
 `;
 
+export const GET_TICKET_BY_ID = gql`
+  query getTicket($id: ID!) {
+    getTicket(id: $id) {
+      id
+      userId
+      price
+      status
+      createdAt
+      session {
+        id
+        datetime
+        movie {
+          id
+          name
+          description
+          duration
+          language
+          releaseDate
+          country
+          genre
+          director
+          cast
+          rating
+          imgUrl
+          trailerUrl
+        }
+        hall {
+          id
+          name
+          type
+          seats {
+            id
+            seatNumber
+            rowNumber
+            hallId
+          }
+        }
+        seats {
+          id
+          status
+          seat {
+            id
+            seatNumber
+            rowNumber
+            hallId
+          }
+        }
+        rates {
+          ADULT
+          CHILD
+          STUDENT
+        }
+      }
+      seats {
+        id
+        status
+        seat {
+          id
+          seatNumber
+          rowNumber
+          hallId
+        }
+      }
+    }
+  }
+`;
+
 export const UPDATE_SESSION_SEATS_MUTATION = gql`
   input UpdateSessionSeatInput {
     id: ID!
@@ -263,15 +330,20 @@ export const UPDATE_SESSION_SEATS_MUTATION = gql`
 `;
 
 export const CREATE_TICKET_MUTATION = gql`
-  input CreateTicketInput {
-    sessionId: ID!
-    seatIds: [ID]!
-    userId: ID!
-    price: Int!
-  }
-
-  mutation createTicket($data: CreateTicketInput) {
-    createTicket(data: $data) {
+  mutation createTicket(
+    $sessionId: ID!
+    $seatIds: [ID]!
+    $userId: ID!
+    $price: Int!
+  ) {
+    createTicket(
+      data: {
+        sessionId: $sessionId
+        seatIds: $seatIds
+        userId: $userId
+        price: $price
+      }
+    ) {
       id
       userId
       price
@@ -325,7 +397,74 @@ export const CREATE_TICKET_MUTATION = gql`
       }
       seats {
         id
-        type
+        status
+        seat {
+          id
+          seatNumber
+          rowNumber
+          hallId
+        }
+      }
+    }
+  }
+`;
+
+export const PAY_FOR_TICKET_MUTATION = gql`
+  mutation payForTicket($id: ID!, $price: Int!) {
+    payForTicket(data: { id: $id, price: $price }) {
+      id
+      userId
+      price
+      status
+      promocode
+      createdAt
+      session {
+        id
+        datetime
+        movie {
+          id
+          name
+          description
+          duration
+          language
+          releaseDate
+          country
+          genre
+          director
+          cast
+          rating
+          imgUrl
+          trailerUrl
+        }
+        hall {
+          id
+          name
+          type
+          seats {
+            id
+            seatNumber
+            rowNumber
+            hallId
+          }
+        }
+        seats {
+          id
+          status
+          seat {
+            id
+            seatNumber
+            rowNumber
+            hallId
+          }
+        }
+        rates {
+          ADULT
+          CHILD
+          STUDENT
+        }
+      }
+      seats {
+        id
         status
         seat {
           id

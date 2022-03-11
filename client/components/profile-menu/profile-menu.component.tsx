@@ -1,4 +1,5 @@
 import React from "react";
+import { Alert } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Heading, Pressable, Text as NativeText } from "native-base";
@@ -19,11 +20,14 @@ const ProfileMenu: React.FC = () => {
       case "EDIT_PROFILE":
         navigation.navigate("EditProfile");
         return;
-      case "SETTTINGS":
-        // navigation.navigate("Settings");
-        return;
       case "FAQ":
         navigation.navigate("FAQ");
+        return;
+      case "SETTINGS":
+        Alert.alert(
+          "Oops..",
+          "You can't change your settings yet.\nThat feature will be here soon!"
+        );
         return;
     }
   };

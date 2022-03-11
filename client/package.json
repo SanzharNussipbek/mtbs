@@ -37,6 +37,8 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
+    "react-native-credit-card-input": "^0.4.1",
+    "react-native-credit-card-input-view": "^0.0.7",
     "react-native-loading-spinner-overlay": "^3.0.0",
     "react-native-pager-view": "5.4.9",
     "react-native-safe-area-context": "^3.1.9",
