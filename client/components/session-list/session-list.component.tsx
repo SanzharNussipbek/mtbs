@@ -13,6 +13,7 @@ import SessionTimeItem from "../session-time-item/session-time-item.component";
 
 import { styles } from "./session-list.styles";
 import { useNavigation } from "@react-navigation/native";
+import { format } from "date-fns";
 
 type Props = {
   movieId: string;
@@ -111,19 +112,29 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
       <View style={styles.main}>
         {sessions.filter((s) =>
           index === 0
-            ? new Date(s.datetime * 1000).getDate() === new Date().getDate()
-            : new Date(s.datetime * 1000).getDate() !== new Date().getDate()
+            ? format(new Date(s.datetime * 1000).getDate(), "dd.MM.yyyy") ===
+              format(new Date().getDate(), "dd.MM.yyyy")
+            : format(new Date(s.datetime * 1000).getDate(), "dd.MM.yyyy") ===
+              format(new Date().setDate(new Date().getDate() + 1), "dd.MM.yyyy")
         )?.length ? (
           halls.map((hall: Hall) => {
             const hallSessions: Session[] = sessions
               .filter((s) =>
                 index === 0
                   ? s.hall.id === hall.id &&
-                    new Date(s.datetime * 1000).getDate() ===
-                      new Date().getDate()
+                    format(
+                      new Date(s.datetime * 1000).getDate(),
+                      "dd.MM.yyyy"
+                    ) === format(new Date().getDate(), "dd.MM.yyyy")
                   : s.hall.id === hall.id &&
-                    new Date(s.datetime * 1000).getDate() !==
-                      new Date().getDate()
+                    format(
+                      new Date(s.datetime * 1000).getDate(),
+                      "dd.MM.yyyy"
+                    ) ===
+                      format(
+                        new Date().setDate(new Date().getDate() + 1),
+                        "dd.MM.yyyy"
+                      )
               )
               .sort(function (a, b) {
                 return a.datetime - b.datetime;
