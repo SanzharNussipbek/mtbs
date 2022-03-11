@@ -112,11 +112,13 @@ module.exports = {
         const newTickets = user?.tickets?.filter((id) => id !== ticket?.id);
         await User.findByIdAndUpdate(user.id, { tickets: newTickets });
 
-        const session = await Session.findById(ticket.sessionId);
-        session?.seats?.map(async (seat) => {
+        const session = await Session.findById(ticket.session?.id);
+        const sessionSeats = session?.seats;
+        sessionSeats?.map(async (seat) => {
           await SessionSeat.findByIdAndUpdate(seat?.id, { status: "VACANT" });
           return { ...seat, status: "VACANT" };
         });
+        await Session.findByIdAndUpdate(session?.id, { seats: sessionSeats });
 
         await ticket.delete();
         return "Ticket deleted successfully";

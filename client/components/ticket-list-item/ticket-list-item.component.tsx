@@ -10,7 +10,6 @@ import {
 } from "native-base";
 import { Image, Alert } from "react-native";
 import { useMutation } from "@apollo/client";
-import SnackBar from "react-native-snackbar-component";
 
 import { View } from "../Themed";
 import { Ticket } from "../../types/types";
@@ -23,9 +22,14 @@ import { styles } from "./ticket-list-item.styles";
 type Props = {
   ticket: Ticket;
   hideActions?: boolean;
+  onDelete: (id: string) => void;
 };
 
-const TicketListItem: React.FC<Props> = ({ ticket, hideActions = false }) => {
+const TicketListItem: React.FC<Props> = ({
+  ticket,
+  hideActions = false,
+  onDelete,
+}) => {
   const ticketDate = new Date(ticket.session.datetime * 1000);
   const isUsed = ticketDate.valueOf() < new Date().valueOf();
   const canCancel = differenceInMinutes(ticketDate, new Date()) > 30;
@@ -34,15 +38,15 @@ const TicketListItem: React.FC<Props> = ({ ticket, hideActions = false }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [showSnackbar, setShowSnackbar] = useState(false);
 
   const cancelRef = React.useRef(null);
 
   const [deleteTicket, { loading }] = useMutation(DELETE_TICKET_BY_ID, {
     update(_, { data }) {
-      setShowSnackbar(true);
+      onDelete(ticket.id);
     },
     onError(err) {
+      console.log(JSON.stringify(err, null, 2));
       setIsLoading(false);
       Alert.alert("ERROR", err?.message);
     },
@@ -70,6 +74,7 @@ const TicketListItem: React.FC<Props> = ({ ticket, hideActions = false }) => {
   const handleConfirm = () => {
     setShowModal(false);
     setShowAlert(false);
+    console.log("TICKET:", ticket.id);
     deleteTicket({ variables: { id: ticket.id } });
   };
 
@@ -189,13 +194,6 @@ const TicketListItem: React.FC<Props> = ({ ticket, hideActions = false }) => {
             </AlertDialog.Footer>
           </AlertDialog.Content>
         </AlertDialog>
-        <SnackBar
-          position="top"
-          autoHidingTime={3000}
-          visible={showSnackbar}
-          backgroundColor={"#22c55e"}
-          textMessage={"Ticket deleted successfully!"}
-        />
       </Pressable>
     )
   ) : null;

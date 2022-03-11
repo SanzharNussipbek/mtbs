@@ -3,6 +3,7 @@ import { Alert, FlatList } from "react-native";
 import { useQuery } from "@apollo/client";
 import { useNavigation } from "@react-navigation/native";
 import { useWindowDimensions } from "react-native";
+import SnackBar from "react-native-snackbar-component";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 
 import { View } from "../Themed";
@@ -24,6 +25,7 @@ const TicketList: React.FC = () => {
   const [index, setIndex] = useState(0);
   const [userId, setUserId] = useState(user?.id);
   const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [showSnackbar, setShowSnackbar] = useState(false);
 
   const [routes] = useState([
     { key: "first", title: "Upcoming" },
@@ -72,7 +74,7 @@ const TicketList: React.FC = () => {
         })}
       style={styles.list}
       renderItem={({ item, index }) => (
-        <TicketListItem ticket={item} key={index} />
+        <TicketListItem ticket={item} key={index} onDelete={onDeleteTicket} />
       )}
       keyExtractor={(ticket: Ticket) => ticket.id}
     />
@@ -93,11 +95,16 @@ const TicketList: React.FC = () => {
         })}
       style={styles.list}
       renderItem={({ item, index }) => (
-        <TicketListItem ticket={item} key={index} />
+        <TicketListItem ticket={item} key={index} onDelete={onDeleteTicket} />
       )}
       keyExtractor={(ticket: Ticket) => ticket.id}
     />
   );
+
+  const onDeleteTicket = (id: string) => {
+    setTickets(tickets.filter((t) => t.id !== id));
+    setShowSnackbar(true);
+  };
 
   return loading ? (
     <Loader />
@@ -120,6 +127,13 @@ const TicketList: React.FC = () => {
             style={{ backgroundColor: "transparent" }}
           />
         )}
+      />
+      <SnackBar
+        position="top"
+        autoHidingTime={3000}
+        visible={showSnackbar}
+        backgroundColor={"#22c55e"}
+        textMessage={"Ticket deleted successfully!"}
       />
     </View>
   );

@@ -1,30 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { Alert, ScrollView } from "react-native";
-import { useMutation, useQuery } from "@apollo/client";
-import { Text, Flex, Button, Modal, View, VStack } from "native-base";
+import { Alert } from "react-native";
+import { useMutation } from "@apollo/client";
+import SnackBar from "react-native-snackbar-component";
 import { useNavigation } from "@react-navigation/native";
 import { CreditCardInput } from "react-native-credit-card-input-view";
-import SnackBar from "react-native-snackbar-component";
+import { Text, Flex, Button, Modal, View, VStack } from "native-base";
 
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { RootStackScreenProps } from "../../types";
-import { SeatType, Session, SessionSeat, Ticket } from "../../types/types";
 import {
   CREATE_TICKET_MUTATION,
   DELETE_TICKET_BY_ID,
-  GET_TICKET_BY_ID,
   PAY_FOR_TICKET_MUTATION,
-  UPDATE_SESSION_SEATS_MUTATION,
 } from "../../utils/gql";
-import Loader from "../../components/loader/loader.component";
-import { selectUser } from "../../redux/user/user.selector";
 import {
   selectSession,
   selectSessionSeats,
 } from "../../redux/session/session.selector";
+import { RootStackScreenProps } from "../../types";
+import { SeatType, Ticket } from "../../types/types";
+import { selectUser } from "../../redux/user/user.selector";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+
+import Loader from "../../components/loader/loader.component";
+import TicketListItem from "../../components/ticket-list-item/ticket-list-item.component";
 
 import { styles } from "./SessionTicketScreen.styles";
-import TicketListItem from "../../components/ticket-list-item/ticket-list-item.component";
 
 export default function SessionTicketScreen(
   props: RootStackScreenProps<"SessionTicket">
@@ -41,22 +40,6 @@ export default function SessionTicketScreen(
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPayDisabled, setIsPayDisabled] = useState(true);
   const [isTicketPaid, setIsTicketPaid] = useState(false);
-
-  const {
-    loading: isGetLoading,
-    error,
-    data: getTicketData,
-  } = useQuery(GET_TICKET_BY_ID, {
-    onError(err) {
-      Alert.alert("ERROR", err.message);
-    },
-    variables: { id: "622766e2f7a5526ecedefa25" },
-  });
-
-  // useEffect(() => {
-  //   if (!getTicketData) return;
-  //   setTicket(getTicketData.getTicket);
-  // }, [getTicketData]);
 
   const [createTicket, { loading: isCreateLoading }] = useMutation(
     CREATE_TICKET_MUTATION,
@@ -150,7 +133,7 @@ export default function SessionTicketScreen(
   };
 
   return user && session && selectedSeats.length ? (
-    isCreateLoading || isDeleteLoading || isPayLoading || isGetLoading ? (
+    isCreateLoading || isDeleteLoading || isPayLoading ? (
       <Loader />
     ) : ticket ? (
       <VStack
@@ -235,7 +218,18 @@ export default function SessionTicketScreen(
       </VStack>
     ) : (
       <View style={styles.container}>
-        <Text color={"white"}>Oops...</Text>
+        <Flex justifyContent="space-between" height="100%">
+          <Text color={"white"}>Oops... Error</Text>
+          <Button
+            size="lg"
+            variant={"outline"}
+            colorScheme="secondary"
+            style={{ width: "100%" }}
+            onPress={handleGoHome}
+          >
+            Go Home
+          </Button>
+        </Flex>
       </View>
     )
   ) : null;
