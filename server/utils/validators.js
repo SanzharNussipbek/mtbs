@@ -340,3 +340,23 @@ module.exports.validateCreatePostInput = (
     valid: Object.keys(errors).length < 1,
   };
 };
+
+module.exports.validateCreateFaqInput = (
+  title,
+  body,
+) => {
+  const errors = {};
+
+  if (title?.trim() === "") {
+    errors.title = "Title must not be empty";
+  }
+
+  if (body?.trim() === "") {
+    errors.body = "Body must not be empty";
+  }
+
+  return {
+    errors,
+    valid: Object.keys(errors).length < 1,
+  };
+};

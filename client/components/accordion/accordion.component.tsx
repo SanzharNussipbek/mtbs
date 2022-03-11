@@ -6,11 +6,11 @@ import { styles } from "./accordion.styles";
 import { FontAwesome } from "@expo/vector-icons";
 
 type Props = {
-  id: number;
+  id: string;
   title: string;
   body: string;
   expanded: boolean;
-  onToggle: (id: number) => void;
+  onToggle: (id: string) => void;
 };
 
 const Accordion: React.FC<Props> = ({

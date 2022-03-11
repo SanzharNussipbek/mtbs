@@ -33,6 +33,21 @@ module.exports = gql`
     oldPassword: String!
     newPassword: String!
   }
+  type Faq {
+    id: ID!
+    title: String!
+    body: String!
+    createdAt: String!
+  }
+  input CreateFaqInput {
+    title: String!
+    body: String!
+  }
+  input UpdateFaqInput {
+    id: ID!
+    title: String
+    body: String
+  }
   type Movie {
     id: ID!
     name: String!
@@ -297,6 +312,9 @@ module.exports = gql`
 
     getPosts: [Post]
     getPost(id: ID!): Post
+
+    getFaqs: [Faq]
+    getFaq(id: ID!): Faq
   }
   type Mutation {
     register(registerInput: RegisterInput): User!
@@ -338,5 +356,9 @@ module.exports = gql`
     createPost(data: CreatePostInput): Post!
     updatePost(data: UpdatePostInput): Post!
     deletePost(id: ID!): String!
+
+    createFaq(data: CreateFaqInput): Faq!
+    updateFaq(data: UpdateFaqInput): Faq!
+    deleteFaq(id: ID!): String!
   }
 `;

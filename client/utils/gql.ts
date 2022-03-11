@@ -14,6 +14,17 @@ export const GET_POSTS = gql`
   }
 `;
 
+export const GET_FAQS = gql`
+  {
+    getFaqs {
+      id
+      title
+      body
+      createdAt
+    }
+  }
+`;
+
 export const GET_ALL_MOVIES_MUTATION = gql`
   {
     getAllMovies {

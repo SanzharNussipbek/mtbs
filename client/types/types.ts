@@ -85,3 +85,10 @@ export interface Ticket {
   createdAt: string;
   promocode?: string;
 }
+
+export interface Faq {
+  id: string;
+  title: string;
+  body: string;
+  createdAt: string;
+}

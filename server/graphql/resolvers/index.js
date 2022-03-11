@@ -6,6 +6,7 @@ const ticketResolvers = require("./ticket");
 const sessionResolvers = require("./session");
 const sessionSeatResolvers = require("./sessionSeat");
 const postResolvers = require("./post");
+const faqResolvers = require("./faq");
 
 module.exports = {
   Query: {
@@ -17,6 +18,7 @@ module.exports = {
     ...sessionResolvers.Query,
     ...sessionSeatResolvers.Query,
     ...postResolvers.Query,
+    ...faqResolvers.Query,
   },
   Mutation: {
     ...usersResolvers.Mutation,
@@ -27,5 +29,6 @@ module.exports = {
     ...sessionResolvers.Mutation,
     ...sessionSeatResolvers.Mutation,
     ...postResolvers.Mutation,
+    ...faqResolvers.Mutation,
   },
 };
