@@ -1,169 +1,13 @@
 import { gql } from "graphql-tag";
 
-export const GET_POSTS = gql`
+export const GET_ALL_TICKETS = gql`
   {
-    getPosts {
-      id
-      title
-      author
-      body
-      imgUrl
-      sourceUrl
-      createdAt
-    }
-  }
-`;
-
-export const GET_FAQS = gql`
-  {
-    getFaqs {
-      id
-      title
-      body
-      createdAt
-    }
-  }
-`;
-
-export const GET_ALL_MOVIES_MUTATION = gql`
-  {
-    getAllMovies {
-      id
-      name
-      description
-      duration
-      language
-      releaseDate
-      country
-      genre
-      director
-      cast
-      rating
-      imgUrl
-      trailerUrl
-    }
-  }
-`;
-
-export const GET_SESSIONS_BY_MOVIE_ID = gql`
-  query getSessionsByMovieId($movieId: ID!) {
-    getSessionsByMovieId(movieId: $movieId) {
-      id
-      datetime
-      movie {
-        id
-        name
-        description
-        duration
-        language
-        releaseDate
-        country
-        genre
-        director
-        cast
-        rating
-        imgUrl
-        trailerUrl
-      }
-      hall {
-        id
-        name
-        type
-        seats {
-          id
-          seatNumber
-          rowNumber
-          hallId
-        }
-      }
-      seats {
-        id
-        status
-        seat {
-          id
-          seatNumber
-          rowNumber
-          hallId
-        }
-      }
-      rates {
-        ADULT
-        CHILD
-        STUDENT
-      }
-    }
-  }
-`;
-
-export const UPDATE_USER_MUTATION = gql`
-  mutation updateUser(
-    $id: ID!
-    $email: String
-    $firstname: String
-    $lastname: String
-    $password: String
-    $phone: String
-  ) {
-    updateUser(
-      data: {
-        id: $id
-        email: $email
-        firstname: $firstname
-        lastname: $lastname
-        password: $password
-        phone: $phone
-      }
-    ) {
-      id
-      firstname
-      lastname
-      email
-      password
-      createdAt
-      status
-      phone
-      tickets
-      token
-    }
-  }
-`;
-
-export const CHANGE_PASSWORD_MUTATION = gql`
-  mutation changePassword(
-    $id: ID!
-    $oldPassword: String!
-    $newPassword: String!
-  ) {
-    changePassword(
-      data: { id: $id, oldPassword: $oldPassword, newPassword: $newPassword }
-    ) {
-      id
-      firstname
-      lastname
-      email
-      password
-      createdAt
-      status
-      phone
-      tickets
-      token
-    }
-  }
-`;
-
-export const DELETE_TICKET_BY_ID = gql`
-  mutation deleteTicket($id: ID!) {
-    deleteTicket(id: $id)
-  }
-`;
-
-export const GET_TICKETS_BY_USER_ID = gql`
-  query getTicketsByUserId($userId: ID!) {
-    getTicketsByUserId(userId: $userId) {
+    getAllTickets {
       id
       userId
       price
       status
+      promocode
       createdAt
       session {
         id
@@ -291,31 +135,7 @@ export const GET_TICKET_BY_ID = gql`
   }
 `;
 
-export const UPDATE_SESSION_SEATS_MUTATION = gql`
-  input UpdateSessionSeatInput {
-    id: ID!
-    type: String
-    status: String
-  }
-  input UpdateSessionSeatsInput {
-    seats: [UpdateSessionSeatInput]!
-  }
-  mutation updateSessionSeats($data: UpdateSessionSeatsInput!) {
-    updateSessionSeats(data: $data) {
-      id
-      type
-      status
-      seat {
-        id
-        seatNumber
-        rowNumber
-        hallId
-      }
-    }
-  }
-`;
-
-export const CREATE_TICKET_MUTATION = gql`
+export const CREATE_TICKET = gql`
   mutation createTicket(
     $sessionId: ID!
     $seatIds: [ID]!
@@ -395,7 +215,7 @@ export const CREATE_TICKET_MUTATION = gql`
   }
 `;
 
-export const PAY_FOR_TICKET_MUTATION = gql`
+export const PAY_FOR_TICKET = gql`
   mutation payForTicket($id: ID!, $price: Int!) {
     payForTicket(data: { id: $id, price: $price }) {
       id
@@ -460,5 +280,93 @@ export const PAY_FOR_TICKET_MUTATION = gql`
         }
       }
     }
+  }
+`;
+
+export const UPDATE_TICKET = gql`
+  mutation updateTicket(
+    id: ID!
+    sessionId: ID
+    seatIds: [ID]
+    price: Int
+    status: String
+    promocode: String
+    ) {
+    updateTicket(data: { 
+      id: $id, 
+      price: $price 
+      sessionId: $sessionId 
+      status: $status 
+      seatIds: $seatIds 
+      promocode: $promocode 
+      }) {
+      id
+      userId
+      price
+      status
+      promocode
+      createdAt
+      session {
+        id
+        datetime
+        movie {
+          id
+          name
+          description
+          duration
+          language
+          releaseDate
+          country
+          genre
+          director
+          cast
+          rating
+          imgUrl
+          trailerUrl
+        }
+        hall {
+          id
+          name
+          type
+          seats {
+            id
+            seatNumber
+            rowNumber
+            hallId
+          }
+        }
+        seats {
+          id
+          status
+          seat {
+            id
+            seatNumber
+            rowNumber
+            hallId
+          }
+        }
+        rates {
+          ADULT
+          CHILD
+          STUDENT
+        }
+      }
+      seats {
+        id
+        status
+        seat {
+          id
+          seatNumber
+          rowNumber
+          hallId
+        }
+      }
+    }
+  }
+`;
+
+export const DELETE_TICKET = gql`
+  mutation deleteTicket($id: ID!) {
+    deleteTicket(id: $id)
   }
 `;
