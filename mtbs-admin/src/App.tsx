@@ -1,24 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { lazy, Suspense } from "react";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { Switch, Route } from "react-router-dom";
+
+import "./App.css";
+
+import Loader from "./components/loader/loader.component";
+import { theme } from "./theme";
+
+const HomePage = lazy(() => import("./pages/home.component"));
+const LoginPage = lazy(() => import("./pages/login.component"));
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Suspense fallback={<Loader fullscreen />}>
+          <Switch>
+            <Route exact path="/" component={LoginPage} />
+            <Route path="/admin" component={HomePage} />
+          </Switch>
+        </Suspense>
+      </ThemeProvider>
     </div>
   );
 }

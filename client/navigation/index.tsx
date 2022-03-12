@@ -147,6 +147,7 @@ function BottomTabNavigator() {
         options={{
           title: "Home",
           headerTitle: "MTBS",
+          headerTitleAlign: "center",
           tabBarActiveTintColor: "#f472b6",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name='home' color={focused ? "#f472b6" : color} />
@@ -159,6 +160,7 @@ function BottomTabNavigator() {
         options={{
           title: "News",
           headerTitle: "MTBS",
+          headerTitleAlign: "center",
           tabBarActiveTintColor: "#f472b6",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
@@ -174,6 +176,7 @@ function BottomTabNavigator() {
         options={{
           title: "Tickets",
           headerTitle: "MTBS",
+          headerTitleAlign: "center",
           tabBarActiveTintColor: "#f472b6",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name='ticket' color={focused ? "#f472b6" : color} />
@@ -186,6 +189,7 @@ function BottomTabNavigator() {
         options={{
           title: "Profile",
           headerTitle: "MTBS",
+          headerTitleAlign: "center",
           tabBarActiveTintColor: "#f472b6",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name='user' color={focused ? "#f472b6" : color} />

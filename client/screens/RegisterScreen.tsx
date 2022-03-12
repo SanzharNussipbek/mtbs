@@ -84,6 +84,7 @@ const RegisterScreen = () => {
               width: "100%",
               marginVertical: 25,
             }}
+            placeholderTextColor="grey"
           />
 
           <TextInput
@@ -98,6 +99,7 @@ const RegisterScreen = () => {
               width: "100%",
               marginVertical: 25,
             }}
+            placeholderTextColor="grey"
           />
 
           <TextInput
@@ -113,6 +115,7 @@ const RegisterScreen = () => {
               width: "100%",
               marginVertical: 25,
             }}
+            placeholderTextColor="grey"
           />
 
           <TextInput
@@ -129,6 +132,7 @@ const RegisterScreen = () => {
               width: "100%",
               marginVertical: 25,
             }}
+            placeholderTextColor="grey"
           />
 
           <TextInput
@@ -145,6 +149,7 @@ const RegisterScreen = () => {
               width: "100%",
               marginVertical: 25,
             }}
+            placeholderTextColor="grey"
           />
           <Button
             size='lg'

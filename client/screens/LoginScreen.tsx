@@ -76,6 +76,7 @@ const LoginScreen = () => {
               width: "100%",
               marginVertical: 25,
             }}
+            placeholderTextColor="grey"
           />
           <TextInput
             placeholder="Password"
@@ -91,6 +92,7 @@ const LoginScreen = () => {
               width: "100%",
               marginVertical: 25,
             }}
+            placeholderTextColor="grey"
           />
           <Button
             size="lg"
