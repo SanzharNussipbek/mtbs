@@ -1,6 +1,6 @@
-import React from "react";
-import { Box, Toolbar, Container } from "@mui/material";
-import { Switch, Route, useRouteMatch } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Box } from "@mui/material";
+import { Switch, Route, useRouteMatch, useHistory } from "react-router-dom";
 
 import useModalState from "../utils/useModalState";
 
@@ -17,10 +17,16 @@ import PostsView from "../components/posts-view/posts-view.component";
 import FaqView from "../components/faq-view/faq-view.component";
 
 const Home = () => {
+  const history = useHistory();
   const match = useRouteMatch();
   const { isOpen, onToggle } = useModalState();
 
-  console.log(`${match.path}/movies`);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      history.push("/");
+    }
+  }, []);
 
   return (
     <Box sx={{ display: "flex" }}>

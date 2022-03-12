@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Avatar,
   Button,
@@ -7,8 +7,13 @@ import {
   Typography,
   Box,
 } from "@mui/material";
+import { useMutation } from "@apollo/client";
 import { useHistory } from "react-router-dom";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+
+import { LOGIN_USER } from "../../utils/gql/user";
+
+import Loader from "../loader/loader.component";
 
 import Styled from "./login-form.styles";
 
@@ -19,6 +24,21 @@ const LoginForm: React.FC = () => {
     password: "",
   });
 
+  const [login, { loading }] = useMutation(LOGIN_USER, {
+    update(_, { data: { login: userData } }) {
+      localStorage.setItem("token", userData?.token);
+      history.push("/admin");
+    },
+    onError(err: any) {
+      console.log(JSON.stringify(err, null, 2));
+      setErrors(err?.graphQLErrors[0]?.extensions?.errors);
+    },
+    variables: {
+      email: "admin@mail.com",
+      password: "admin",
+    },
+  });
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -27,16 +47,37 @@ const LoginForm: React.FC = () => {
     const password = data.get("password");
 
     if (username === "admin" && password === "admin") {
-      history.push("/admin");
+      login({
+        variables: {
+          email: "admin@mail.com",
+          password: "admin",
+        },
+      });
     } else {
       setErrors({
-        username: username !== "admin" ? "Wrong username" : "",
-        password: password !== "admin" ? "Wrong password" : "",
+        username:
+          username !== "admin"
+            ? username !== ""
+              ? "Wrong username"
+              : "Please fill username"
+            : "",
+        password:
+          password !== "admin"
+            ? password !== ""
+              ? "Wrong password"
+              : "Please fill password"
+            : "",
       });
     }
   };
 
-  return (
+  useEffect(() => {
+    localStorage.removeItem("token");
+  }, []);
+
+  return loading ? (
+    <Loader />
+  ) : (
     <Styled.LoginForm>
       <Container component="main" maxWidth="xs">
         <Box
@@ -51,7 +92,7 @@ const LoginForm: React.FC = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign in as Admin
           </Typography>
           <Box
             component="form"
@@ -68,8 +109,8 @@ const LoginForm: React.FC = () => {
               name="username"
               autoComplete="username"
               autoFocus
-              error={errors.username.length > 0}
-              helperText={errors.username.length > 0 && errors.username}
+              error={errors?.username?.length > 0}
+              helperText={errors?.username?.length > 0 && errors?.username}
             />
             <TextField
               margin="normal"
@@ -80,8 +121,8 @@ const LoginForm: React.FC = () => {
               type="password"
               id="password"
               autoComplete="current-password"
-              error={errors.password.length > 0}
-              helperText={errors.password.length > 0 && errors.password}
+              error={errors?.password?.length > 0}
+              helperText={errors?.password?.length > 0 && errors?.password}
             />
             <Button
               type="submit"

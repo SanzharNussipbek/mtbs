@@ -6,8 +6,10 @@ import {
   Toolbar,
   IconButton,
   Typography,
+  Button,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useHistory } from "react-router-dom";
 
 const drawerWidth: number = 240;
 
@@ -39,6 +41,12 @@ type Props = {
 };
 
 const TopBar: React.FC<Props> = ({ isOpen, onToggle }) => {
+  const history = useHistory();
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    history.push('/')
+  };
+
   return (
     <CustomAppBar position="absolute" open={isOpen}>
       <Toolbar
@@ -67,6 +75,14 @@ const TopBar: React.FC<Props> = ({ isOpen, onToggle }) => {
         >
           MTBS ADMIN
         </Typography>
+        <Button
+          type="button"
+          variant="contained"
+          color="primary"
+          onClick={handleLogout}
+        >
+          Sign Out
+        </Button>
       </Toolbar>
     </CustomAppBar>
   );
