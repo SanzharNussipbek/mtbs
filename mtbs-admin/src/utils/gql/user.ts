@@ -1,8 +1,8 @@
 import { gql } from "graphql-tag";
 
-export const GET_USERS = gql`
+export const GET_ALL_USERS = gql`
   {
-    getUsers {
+    getAllUsers {
       id
       firstname
       lastname

@@ -213,5 +213,17 @@ module.exports = {
         token: token,
       };
     },
+    async deleteUser(_, { id }, context) {
+      try {
+        const user = await User.findById(id);
+        if (!user) {
+          throw new Error("USER not found");
+        }
+        await user.delete();
+        return "User deleted successfully";
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
   },
 };

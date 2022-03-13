@@ -11,13 +11,16 @@ import { useMutation } from "@apollo/client";
 import { useHistory } from "react-router-dom";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
+import { useAppDispatch } from "../../hooks";
 import { LOGIN_USER } from "../../utils/gql/user";
+import { loginUser, logoutUser } from "../../redux/user/user.actions";
 
 import Loader from "../loader/loader.component";
 
 import Styled from "./login-form.styles";
 
 const LoginForm: React.FC = () => {
+  const dispatch = useAppDispatch();
   const history = useHistory();
   const [errors, setErrors] = useState({
     username: "",
@@ -26,7 +29,9 @@ const LoginForm: React.FC = () => {
 
   const [login, { loading }] = useMutation(LOGIN_USER, {
     update(_, { data: { login: userData } }) {
+      dispatch(loginUser(userData));
       localStorage.setItem("token", userData?.token);
+      localStorage.setItem("user", userData);
       history.push("/admin");
     },
     onError(err: any) {
@@ -72,7 +77,9 @@ const LoginForm: React.FC = () => {
   };
 
   useEffect(() => {
+    dispatch(logoutUser());
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
   }, []);
 
   return loading ? (

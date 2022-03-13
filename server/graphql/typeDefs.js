@@ -320,6 +320,7 @@ module.exports = gql`
     register(registerInput: RegisterInput): User!
     login(email: String!, password: String!): User!
     updateUser(data: UpdateUserInput): User!
+    deleteUser(id: ID!): String!
     changePassword(data: ChangePasswordInput): User!
 
     createMovie(data: CreateMovieInput): Movie!

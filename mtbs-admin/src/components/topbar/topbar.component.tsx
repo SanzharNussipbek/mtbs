@@ -11,6 +11,9 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import { useHistory } from "react-router-dom";
 
+import { useAppDispatch } from "../../hooks";
+import { logoutUser } from "../../redux/user/user.actions";
+
 const drawerWidth: number = 240;
 
 interface AppBarProps extends MuiAppBarProps {
@@ -41,9 +44,12 @@ type Props = {
 };
 
 const TopBar: React.FC<Props> = ({ isOpen, onToggle }) => {
+  const dispatch = useAppDispatch();
   const history = useHistory();
   const handleLogout = () => {
+    dispatch(logoutUser());
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     history.push('/')
   };
 
@@ -77,8 +83,6 @@ const TopBar: React.FC<Props> = ({ isOpen, onToggle }) => {
         </Typography>
         <Button
           type="button"
-          variant="contained"
-          color="primary"
           onClick={handleLogout}
         >
           Sign Out
