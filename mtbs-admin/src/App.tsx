@@ -10,6 +10,7 @@ import { ApolloProvider } from "@apollo/client";
 import { client } from "./apollo";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import CustomSnackbar from "./components/custom-snackbar/custom-snackbar.component";
 
 const HomePage = lazy(() => import("./pages/home.component"));
 const LoginPage = lazy(() => import("./pages/login.component"));
@@ -27,6 +28,7 @@ function App() {
                 <Route path="/admin" component={HomePage} />
               </Switch>
             </Suspense>
+            <CustomSnackbar />
           </ThemeProvider>
         </ApolloProvider>
       </div>
