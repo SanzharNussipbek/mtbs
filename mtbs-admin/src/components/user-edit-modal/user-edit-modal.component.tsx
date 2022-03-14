@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -12,67 +12,76 @@ import { Close } from "@mui/icons-material";
 import { useMutation } from "@apollo/client";
 import { Controller, useForm } from "react-hook-form";
 
+import { User } from "../../types/types";
 import { useAppDispatch } from "../../hooks";
-import { REGISTER_USER } from "../../utils/gql/user";
+import { UPDATE_USER } from "../../utils/gql/user";
 import { openSnackbar } from "../../redux/loading/loading.slice";
 
 import LoadingButton from "../loading-button/loading-button.component";
-import { User } from "../../types/types";
 
 type Props = {
+  data: User | null;
   open: boolean;
   onClose: () => void;
-  onCreateCallback: () => void;
 };
 
-const UserCreateModal: React.FC<Props> = ({ open, onClose, onCreateCallback }) => {
+const UserEditModal: React.FC<Props> = ({ data, open, onClose }) => {
   const dispatch = useAppDispatch();
 
-  const defaultValues = {
-    firstname: "",
-    lastname: "",
-    email: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
-  };
+  const [values, setValues] = useState({
+    id: data?.id?.length ? data?.id : "",
+    firstname: data?.firstname?.length ? data?.firstname : "",
+    lastname: data?.lastname?.length ? data?.lastname : "",
+    email: data?.email?.length ? data?.email : "",
+    phone: data?.phone?.length ? data?.phone : "",
+  });
+
   const {
     handleSubmit,
     formState: { errors },
     control,
   } = useForm({
-    defaultValues: defaultValues,
+    defaultValues: values,
   });
 
-  const [register, { loading }] = useMutation(REGISTER_USER, {
-    update(_, { data: { register: userData } }) {
-      onCreateCallback();
-      onClose();
+  const [updateUser, { loading }] = useMutation(UPDATE_USER, {
+    update(_, { data: { updateUser: userData } }) {
       dispatch(
         openSnackbar({
-          message: "User created successfully!",
+          message: "User updated successfully!",
           severity: "success",
         })
       );
+      onClose();
     },
     onError(err) {
       dispatch(
         openSnackbar({
-          message: "Error while creating the user. See the logs.",
+          message: "Error while updating the user. See the logs.",
           severity: "error",
         })
       );
       console.error(JSON.stringify(err, null, 2));
       // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
     },
-    variables: defaultValues,
+    variables: values,
   });
 
-  const onSubmit = async (values: any, e: any) => {
+  const onSubmit = async (v: any, e: any) => {
     e.preventDefault();
     console.table(values);
-    register({ variables: values });
+    updateUser({ variables: values });
   };
+
+  useEffect(() => {
+    setValues({
+      id: data?.id?.length ? data?.id : "",
+      firstname: data?.firstname?.length ? data?.firstname : "",
+      lastname: data?.lastname?.length ? data?.lastname : "",
+      email: data?.email?.length ? data?.email : "",
+      phone: data?.phone?.length ? data?.phone : "",
+    });
+  }, [data]);
 
   return (
     <Dialog open={open}>
@@ -83,7 +92,7 @@ const UserCreateModal: React.FC<Props> = ({ open, onClose, onCreateCallback }) =
           justifyContent: "space-between",
         }}
       >
-        Create User
+        Edit User
         <IconButton onClick={onClose} disabled={loading}>
           <Close />
         </IconButton>
@@ -103,7 +112,7 @@ const UserCreateModal: React.FC<Props> = ({ open, onClose, onCreateCallback }) =
             }}
             render={({ ...props }) => (
               <TextField
-                {...props}
+                value={values?.firstname}
                 margin="normal"
                 required
                 fullWidth
@@ -114,8 +123,9 @@ const UserCreateModal: React.FC<Props> = ({ open, onClose, onCreateCallback }) =
                 autoFocus
                 error={!!errors.firstname}
                 helperText={errors.firstname && errors.firstname.message}
-                onChange={(value) => {
-                  props?.field?.onChange(value);
+                onChange={(e) => {
+                  props?.field?.onChange(e);
+                  setValues({ ...values, firstname: e.target.value });
                 }}
               />
             )}
@@ -129,6 +139,7 @@ const UserCreateModal: React.FC<Props> = ({ open, onClose, onCreateCallback }) =
             render={({ ...props }) => (
               <TextField
                 {...props}
+                value={values?.lastname}
                 margin="normal"
                 required
                 fullWidth
@@ -138,8 +149,9 @@ const UserCreateModal: React.FC<Props> = ({ open, onClose, onCreateCallback }) =
                 autoComplete="lastname"
                 error={!!errors.lastname}
                 helperText={errors.lastname && errors.lastname.message}
-                onChange={(value) => {
-                  props?.field?.onChange(value);
+                onChange={(e) => {
+                  props?.field?.onChange(e);
+                  setValues({ ...values, lastname: e.target.value });
                 }}
               />
             )}
@@ -149,10 +161,15 @@ const UserCreateModal: React.FC<Props> = ({ open, onClose, onCreateCallback }) =
             control={control}
             rules={{
               required: "Required field",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Invalid email address",
+              },
             }}
             render={({ ...props }) => (
               <TextField
                 {...props}
+                value={values?.email}
                 margin="normal"
                 required
                 fullWidth
@@ -163,8 +180,9 @@ const UserCreateModal: React.FC<Props> = ({ open, onClose, onCreateCallback }) =
                 autoComplete="email"
                 error={!!errors.email}
                 helperText={errors.email && errors.email.message}
-                onChange={(value) => {
-                  props.field?.onChange(value);
+                onChange={(e) => {
+                  props.field?.onChange(e);
+                  setValues({ ...values, email: e.target.value });
                 }}
               />
             )}
@@ -172,9 +190,16 @@ const UserCreateModal: React.FC<Props> = ({ open, onClose, onCreateCallback }) =
           <Controller
             name="phone"
             control={control}
+            rules={{
+              pattern: {
+                value: /^[0-9\s+-]+$/,
+                message: "Please type in correct numbers",
+              },
+            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
+                value={values?.phone}
                 margin="normal"
                 fullWidth
                 id="phone"
@@ -184,58 +209,9 @@ const UserCreateModal: React.FC<Props> = ({ open, onClose, onCreateCallback }) =
                 autoComplete="phone"
                 error={!!errors.phone}
                 helperText={errors.phone && errors.phone.message}
-                onChange={(value) => {
-                  props?.field?.onChange(value);
-                }}
-              />
-            )}
-          />
-          <Controller
-            name="password"
-            control={control}
-            rules={{
-              required: "Required field",
-            }}
-            render={({ ...props }) => (
-              <TextField
-                {...props}
-                margin="normal"
-                fullWidth
-                id="password"
-                type="password"
-                label="Password"
-                name="password"
-                autoComplete="password"
-                error={!!errors.password}
-                helperText={errors.password && errors.password.message}
-                onChange={(value) => {
-                  props?.field?.onChange(value);
-                }}
-              />
-            )}
-          />
-          <Controller
-            name="confirmPassword"
-            control={control}
-            rules={{
-              required: "Required field",
-            }}
-            render={({ ...props }) => (
-              <TextField
-                {...props}
-                margin="normal"
-                fullWidth
-                id="confirmPassword"
-                type="password"
-                label="Confirm Password"
-                name="confirmPassword"
-                autoComplete="confirmPassword"
-                error={!!errors.confirmPassword}
-                helperText={
-                  errors.confirmPassword && errors.confirmPassword.message
-                }
-                onChange={(value) => {
-                  props?.field?.onChange(value);
+                onChange={(e) => {
+                  props?.field?.onChange(e);
+                  setValues({ ...values, phone: e.target.value });
                 }}
               />
             )}
@@ -271,4 +247,4 @@ const UserCreateModal: React.FC<Props> = ({ open, onClose, onCreateCallback }) =
   );
 };
 
-export default UserCreateModal;
+export default UserEditModal;
