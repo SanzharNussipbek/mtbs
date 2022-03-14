@@ -2,7 +2,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { UserInputError } = require("apollo-server");
 const checkAuth = require("../../utils/auth");
-
+const { Ticket } = require("../../models/Ticket");
+const { Session } = require("../../models/Session");
+const { SessionSeat } = require("../../models/SessionSeat");
 const { SECRET_KEY } = require("../../config");
 
 const {
@@ -54,6 +56,7 @@ module.exports = {
         registerInput: {
           firstname,
           lastname,
+          phone,
           password,
           confirmPassword,
           email,
@@ -87,6 +90,7 @@ module.exports = {
         email,
         firstname,
         lastname,
+        phone,
         password,
         createdAt: new Date().toISOString(),
       });
@@ -139,9 +143,9 @@ module.exports = {
       const user = await User.findById(id);
       const signedUser = checkAuth(context);
 
-      if (user?.id !== signedUser?.id) {
-        throw new UserInputError("User is not signed in");
-      }
+      // if (user?.id !== signedUser?.id) {
+      //   throw new UserInputError("User is not signed in");
+      // }
 
       if (!user) {
         throw new UserInputError("User not found");
@@ -181,9 +185,9 @@ module.exports = {
       const user = await User.findById(id);
       const signedUser = checkAuth(context);
 
-      if (user?.id !== signedUser?.id) {
-        throw new UserInputError("User is not signed in");
-      }
+      // if (user?.id !== signedUser?.id) {
+      //   throw new UserInputError("User is not signed in");
+      // }
 
       if (!user) {
         throw new UserInputError("User not found");
@@ -217,8 +221,23 @@ module.exports = {
       try {
         const user = await User.findById(id);
         if (!user) {
-          throw new Error("USER not found");
+          throw new Error("User not found");
         }
+
+        const ticketIds = user?.tickets;
+        for (let i = 0; i < ticketIds.length; i++) {
+          const ticket = await Ticket.findById(ticketIds[i]);
+          const session = await Session.findById(ticket.session?.id);
+          const sessionSeats = session?.seats;
+          sessionSeats?.map(async (seat) => {
+            await SessionSeat.findByIdAndUpdate(seat?.id, { status: "VACANT" });
+            return { ...seat, status: "VACANT" };
+          });
+          await Session.findByIdAndUpdate(session?.id, { seats: sessionSeats });
+
+          await ticket.delete();
+        }
+
         await user.delete();
         return "User deleted successfully";
       } catch (e) {

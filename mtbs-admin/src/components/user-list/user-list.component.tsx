@@ -1,29 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { useMutation, useQuery } from "@apollo/client";
-import {
-  Alert,
-  Box,
-  Button,
-  ButtonGroup,
-  IconButton,
-  Typography,
-} from "@mui/material";
+import { Alert, Box, Button, ButtonGroup, IconButton } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 
 import { User } from "../../types/types";
-import { useAppDispatch, useAppSelector } from "../../hooks";
+import { useAppDispatch } from "../../hooks";
 import { Column, Row } from "../table/table.types";
-import { DELETE_USER, GET_ALL_USERS } from "../../utils/gql/user";
-import { setUserList } from "../../redux/user/user.actions";
 import useModalState from "../../utils/useModalState";
+import { setUserList } from "../../redux/user/user.actions";
+import { DELETE_USER, GET_ALL_USERS } from "../../utils/gql/user";
+import { openSnackbar } from "../../redux/loading/loading.slice";
 
 import Table from "../table/table.component";
 import Loader from "../loader/loader.component";
+import Dialog from "../dialog/dialog.component";
+import UserEditModal from "../user-edit-modal/user-edit-modal.component";
+import UserCreateModal from "../user-create-modal/user-create-modal.component";
 
 import { Styled } from "./user-list.styles";
-import Dialog from "../dialog/dialog.component";
-import UserCreateModal from "../user-create-modal/user-create-modal.component";
 
 const columns: Column[] = [
   { title: "ID", field: "id" },
@@ -43,23 +38,42 @@ const UserList: React.FC = () => {
   const [userId, setUserId] = useState("");
   const [rows, setRows] = useState<Row[]>([]);
   const [users, setUsers] = useState<User[]>([]);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const { isOpen: isCreateOpen, onToggle: toggleCreate } = useModalState();
   const { isOpen: isEditOpen, onToggle: toggleEdit } = useModalState();
   const { isOpen: isDeleteOpen, onToggle: toggleDelete } = useModalState();
 
-  const { loading, error, data } = useQuery(GET_ALL_USERS, {
+  const { loading, error, data, refetch } = useQuery(GET_ALL_USERS, {
     onError(err) {
+      dispatch(
+        openSnackbar({
+          message: "Error while fetching users list. See the logs.",
+          severity: "error",
+        })
+      );
       console.error(JSON.stringify(err, null, 2));
     },
   });
 
   const [deleteUser, { loading: isDeleteLoading }] = useMutation(DELETE_USER, {
     update(_, { data }) {
-      setUsers(users.filter((user) => user.id !== userId));
+      refetch();
       setUserId("");
+      dispatch(
+        openSnackbar({
+          message: "User deleted successfully!",
+          severity: "success",
+        })
+      );
     },
     onError(err) {
+      dispatch(
+        openSnackbar({
+          message: "Error while deleting the user. See the logs.",
+          severity: "error",
+        })
+      );
       console.error(JSON.stringify(err, null, 2));
       // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
     },
@@ -85,7 +99,7 @@ const UserList: React.FC = () => {
               <IconButton
                 color="warning"
                 disabled={user?.id === admin?.id}
-                onClick={() => handleEditUser(user?.id)}
+                onClick={() => handleEditUser(user)}
               >
                 <Edit />
               </IconButton>
@@ -103,8 +117,9 @@ const UserList: React.FC = () => {
     );
   }, [users]);
 
-  const handleEditUser = (id: string) => {
-    setUserId(id);
+  const handleEditUser = (user: User) => {
+    setSelectedUser(user);
+    toggleEdit();
   };
 
   const handleDeleteUser = (id: string) => {
@@ -115,6 +130,10 @@ const UserList: React.FC = () => {
   const handleDeleteSubmit = () => {
     toggleDelete();
     deleteUser({ variables: { id: userId } });
+  };
+
+  const onCreateUser = () => {
+    refetch();
   };
 
   return loading || isDeleteLoading ? (
@@ -138,7 +157,16 @@ const UserList: React.FC = () => {
         onSubmit={handleDeleteSubmit}
         pending={false}
       />
-      <UserCreateModal open={isCreateOpen} onClose={toggleCreate} />
+      <UserCreateModal
+        open={isCreateOpen}
+        onClose={toggleCreate}
+        onCreateCallback={onCreateUser}
+      />
+      <UserEditModal
+        data={selectedUser}
+        open={isEditOpen}
+        onClose={toggleEdit}
+      />
     </Styled.Container>
   );
 };

@@ -31,7 +31,7 @@ const LoginForm: React.FC = () => {
     update(_, { data: { login: userData } }) {
       dispatch(loginUser(userData));
       localStorage.setItem("token", userData?.token);
-      localStorage.setItem("user", userData);
+      localStorage.setItem("user", JSON.stringify(userData, null, 2));
       history.push("/admin");
     },
     onError(err: any) {
