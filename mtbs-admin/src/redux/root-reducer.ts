@@ -7,6 +7,7 @@ import postReducer from "./post/post.slice";
 import faqReducer from "./faq/faq.slice";
 import seatReducer from "./seat/seat.slice";
 import hallReducer from "./hall/hall.slice";
+import ticketReducer from "./ticket/ticket.slice";
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   faq: faqReducer,
   seat: seatReducer,
   hall: hallReducer,
+  ticket: ticketReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

@@ -1,9 +1,12 @@
 import React from 'react';
+import TicketsList from '../tickets-list/tickets-list.component';
 import { Styled } from './tickets-view.styles';
 
 const TicketsView: React.FC = () => {
   return (
-    <Styled.Container>Tickets</Styled.Container>
+    <Styled.Container>
+      <TicketsList />
+    </Styled.Container>
   );
 };
 

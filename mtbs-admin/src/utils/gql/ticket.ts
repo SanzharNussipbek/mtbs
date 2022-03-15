@@ -285,21 +285,23 @@ export const PAY_FOR_TICKET = gql`
 
 export const UPDATE_TICKET = gql`
   mutation updateTicket(
-    id: ID!
-    sessionId: ID
-    seatIds: [ID]
-    price: Int
-    status: String
-    promocode: String
+    $id: ID!
+    $sessionId: ID
+    $seatIds: [ID]
+    $price: Int
+    $status: String
+    $promocode: String
+  ) {
+    updateTicket(
+      data: {
+        id: $id
+        price: $price
+        sessionId: $sessionId
+        status: $status
+        seatIds: $seatIds
+        promocode: $promocode
+      }
     ) {
-    updateTicket(data: { 
-      id: $id, 
-      price: $price 
-      sessionId: $sessionId 
-      status: $status 
-      seatIds: $seatIds 
-      promocode: $promocode 
-      }) {
       id
       userId
       price
