@@ -457,7 +457,7 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
                 required
                 id="trailerUrl"
                 type="url"
-                label="trailerUrl"
+                label="Trailer URL"
                 name="trailerUrl"
                 autoComplete="trailerUrl"
                 error={!!errors.trailerUrl}

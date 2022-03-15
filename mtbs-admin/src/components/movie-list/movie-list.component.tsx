@@ -105,9 +105,10 @@ const MovieList: React.FC = () => {
         return {
           ...movie,
           releaseDate: format(new Date(movie?.releaseDate), "dd.MM.yyyy"),
+          description: <Box maxHeight={100} overflow="auto" >{movie.description}</Box>,
           imgUrl: (
             <Link href={movie.imgUrl} target="_blank">
-              Link to image
+              Link to poster
             </Link>
           ),
           trailerUrl: (

@@ -409,7 +409,7 @@ const MovieCreateModal: React.FC<Props> = ({
                 required
                 id="trailerUrl"
                 type="url"
-                label="trailerUrl"
+                label="Trailer URL"
                 name="trailerUrl"
                 autoComplete="trailerUrl"
                 error={!!errors.trailerUrl}
