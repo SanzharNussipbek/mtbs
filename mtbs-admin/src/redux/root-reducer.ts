@@ -6,6 +6,7 @@ import movieReducer from "./movie/movie.slice";
 import postReducer from "./post/post.slice";
 import faqReducer from "./faq/faq.slice";
 import seatReducer from "./seat/seat.slice";
+import hallReducer from "./hall/hall.slice";
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   post: postReducer,
   faq: faqReducer,
   seat: seatReducer,
+  hall: hallReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
