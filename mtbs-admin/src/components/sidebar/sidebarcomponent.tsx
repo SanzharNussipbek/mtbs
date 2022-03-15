@@ -133,7 +133,10 @@ const Sidebar: React.FC<Props> = ({ isOpen, onToggle }) => {
         </IconButton>
       </Toolbar>
       <Divider />
-      <List component="nav">
+      <List
+        component="nav"
+        style={{ display: "flex", flexDirection: "column" }}
+      >
         {LIST_ITEMS.map(({ title, icon, url }, index) => (
           <ListItemButton
             key={index}
