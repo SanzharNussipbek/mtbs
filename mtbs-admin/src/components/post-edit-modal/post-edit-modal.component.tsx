@@ -11,18 +11,13 @@ import {
 import { Close } from "@mui/icons-material";
 import { useMutation } from "@apollo/client";
 import { Controller, useForm } from "react-hook-form";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DatePicker from "@mui/lab/DatePicker";
-import { format } from "date-fns";
 
 import { Post } from "../../types/types";
 import { useAppDispatch } from "../../hooks";
-import { UPDATE_MOVIE } from "../../utils/gql/movie";
+import { UPDATE_POST } from "../../utils/gql/post";
 import { openSnackbar } from "../../redux/loading/loading.slice";
 
 import LoadingButton from "../loading-button/loading-button.component";
-import { UPDATE_POST } from "../../utils/gql/post";
 
 type Props = {
   data: Post | null;

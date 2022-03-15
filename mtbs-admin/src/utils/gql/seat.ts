@@ -24,7 +24,7 @@ export const GET_SEAT_BY_ID = gql`
 
 export const GET_SEAT_BY_HALL_ID = gql`
   query getSeatsByHallId($hallId: ID!) {
-    getSeatsByHallId(hallId: $id) {
+    getSeatsByHallId(hallId: $hallId) {
       id
       seatNumber
       rowNumber
@@ -40,22 +40,16 @@ export const DELETE_SEAT = gql`
 `;
 
 export const DELETE_ALL_SEATS = gql`
-  mutation deleteAllSeats() {
+  mutation deleteAllSeats {
     deleteAllSeats
   }
 `;
 
 export const UPDATE_SEAT = gql`
-  mutation updateSeat(
-    id: ID!
-    seatNumber: Int
-    rowNumber: Int
-  ) {
-    updateSeat(data: {
-      id: $id
-      seatNumber: $seatNumber
-      rowNumber: $rowNumber
-    }) {
+  mutation updateSeat($id: ID!, $seatNumber: Int, $rowNumber: Int) {
+    updateSeat(
+      data: { id: $id, seatNumber: $seatNumber, rowNumber: $rowNumber }
+    ) {
       id
       seatNumber
       rowNumber
@@ -65,16 +59,10 @@ export const UPDATE_SEAT = gql`
 `;
 
 export const CREATE_SEAT = gql`
-  mutation createSeat(
-    seatNumber: Int!
-    rowNumber: Int!
-    hallId: ID!
-  ) {
-    createSeat(data: {
-      seatNumber: $seatNumber
-      rowNumber: $rowNumber
-      hallId: $hallId
-    }) {
+  mutation createSeat($seatNumber: Int!, $rowNumber: Int!, $hallId: ID!) {
+    createSeat(
+      data: { seatNumber: $seatNumber, rowNumber: $rowNumber, hallId: $hallId }
+    ) {
       id
       seatNumber
       rowNumber

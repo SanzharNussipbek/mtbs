@@ -39,18 +39,8 @@ export const DELETE_HALL = gql`
 `;
 
 export const UPDATE_HALL = gql`
-  mutation updateHall(
-    id: ID!
-    name: String
-    type: String
-    seatIds: [ID]
-  ) {
-    updateHall(data: {
-      id: $id
-      name: $name
-      type: $type
-      seatIds: $seatIds
-    }) {
+  mutation updateHall($id: ID!, $name: String, $type: String, $seatIds: [ID]) {
+    updateHall(data: { id: $id, name: $name, type: $type, seatIds: $seatIds }) {
       id
       name
       type
@@ -65,16 +55,8 @@ export const UPDATE_HALL = gql`
 `;
 
 export const CREATE_HALL = gql`
-  mutation createHall(
-    name: String!
-    type: String!
-    seatIds: [ID]!
-  ) {
-    createHall(data: {
-      name: $name
-      type: $type
-      seatIds: $seatIds
-    }) {
+  mutation createHall($name: String!, $type: String!, $seatIds: [ID]!) {
+    createHall(data: { name: $name, type: $type, seatIds: $seatIds }) {
       id
       name
       type
