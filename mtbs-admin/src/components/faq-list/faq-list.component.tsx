@@ -1,54 +1,54 @@
 import React, { useEffect, useState } from "react";
-import { format } from "date-fns";
 import { useMutation, useQuery } from "@apollo/client";
-import { Alert, Box, Button, ButtonGroup, IconButton } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  ButtonGroup,
+  IconButton,
+} from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 
-import { User } from "../../types/types";
+import { Faq } from "../../types/types";
 import { useAppDispatch } from "../../hooks";
 import { Column, Row } from "../table/table.types";
 import useModalState from "../../utils/useModalState";
-import { setUserList } from "../../redux/user/user.actions";
-import { DELETE_USER, GET_ALL_USERS } from "../../utils/gql/user";
+import { setFaqList } from "../../redux/faq/faq.actions";
+import { DELETE_FAQ, GET_ALL_FAQ } from "../../utils/gql/faq";
 import { openSnackbar } from "../../redux/loading/loading.slice";
 
 import Table from "../table/table.component";
 import Loader from "../loader/loader.component";
 import Dialog from "../dialog/dialog.component";
-import UserEditModal from "../user-edit-modal/user-edit-modal.component";
-import UserCreateModal from "../user-create-modal/user-create-modal.component";
+import FaqEditModal from "../faq-edit-modal/faq-edit-modal.component";
+import FaqCreateModal from "../faq-create-modal/faq-create-modal.component";
 
-import { Styled } from "./user-list.styles";
+import { Styled } from "./faq-list.styles";
 
 const columns: Column[] = [
   { title: "ID", field: "id" },
-  { title: "Name", field: "name", width: 200 },
-  { title: "Email", field: "email" },
-  { title: "Phone", field: "phone" },
-  { title: "Status", field: "status" },
-  { title: "Ticket IDs", field: "tickets", width: 300 },
-  { title: "Created at", field: "createdAt" },
+  { title: "Title", field: "title", width: 300 },
+  { title: "Body", field: "body", width: 500 },
   { title: "Actions", field: "actions" },
 ];
 
-const UserList: React.FC = () => {
+const FaqList: React.FC = () => {
   const dispatch = useAppDispatch();
-  const admin = JSON.parse(localStorage.getItem("user") ?? "");
 
-  const [userId, setUserId] = useState("");
+  const [faqId, setFaqId] = useState("");
   const [rows, setRows] = useState<Row[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [faqs, setFaqs] = useState<Faq[]>([]);
+  const [selectedFaq, setSelectedFaq] = useState<Faq | null>(null);
 
   const { isOpen: isCreateOpen, onToggle: toggleCreate } = useModalState();
   const { isOpen: isEditOpen, onToggle: toggleEdit } = useModalState();
   const { isOpen: isDeleteOpen, onToggle: toggleDelete } = useModalState();
 
-  const { called, loading, error, data, refetch } = useQuery(GET_ALL_USERS, {
+  const { called, loading, error, data, refetch } = useQuery(GET_ALL_FAQ, {
     onError(err) {
       dispatch(
         openSnackbar({
-          message: "Error while fetching users list. See the logs.",
+          message: "Error while fetching FAQ list. See the logs.",
           severity: "error",
         })
       );
@@ -56,14 +56,14 @@ const UserList: React.FC = () => {
     },
   });
 
-  const [deleteUser, { called: isDeleteCalled, loading: isDeleteLoading }] =
-    useMutation(DELETE_USER, {
+  const [deleteFaq, { called: isDeleteCalled, loading: isDeleteLoading }] =
+    useMutation(DELETE_FAQ, {
       update(_, { data }) {
         refetch();
-        setUserId("");
+        setFaqId("");
         dispatch(
           openSnackbar({
-            message: "User deleted successfully!",
+            message: "FAQ deleted successfully!",
             severity: "success",
           })
         );
@@ -71,43 +71,36 @@ const UserList: React.FC = () => {
       onError(err) {
         dispatch(
           openSnackbar({
-            message: "Error while deleting the user. See the logs.",
+            message: "Error while deleting the FAQ. See the logs.",
             severity: "error",
           })
         );
         console.error(JSON.stringify(err, null, 2));
         // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
       },
-      variables: { id: userId },
+      variables: { id: faqId },
     });
 
   useEffect(() => {
     if (!data) return;
-    setUsers(data.getAllUsers);
-    dispatch(setUserList(data.getAllUsers));
+    setFaqs(data.getFaqs);
+    dispatch(setFaqList(data.getFaqs));
   }, [data]);
 
   useEffect(() => {
     setRows(
-      users.map((user) => {
+      faqs.map((faq) => {
         return {
-          ...user,
-          name: `${user?.firstname} ${user?.lastname}`,
-          tickets: user?.tickets?.join(", "),
-          createdAt: format(new Date(user?.createdAt), "dd.MM.yyyy, HH:mm:ss"),
+          ...faq,
+          body: <Box maxHeight={100} overflow="auto" >{faq.body}</Box>,
           actions: (
             <ButtonGroup>
-              <IconButton
-                color="warning"
-                disabled={user?.id === admin?.id}
-                onClick={() => handleEditUser(user)}
-              >
+              <IconButton color="warning" onClick={() => handleEditFaq(faq)}>
                 <Edit />
               </IconButton>
               <IconButton
                 color="error"
-                disabled={user?.id === admin?.id}
-                onClick={() => handleDeleteUser(user?.id)}
+                onClick={() => handleDeleteFaq(faq?.id)}
               >
                 <Delete />
               </IconButton>
@@ -116,24 +109,24 @@ const UserList: React.FC = () => {
         };
       })
     );
-  }, [users]);
+  }, [faqs]);
 
-  const handleEditUser = (user: User) => {
-    setSelectedUser(user);
+  const handleEditFaq = (faq: Faq) => {
+    setSelectedFaq(faq);
     toggleEdit();
   };
 
-  const handleDeleteUser = (id: string) => {
-    setUserId(id);
+  const handleDeleteFaq = (id: string) => {
+    setFaqId(id);
     toggleDelete();
   };
 
   const handleDeleteSubmit = () => {
     toggleDelete();
-    deleteUser({ variables: { id: userId } });
+    deleteFaq({ variables: { id: faqId } });
   };
 
-  const onCreateUser = () => {
+  const onCreateFaq = () => {
     refetch();
   };
 
@@ -152,19 +145,19 @@ const UserList: React.FC = () => {
       <Dialog
         open={isDeleteOpen}
         confirmText="Delete"
-        title="Delete User"
-        description="Are you sure you want to delete this user?"
+        title="Delete Faq"
+        description="Are you sure you want to delete this faq?"
         onClose={toggleDelete}
         onSubmit={handleDeleteSubmit}
         pending={false}
       />
-      <UserCreateModal
+      <FaqCreateModal
         open={isCreateOpen}
         onClose={toggleCreate}
-        onCreateCallback={onCreateUser}
+        onCreateCallback={onCreateFaq}
       />
-      <UserEditModal
-        data={selectedUser}
+      <FaqEditModal
+        data={selectedFaq}
         open={isEditOpen}
         onClose={toggleEdit}
       />
@@ -172,4 +165,4 @@ const UserList: React.FC = () => {
   );
 };
 
-export default UserList;
+export default FaqList;

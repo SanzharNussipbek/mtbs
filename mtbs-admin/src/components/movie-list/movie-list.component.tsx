@@ -157,7 +157,7 @@ const MovieList: React.FC = () => {
   };
 
   return (called && loading) || (isDeleteCalled && isDeleteLoading) ? (
-    <Loader />
+    <Loader fullscreen/>
   ) : error ? (
     <Alert severity="error" title={error?.message} />
   ) : (

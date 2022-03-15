@@ -29,16 +29,8 @@ export const DELETE_FAQ = gql`
 `;
 
 export const UPDATE_FAQ = gql`
-  mutation updateFaq(
-    id: ID!
-    title: String
-    body: String
-  ) {
-    updateFaq(data: {
-      id: $id
-      title: $title
-      body: $body
-    }) {
+  mutation updateFaq($id: ID!, $title: String, $body: String) {
+    updateFaq(data: { id: $id, title: $title, body: $body }) {
       id
       title
       body
@@ -48,14 +40,8 @@ export const UPDATE_FAQ = gql`
 `;
 
 export const CREATE_FAQ = gql`
-  mutation createFaq(
-    title: String
-    body: String
-  ) {
-    createFaq(data: {
-      title: $title
-      body: $body
-    }) {
+  mutation createFaq($title: String!, $body: String!) {
+    createFaq(data: { title: $title, body: $body }) {
       id
       title
       body

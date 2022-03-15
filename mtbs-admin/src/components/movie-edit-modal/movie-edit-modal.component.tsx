@@ -126,7 +126,7 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           justifyContent: "space-between",
         }}
       >
-        Create Movie
+        Update Movie
         <IconButton onClick={onClose} disabled={loading}>
           <Close />
         </IconButton>
