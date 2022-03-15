@@ -44,7 +44,7 @@ const UserList: React.FC = () => {
   const { isOpen: isEditOpen, onToggle: toggleEdit } = useModalState();
   const { isOpen: isDeleteOpen, onToggle: toggleDelete } = useModalState();
 
-  const { loading, error, data, refetch } = useQuery(GET_ALL_USERS, {
+  const { called, loading, error, data, refetch } = useQuery(GET_ALL_USERS, {
     onError(err) {
       dispatch(
         openSnackbar({
@@ -56,29 +56,30 @@ const UserList: React.FC = () => {
     },
   });
 
-  const [deleteUser, { loading: isDeleteLoading }] = useMutation(DELETE_USER, {
-    update(_, { data }) {
-      refetch();
-      setUserId("");
-      dispatch(
-        openSnackbar({
-          message: "User deleted successfully!",
-          severity: "success",
-        })
-      );
-    },
-    onError(err) {
-      dispatch(
-        openSnackbar({
-          message: "Error while deleting the user. See the logs.",
-          severity: "error",
-        })
-      );
-      console.error(JSON.stringify(err, null, 2));
-      // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
-    },
-    variables: { id: userId },
-  });
+  const [deleteUser, { called: isDeleteCalled, loading: isDeleteLoading }] =
+    useMutation(DELETE_USER, {
+      update(_, { data }) {
+        refetch();
+        setUserId("");
+        dispatch(
+          openSnackbar({
+            message: "User deleted successfully!",
+            severity: "success",
+          })
+        );
+      },
+      onError(err) {
+        dispatch(
+          openSnackbar({
+            message: "Error while deleting the user. See the logs.",
+            severity: "error",
+          })
+        );
+        console.error(JSON.stringify(err, null, 2));
+        // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
+      },
+      variables: { id: userId },
+    });
 
   useEffect(() => {
     if (!data) return;
@@ -136,7 +137,7 @@ const UserList: React.FC = () => {
     refetch();
   };
 
-  return loading || isDeleteLoading ? (
+  return (called && loading) || (isDeleteCalled && isDeleteLoading) ? (
     <Loader />
   ) : error ? (
     <Alert severity="error">{error?.message}</Alert>

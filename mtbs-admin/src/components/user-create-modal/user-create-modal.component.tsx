@@ -17,7 +17,6 @@ import { REGISTER_USER } from "../../utils/gql/user";
 import { openSnackbar } from "../../redux/loading/loading.slice";
 
 import LoadingButton from "../loading-button/loading-button.component";
-import { User } from "../../types/types";
 
 type Props = {
   open: boolean;
@@ -44,7 +43,7 @@ const UserCreateModal: React.FC<Props> = ({ open, onClose, onCreateCallback }) =
     defaultValues: defaultValues,
   });
 
-  const [register, { loading }] = useMutation(REGISTER_USER, {
+  const [register, { called, loading }] = useMutation(REGISTER_USER, {
     update(_, { data: { register: userData } }) {
       onCreateCallback();
       onClose();
@@ -253,14 +252,14 @@ const UserCreateModal: React.FC<Props> = ({ open, onClose, onCreateCallback }) =
             color="secondary"
             size="large"
             onClick={onClose}
-            disabled={loading}
+            disabled={called && loading}
           >
             Cancel
           </Button>
           <LoadingButton
             type="submit"
             size="large"
-            pending={loading}
+            pending={called && loading}
             form="user-create-form"
           >
             Submit

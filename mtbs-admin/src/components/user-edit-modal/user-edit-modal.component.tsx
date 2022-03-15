@@ -44,7 +44,7 @@ const UserEditModal: React.FC<Props> = ({ data, open, onClose }) => {
     defaultValues: values,
   });
 
-  const [updateUser, { loading }] = useMutation(UPDATE_USER, {
+  const [updateUser, { called, loading }] = useMutation(UPDATE_USER, {
     update(_, { data: { updateUser: userData } }) {
       dispatch(
         openSnackbar({
@@ -102,7 +102,7 @@ const UserEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           component="form"
           onSubmit={handleSubmit(onSubmit)}
           noValidate
-          id="user-create-form"
+          id="user-edit-form"
         >
           <Controller
             name="firstname"
@@ -229,15 +229,15 @@ const UserEditModal: React.FC<Props> = ({ data, open, onClose }) => {
             color="secondary"
             size="large"
             onClick={onClose}
-            disabled={loading}
+            disabled={called && loading}
           >
             Cancel
           </Button>
           <LoadingButton
             type="submit"
             size="large"
-            pending={loading}
-            form="user-create-form"
+            pending={called && loading}
+            form="user-edit-form"
           >
             Submit
           </LoadingButton>
