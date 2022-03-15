@@ -44,6 +44,7 @@ const TableHead = (props: Props) => {
               minWidth: column.width || "auto",
               maxWidth: column.width || "auto",
               color: "#fff",
+              whiteSpace: 'nowrap',
             }}
           >
             {column.field !== "actions" && (

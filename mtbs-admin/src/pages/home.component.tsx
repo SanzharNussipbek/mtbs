@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { lazy, useEffect } from "react";
 import { Box } from "@mui/material";
 import { Switch, Route, useRouteMatch, useHistory } from "react-router-dom";
 
@@ -6,15 +6,16 @@ import useModalState from "../utils/useModalState";
 
 import TopBar from "../components/topbar/topbar.component";
 import Sidebar from "../components/sidebar/sidebarcomponent";
-import UsersView from "../components/users-view/users-view.component";
-import SeatsView from "../components/seats-view/seats-view.component";
-import MoviesView from "../components/movies-view/movies-view.component";
-import SessionsView from "../components/sessions-view/sessions-view.component";
-import SessionSeatsView from "../components/session-seats-view/session-seats-view.component";
-import HallsView from "../components/halls-view/halls-view.component";
-import TicketsView from "../components/tickets-view/tickets-view.component";
-import PostsView from "../components/posts-view/posts-view.component";
-import FaqView from "../components/faq-view/faq-view.component";
+
+const UsersView = lazy(() => import("../components/users-view/users-view.component"));
+const MoviesView = lazy(() => import("../components/movies-view/movies-view.component"));
+const SeatsView = lazy(() => import("../components/seats-view/seats-view.component"));
+const SessionsView = lazy(() => import( "../components/sessions-view/sessions-view.component"));
+const SessionSeatsView = lazy(() => import("../components/session-seats-view/session-seats-view.component"));
+const HallsView = lazy(() => import("../components/halls-view/halls-view.component"));
+const TicketsView = lazy(() => import("../components/tickets-view/tickets-view.component"));
+const PostsView = lazy(() => import("../components/posts-view/posts-view.component"));
+const FaqView = lazy(() => import("../components/faq-view/faq-view.component"));
 
 const Home = () => {
   const history = useHistory();

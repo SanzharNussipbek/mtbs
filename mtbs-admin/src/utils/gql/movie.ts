@@ -48,35 +48,37 @@ export const DELETE_MOVIE = gql`
 
 export const UPDATE_MOVIE = gql`
   mutation updateMovie(
-    id: ID!
-    name: String
-    description: String
-    duration: Int
-    language: String
-    releaseDate: String
-    country: String
-    genre: String
-    director: String
-    cast: String
-    imgUrl: String
-    rating: String
-    trailerUrl: String
+    $id: ID!
+    $name: String
+    $description: String
+    $duration: Int
+    $language: String
+    $releaseDate: String
+    $country: String
+    $genre: String
+    $director: String
+    $cast: String
+    $imgUrl: String
+    $rating: String
+    $trailerUrl: String
   ) {
-    updateMovie(data: {
-      id: $id
-      name: $name
-      description: $description
-      duration: $duration
-      language: $language
-      releaseDate: $releaseDate
-      country: $country
-      genre: $genre
-      director: $director
-      cast: $cast
-      imgUrl: $imgUrl
-      rating: $rating
-      trailerUrl: $trailerUrl
-    }) {
+    updateMovie(
+      data: {
+        id: $id
+        name: $name
+        description: $description
+        duration: $duration
+        language: $language
+        releaseDate: $releaseDate
+        country: $country
+        genre: $genre
+        director: $director
+        cast: $cast
+        imgUrl: $imgUrl
+        rating: $rating
+        trailerUrl: $trailerUrl
+      }
+    ) {
       id
       name
       description
@@ -96,33 +98,35 @@ export const UPDATE_MOVIE = gql`
 
 export const CREATE_MOVIE = gql`
   mutation createMovie(
-    name: String!
-    description: String!
-    duration: Int!
-    language: String!
-    releaseDate: String!
-    country: String!
-    genre: String!
-    director: String!
-    cast: String!
-    imgUrl: String!
-    rating: String!
-    trailerUrl: String!
+    $name: String!
+    $description: String!
+    $duration: Int!
+    $language: String!
+    $releaseDate: String!
+    $country: String!
+    $genre: String!
+    $director: String!
+    $cast: String!
+    $imgUrl: String!
+    $rating: String!
+    $trailerUrl: String!
   ) {
-    createMovie(data: {
-      name: $name
-      description: $description
-      duration: $duration
-      language: $language
-      releaseDate: $releaseDate
-      country: $country
-      genre: $genre
-      director: $director
-      cast: $cast
-      imgUrl: $imgUrl
-      rating: $rating
-      trailerUrl: $trailerUrl
-    }) {
+    createMovie(
+      data: {
+        name: $name
+        description: $description
+        duration: $duration
+        language: $language
+        releaseDate: $releaseDate
+        country: $country
+        genre: $genre
+        director: $director
+        cast: $cast
+        imgUrl: $imgUrl
+        rating: $rating
+        trailerUrl: $trailerUrl
+      }
+    ) {
       id
       name
       description

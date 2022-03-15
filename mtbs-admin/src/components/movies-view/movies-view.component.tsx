@@ -1,9 +1,12 @@
-import React from 'react';
-import { Styled } from './movies-view.styles';
+import React from "react";
+import MovieList from "../movie-list/movie-list.component";
+import { Styled } from "./movies-view.styles";
 
 const MoviesView: React.FC = () => {
   return (
-    <Styled.Container>Movies</Styled.Container>
+    <Styled.Container>
+      <MovieList />
+    </Styled.Container>
   );
 };
 

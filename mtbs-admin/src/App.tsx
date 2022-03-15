@@ -11,6 +11,8 @@ import { client } from "./apollo";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import CustomSnackbar from "./components/custom-snackbar/custom-snackbar.component";
+import Login from "./pages/login.component";
+import Home from "./pages/home.component";
 
 const HomePage = lazy(() => import("./pages/home.component"));
 const LoginPage = lazy(() => import("./pages/login.component"));
