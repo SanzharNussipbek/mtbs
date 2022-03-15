@@ -19,7 +19,6 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import LocalMoviesIcon from "@mui/icons-material/LocalMovies";
 import CameraOutdoorIcon from "@mui/icons-material/CameraOutdoor";
 import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
-import AirlineSeatReclineNormalIcon from "@mui/icons-material/AirlineSeatReclineNormal";
 import { useHistory, useRouteMatch } from "react-router-dom";
 
 const drawerWidth: number = 240;
@@ -79,11 +78,6 @@ const LIST_ITEMS: {
     title: "Seats",
     url: "/seats",
     icon: <EventSeatIcon />,
-  },
-  {
-    title: "Session Seats",
-    url: "/session-seats",
-    icon: <AirlineSeatReclineNormalIcon />,
   },
   {
     title: "Tickets",

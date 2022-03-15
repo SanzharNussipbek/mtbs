@@ -37,24 +37,21 @@ export const DELETE_SESSION_SEAT = gql`
 `;
 
 export const DELETE_ALL_SESSION_SEATS = gql`
-  mutation deleteAllSessionSeats() {
+  mutation deleteAllSessionSeats {
     deleteAllSessionSeats
   }
 `;
 
 export const UPDATE_SESSION_SEAT = gql`
   mutation updateSessionSeat(
-    id: ID!
-    seatId: ID
-    type: String
-    status: String
+    $id: ID!
+    $seatId: ID
+    $type: String
+    $status: String
   ) {
-    updateSessionSeat(data: {
-      id: $id
-      seatId: $seatId
-      type: $type
-      status: $status
-    }) {
+    updateSessionSeat(
+      data: { id: $id, seatId: $seatId, type: $type, status: $status }
+    ) {
       id
       status
       seat {
@@ -68,16 +65,8 @@ export const UPDATE_SESSION_SEAT = gql`
 `;
 
 export const CREATE_SESSION_SEAT = gql`
-  mutation createSessionSeat(
-    seatId: ID!
-    type: String
-    status: String
-  ) {
-    createSessionSeat(data: {
-      seatId: $seatId
-      type: $type
-      status: $status
-    }) {
+  mutation createSessionSeat($seatId: ID!, $type: String, $status: String) {
+    createSessionSeat(data: { seatId: $seatId, type: $type, status: $status }) {
       id
       status
       seat {
