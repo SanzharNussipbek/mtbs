@@ -2,7 +2,7 @@ import { gql } from "graphql-tag";
 
 export const GET_ALL_POSTS = gql`
   {
-    getAllPosts {
+    getPosts {
       id
       title
       author
@@ -36,21 +36,23 @@ export const DELETE_POST = gql`
 
 export const UPDATE_POST = gql`
   mutation updatePost(
-    id: ID!
-    title: String
-    body: String
-    author: String
-    imgUrl: String
-    sourceUrl: String
+    $id: ID!
+    $title: String
+    $body: String
+    $author: String
+    $imgUrl: String
+    $sourceUrl: String
   ) {
-    updatePost(data: {
-      id: $id
-      title: $title
-    body: $body
-    author: $author
-    imgUrl: $imgUrl
-    sourceUrl: $sourceUrl
-    }) {
+    updatePost(
+      data: {
+        id: $id
+        title: $title
+        body: $body
+        author: $author
+        imgUrl: $imgUrl
+        sourceUrl: $sourceUrl
+      }
+    ) {
       id
       title
       author
@@ -64,19 +66,21 @@ export const UPDATE_POST = gql`
 
 export const CREATE_POST = gql`
   mutation createPost(
-    title: String!
-    body: String!
-    author: String!
-    imgUrl: String!
-    sourceUrl: String!
+    $title: String!
+    $body: String!
+    $author: String!
+    $imgUrl: String!
+    $sourceUrl: String!
   ) {
-    createPost(data: {
-      title: $title
-    body: $body
-    author: $author
-    imgUrl: $imgUrl
-    sourceUrl: $sourceUrl
-    }) {
+    createPost(
+      data: {
+        title: $title
+        body: $body
+        author: $author
+        imgUrl: $imgUrl
+        sourceUrl: $sourceUrl
+      }
+    ) {
       id
       title
       author
