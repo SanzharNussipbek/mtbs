@@ -8,6 +8,11 @@ export const selectSession = createSelector(
   (sessionState) => sessionState.session
 );
 
+export const selectSessionList = createSelector(
+  [sessionState],
+  (sessionState) => sessionState.sessionList
+);
+
 export const selectSessionSeats = createSelector(
   [sessionState],
   (sessionState) => sessionState.sessionSeats

@@ -7,6 +7,10 @@ const reducers = {
     state.session = action.payload;
     return state;
   },
+  setSessionList: (state: SessionState, action: PayloadAction<Session[]>) => {
+    state.sessionList = action.payload;
+    return state;
+  },
   setSessionSeats: (state: SessionState, action: PayloadAction<SessionSeat[]>) => {
     state.sessionSeats = action.payload;
     return state;

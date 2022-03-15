@@ -206,7 +206,7 @@ export const DELETE_SESSION = gql`
 `;
 
 export const DELETE_ALL_SESSIONS = gql`
-  mutation deleteAllSessions() {
+  mutation deleteAllSessions {
     deleteAllSessions
   }
 `;
@@ -218,21 +218,23 @@ export const UPDATE_SESSION = gql`
     CHILD: Int
   }
   mutation updateSession(
-    id: ID!
-    movieId: ID
-    hallId: ID
-    datetime: Int
-    seats: [ID]
-    rates: CreateSessionRatesInput
+    $id: ID!
+    $movieId: ID
+    $hallId: ID
+    $datetime: Int
+    $seats: [ID]
+    # $rates: CreateSessionRatesInput
   ) {
-    updateSession(data: {
-      id: $id
-      movieId: $movieId
-      hallId: $hallId
-      datetime: $datetime
-      seats: $seats
-      rates: $rates
-    }) {
+    updateSession(
+      data: {
+        id: $id
+        movieId: $movieId
+        hallId: $hallId
+        datetime: $datetime
+        seats: $seats
+        # rates: $rates
+      }
+    ) {
       id
       datetime
       movie {
@@ -287,17 +289,19 @@ export const CREATE_SESSION = gql`
     CHILD: Int
   }
   mutation createSession(
-    movieId: String!
-    hallId: String!
-    datetime: Int!
-    rates: CreateSessionRatesInput!
+    $movieId: String!
+    $hallId: String!
+    $datetime: Int!
+    # $rates: CreateSessionRatesInput!
   ) {
-    createSession(data: {
-      movieId: $movieId
-      hallId: $hallId
-      datetime: $datetime
-      rates: $rates
-    }) {
+    createSession(
+      data: {
+        movieId: $movieId
+        hallId: $hallId
+        datetime: $datetime
+        # rates: $rates
+      }
+    ) {
       id
       datetime
       movie {

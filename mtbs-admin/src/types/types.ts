@@ -61,9 +61,9 @@ export interface SessionSeat {
 }
 
 export interface SessionRates {
-  ADULT: number;
-  CHILD: number;
-  STUDENT: number;
+  "ADULT": number;
+  "CHILD": number;
+  "STUDENT": number;
 }
 
 export interface Session {

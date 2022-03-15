@@ -4,11 +4,13 @@ import reducers from './session.reducer';
 
 export interface SessionState {
   session: Session | null;
+  sessionList: Session[];
   sessionSeats: SessionSeat[];
 };
 
 export const initialState: SessionState = {
   session: null,
+  sessionList: [],
   sessionSeats: [],
 };
 
@@ -20,6 +22,7 @@ export const sessionSlice = createSlice({
 
 export const {
   setSession,
+  setSessionList,
   setSessionSeats,
 } = sessionSlice.actions;
 
