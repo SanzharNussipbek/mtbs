@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useMutation, useQuery } from "@apollo/client";
-import {
-  Alert,
-  Box,
-  Button,
-  ButtonGroup,
-  IconButton,
-  Typography,
-} from "@mui/material";
 import { format } from "date-fns";
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete } from "@mui/icons-material";
+import { useMutation, useQuery } from "@apollo/client";
+import { Alert, Box, IconButton, Typography } from "@mui/material";
 
 import { Ticket } from "../../types/types";
 import { useAppDispatch } from "../../hooks";
@@ -45,10 +38,7 @@ const TicketsList: React.FC = () => {
   const [ticketId, setTicketId] = useState("");
   const [rows, setRows] = useState<Row[]>([]);
   const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
 
-  const { isOpen: isCreateOpen, onToggle: toggleCreate } = useModalState();
-  const { isOpen: isEditOpen, onToggle: toggleEdit } = useModalState();
   const { isOpen: isDeleteOpen, onToggle: toggleDelete } = useModalState();
 
   const { called, loading, error, data, refetch } = useQuery(GET_ALL_TICKETS, {
@@ -124,30 +114,17 @@ const TicketsList: React.FC = () => {
             </Box>
           ),
           actions: (
-            <ButtonGroup>
-              <IconButton
-                color="warning"
-                onClick={() => handleEditTicket(ticket)}
-              >
-                <Edit />
-              </IconButton>
-              <IconButton
-                color="error"
-                onClick={() => handleDeleteTicket(ticket?.id)}
-              >
-                <Delete />
-              </IconButton>
-            </ButtonGroup>
+            <IconButton
+              color="error"
+              onClick={() => handleDeleteTicket(ticket?.id)}
+            >
+              <Delete />
+            </IconButton>
           ),
         };
       })
     );
   }, [tickets]);
-
-  const handleEditTicket = (ticket: Ticket) => {
-    setSelectedTicket(ticket);
-    toggleEdit();
-  };
 
   const handleDeleteTicket = (id: string) => {
     setTicketId(id);
@@ -157,10 +134,6 @@ const TicketsList: React.FC = () => {
   const handleDeleteSubmit = () => {
     toggleDelete();
     deleteTicket({ variables: { id: ticketId } });
-  };
-
-  const onCreateTicket = () => {
-    refetch();
   };
 
   return (called && loading) || (isDeleteCalled && isDeleteLoading) ? (
@@ -173,9 +146,6 @@ const TicketsList: React.FC = () => {
         <Typography variant="h5" color="primary">
           Tickets
         </Typography>
-        <Button color="info" variant="contained" onClick={toggleCreate}>
-          Create
-        </Button>
       </Box>
       <Table columns={columns} rows={rows} />
       <Dialog
@@ -187,16 +157,6 @@ const TicketsList: React.FC = () => {
         onSubmit={handleDeleteSubmit}
         pending={false}
       />
-      {/* <FaqCreateModal
-        open={isCreateOpen}
-        onClose={toggleCreate}
-        onCreateCallback={onCreateTicket}
-      />
-      <FaqEditModal
-        data={selectedTicket}
-        open={isEditOpen}
-        onClose={toggleEdit}
-      /> */}
     </Styled.Container>
   );
 };
