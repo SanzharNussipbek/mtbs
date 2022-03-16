@@ -156,6 +156,7 @@ const HallCreateModal: React.FC<Props> = ({
                 renderInput={(params) => (
                   <TextField
                     {...params}
+                    required
                     label="Type"
                     margin="normal"
                     error={!!errors.type}

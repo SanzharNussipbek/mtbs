@@ -109,14 +109,10 @@ const UserEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="firstname"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 value={values?.firstname}
                 margin="normal"
-                required
                 fullWidth
                 id="firstname"
                 label="First name"
@@ -135,15 +131,11 @@ const UserEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="lastname"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 value={values?.lastname}
                 margin="normal"
-                required
                 fullWidth
                 id="lastname"
                 label="Last name"
@@ -162,7 +154,6 @@ const UserEditModal: React.FC<Props> = ({ data, open, onClose }) => {
             name="email"
             control={control}
             rules={{
-              required: "Required field",
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: "Invalid email address",
@@ -173,7 +164,6 @@ const UserEditModal: React.FC<Props> = ({ data, open, onClose }) => {
                 {...props}
                 value={values?.email}
                 margin="normal"
-                required
                 fullWidth
                 id="email"
                 type="email"

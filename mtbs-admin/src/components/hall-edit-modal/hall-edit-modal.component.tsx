@@ -109,14 +109,10 @@ const HallEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="name"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 margin="normal"
-                required
                 fullWidth
                 id="name"
                 label="Title"
@@ -136,9 +132,6 @@ const HallEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="type"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <Autocomplete
                 {...props}

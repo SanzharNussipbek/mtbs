@@ -105,14 +105,10 @@ const FaqEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="title"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 margin="normal"
-                required
                 fullWidth
                 id="title"
                 label="Title"
@@ -132,14 +128,10 @@ const FaqEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="body"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 margin="normal"
-                required
                 fullWidth
                 multiline
                 rows={4}

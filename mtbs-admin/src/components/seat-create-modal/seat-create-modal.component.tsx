@@ -66,7 +66,7 @@ const SeatCreateModal: React.FC<Props> = ({
   });
 
   const [createSeat] = useMutation(CREATE_SEAT, {
-    update(_, { data: { createSeat: seatData } }) {
+    update(_, { data }) {
       setIsLoading(false);
       onCreateCallback();
       onClose();
@@ -102,7 +102,7 @@ const SeatCreateModal: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    setHalls(hallsData.getAllHalls);
+    setHalls(hallsData?.getAllHalls);
   }, [hallsData]);
 
   return (
@@ -197,7 +197,7 @@ const SeatCreateModal: React.FC<Props> = ({
                 onInputChange={(event, newInputValue) => {
                   setSelectedHallInputValue(newInputValue);
                 }}
-                options={halls.map((h) => h.name)}
+                options={halls?.map((h) => h.name)}
                 renderInput={(params) => (
                   <TextField
                     {...params}

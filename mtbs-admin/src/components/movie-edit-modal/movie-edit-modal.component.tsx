@@ -144,14 +144,10 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="name"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 margin="normal"
-                required
                 fullWidth
                 id="name"
                 label="Name"
@@ -171,14 +167,10 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="description"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 margin="normal"
-                required
                 fullWidth
                 multiline
                 rows={4}
@@ -200,14 +192,10 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="duration"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 margin="normal"
-                required
                 fullWidth
                 id="duration"
                 type="number"
@@ -228,15 +216,11 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="language"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 margin="normal"
                 fullWidth
-                required
                 id="language"
                 type="language"
                 label="Language"
@@ -255,9 +239,6 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="releaseDate"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
@@ -277,7 +258,6 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
                     <TextField
                       {...params}
                       fullWidth
-                      required
                       margin="normal"
                       error={!!errors.releaseDate}
                       helperText={
@@ -292,15 +272,11 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="country"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 margin="normal"
                 fullWidth
-                required
                 id="country"
                 label="Country"
                 name="country"
@@ -318,15 +294,11 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="genre"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 margin="normal"
                 fullWidth
-                required
                 id="genre"
                 label="Genre"
                 name="genre"
@@ -344,15 +316,11 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="director"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 margin="normal"
                 fullWidth
-                required
                 id="director"
                 label="Director"
                 name="director"
@@ -370,15 +338,11 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="cast"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 margin="normal"
                 fullWidth
-                required
                 id="cast"
                 label="Cast"
                 name="cast"
@@ -396,15 +360,11 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="rating"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 margin="normal"
                 fullWidth
-                required
                 id="rating"
                 label="Rating"
                 name="rating"
@@ -422,15 +382,11 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="imgUrl"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 margin="normal"
                 fullWidth
-                required
                 id="imgUrl"
                 type="url"
                 label="Poster URL"
@@ -449,15 +405,11 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="trailerUrl"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 margin="normal"
                 fullWidth
-                required
                 id="trailerUrl"
                 type="url"
                 label="Trailer URL"

@@ -111,14 +111,10 @@ const PostEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="title"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 margin="normal"
-                required
                 fullWidth
                 id="title"
                 label="Title"
@@ -138,14 +134,10 @@ const PostEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="body"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 margin="normal"
-                required
                 fullWidth
                 multiline
                 rows={4}
@@ -167,14 +159,10 @@ const PostEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="author"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 margin="normal"
-                required
                 fullWidth
                 id="author"
                 label="Author"
@@ -193,15 +181,11 @@ const PostEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="imgUrl"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 margin="normal"
                 fullWidth
-                required
                 id="imgUrl"
                 type="url"
                 label="Poster URL"
@@ -220,15 +204,11 @@ const PostEditModal: React.FC<Props> = ({ data, open, onClose }) => {
           <Controller
             name="sourceUrl"
             control={control}
-            rules={{
-              required: "Required field",
-            }}
             render={({ ...props }) => (
               <TextField
                 {...props}
                 margin="normal"
                 fullWidth
-                required
                 id="sourceUrl"
                 type="url"
                 label="Source URL"
