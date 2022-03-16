@@ -147,7 +147,15 @@ const TicketsList: React.FC = () => {
           Tickets
         </Typography>
       </Box>
-      <Table columns={columns} rows={rows} />
+      {rows?.length ? (
+        <Table columns={columns} rows={rows} />
+      ) : (
+        <Box display={"flex"} justifyContent="center">
+          <Typography variant="h6" color="textPrimary">
+            No tickets right now
+          </Typography>
+        </Box>
+      )}
       <Dialog
         open={isDeleteOpen}
         confirmText="Delete"

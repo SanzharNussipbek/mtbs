@@ -175,7 +175,15 @@ const MovieList: React.FC = () => {
           Create
         </Button>
       </Box>
-      <Table columns={columns} rows={rows} />
+      {rows?.length ? (
+        <Table columns={columns} rows={rows} />
+      ) : (
+        <Box display={"flex"} justifyContent="center">
+          <Typography variant="h6" color="textPrimary">
+            No movies right now
+          </Typography>
+        </Box>
+      )}
       <Dialog
         open={isDeleteOpen}
         confirmText="Delete"
