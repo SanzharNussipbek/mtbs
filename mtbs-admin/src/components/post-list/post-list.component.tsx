@@ -166,15 +166,7 @@ const PostList: React.FC = () => {
           Create
         </Button>
       </Box>
-      {rows?.length ? (
-        <Table columns={columns} rows={rows} />
-      ) : (
-        <Box display={"flex"} justifyContent="center">
-          <Typography variant="h6" color="textPrimary">
-            No posts right now
-          </Typography>
-        </Box>
-      )}
+      <Table columns={columns} rows={rows} />
       <Dialog
         open={isDeleteOpen}
         confirmText="Delete"
