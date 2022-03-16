@@ -28,6 +28,7 @@ type Props = {
 const PostEditModal: React.FC<Props> = ({ data, open, onClose }) => {
   const dispatch = useAppDispatch();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [values, setValues] = useState({
     id: data?.id?.length ? data?.id : "",
     title: data?.title?.length ? data?.title : "",
@@ -45,8 +46,9 @@ const PostEditModal: React.FC<Props> = ({ data, open, onClose }) => {
     defaultValues: values,
   });
 
-  const [updatePost, { called, loading }] = useMutation(UPDATE_POST, {
-    update(_, { data: { updatePost: postData } }) {
+  const [updatePost] = useMutation(UPDATE_POST, {
+    update(_, { data }) {
+      setIsLoading(false);
       onClose();
       dispatch(
         openSnackbar({
@@ -56,6 +58,7 @@ const PostEditModal: React.FC<Props> = ({ data, open, onClose }) => {
       );
     },
     onError(err) {
+      setIsLoading(false);
       dispatch(
         openSnackbar({
           message: "Error while updating the post. See the logs.",
@@ -63,13 +66,13 @@ const PostEditModal: React.FC<Props> = ({ data, open, onClose }) => {
         })
       );
       console.error(JSON.stringify(err, null, 2));
-      // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
     },
     variables: values,
   });
 
   const onSubmit = async (v: any, e: any) => {
     e.preventDefault();
+    setIsLoading(true);
     updatePost({ variables: values });
   };
 
@@ -94,7 +97,7 @@ const PostEditModal: React.FC<Props> = ({ data, open, onClose }) => {
         }}
       >
         Create Post
-        <IconButton onClick={onClose} disabled={loading}>
+        <IconButton onClick={onClose} disabled={isLoading}>
           <Close />
         </IconButton>
       </DialogTitle>
@@ -254,14 +257,14 @@ const PostEditModal: React.FC<Props> = ({ data, open, onClose }) => {
             color="secondary"
             size="large"
             onClick={onClose}
-            disabled={called && loading}
+            disabled={isLoading}
           >
             Cancel
           </Button>
           <LoadingButton
             type="submit"
             size="large"
-            pending={called && loading}
+            pending={isLoading}
             form="post-edit-form"
           >
             Submit

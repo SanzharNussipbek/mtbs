@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -27,6 +27,7 @@ type Props = {
 const UserCreateModal: React.FC<Props> = ({ open, onClose, onCreateCallback }) => {
   const dispatch = useAppDispatch();
 
+  const [isLoading, setIsLoading] = useState(false);
   const defaultValues = {
     firstname: "",
     lastname: "",
@@ -43,8 +44,9 @@ const UserCreateModal: React.FC<Props> = ({ open, onClose, onCreateCallback }) =
     defaultValues: defaultValues,
   });
 
-  const [register, { called, loading }] = useMutation(REGISTER_USER, {
-    update(_, { data: { register: userData } }) {
+  const [register] = useMutation(REGISTER_USER, {
+    update(_, { data }) {
+      setIsLoading(false);
       onCreateCallback();
       onClose();
       dispatch(
@@ -55,6 +57,7 @@ const UserCreateModal: React.FC<Props> = ({ open, onClose, onCreateCallback }) =
       );
     },
     onError(err) {
+      setIsLoading(false);
       dispatch(
         openSnackbar({
           message: "Error while creating the user. See the logs.",
@@ -62,14 +65,13 @@ const UserCreateModal: React.FC<Props> = ({ open, onClose, onCreateCallback }) =
         })
       );
       console.error(JSON.stringify(err, null, 2));
-      // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
     },
     variables: defaultValues,
   });
 
   const onSubmit = async (values: any, e: any) => {
     e.preventDefault();
-    console.table(values);
+    setIsLoading(true);
     register({ variables: values });
   };
 
@@ -83,7 +85,7 @@ const UserCreateModal: React.FC<Props> = ({ open, onClose, onCreateCallback }) =
         }}
       >
         Create User
-        <IconButton onClick={onClose} disabled={loading}>
+        <IconButton onClick={onClose} disabled={isLoading}>
           <Close />
         </IconButton>
       </DialogTitle>
@@ -252,14 +254,14 @@ const UserCreateModal: React.FC<Props> = ({ open, onClose, onCreateCallback }) =
             color="secondary"
             size="large"
             onClick={onClose}
-            disabled={called && loading}
+            disabled={isLoading}
           >
             Cancel
           </Button>
           <LoadingButton
             type="submit"
             size="large"
-            pending={called && loading}
+            pending={isLoading}
             form="user-create-form"
           >
             Submit

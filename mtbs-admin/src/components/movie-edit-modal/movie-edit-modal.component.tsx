@@ -48,6 +48,7 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
     trailerUrl: data?.trailerUrl?.length ? data?.trailerUrl : "",
   });
 
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(
     values?.releaseDate?.length ? new Date(values?.releaseDate) : null
   );
@@ -60,8 +61,9 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
     defaultValues: values,
   });
 
-  const [updateMovie, { called, loading }] = useMutation(UPDATE_MOVIE, {
-    update(_, { data: { updateMovie: movieData } }) {
+  const [updateMovie] = useMutation(UPDATE_MOVIE, {
+    update(_, { data }) {
+      setIsLoading(false);
       onClose();
       dispatch(
         openSnackbar({
@@ -71,6 +73,7 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
       );
     },
     onError(err) {
+      setIsLoading(false);
       dispatch(
         openSnackbar({
           message: "Error while updating the movie. See the logs.",
@@ -78,13 +81,13 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
         })
       );
       console.error(JSON.stringify(err, null, 2));
-      // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
     },
     variables: values,
   });
 
   const onSubmit = async (v: any, e: any) => {
     e.preventDefault();
+    setIsLoading(true);
     updateMovie({ variables: values });
   };
 
@@ -127,7 +130,7 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
         }}
       >
         Update Movie
-        <IconButton onClick={onClose} disabled={loading}>
+        <IconButton onClick={onClose} disabled={isLoading}>
           <Close />
         </IconButton>
       </DialogTitle>
@@ -483,14 +486,14 @@ const MovieEditModal: React.FC<Props> = ({ data, open, onClose }) => {
             color="secondary"
             size="large"
             onClick={onClose}
-            disabled={called && loading}
+            disabled={isLoading}
           >
             Cancel
           </Button>
           <LoadingButton
             type="submit"
             size="large"
-            pending={called && loading}
+            pending={isLoading}
             form="movie-edit-form"
           >
             Submit

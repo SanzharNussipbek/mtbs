@@ -50,6 +50,7 @@ const MovieCreateModal: React.FC<Props> = ({
     trailerUrl: "",
   };
 
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
 
   const {
@@ -60,8 +61,9 @@ const MovieCreateModal: React.FC<Props> = ({
     defaultValues: defaultValues,
   });
 
-  const [createMovie, { called, loading }] = useMutation(CREATE_MOVIE, {
-    update(_, { data: { createMovie: movieData } }) {
+  const [createMovie] = useMutation(CREATE_MOVIE, {
+    update(_, { data }) {
+      setIsLoading(false);
       onCreateCallback();
       onClose();
       dispatch(
@@ -72,6 +74,7 @@ const MovieCreateModal: React.FC<Props> = ({
       );
     },
     onError(err) {
+      setIsLoading(false);
       dispatch(
         openSnackbar({
           message: "Error while creating the movie. See the logs.",
@@ -79,13 +82,13 @@ const MovieCreateModal: React.FC<Props> = ({
         })
       );
       console.error(JSON.stringify(err, null, 2));
-      // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
     },
     variables: defaultValues,
   });
 
   const onSubmit = async (values: any, e: any) => {
     e.preventDefault();
+    setIsLoading(true);
     createMovie({ variables: values });
   };
 
@@ -99,7 +102,7 @@ const MovieCreateModal: React.FC<Props> = ({
         }}
       >
         Create Movie
-        <IconButton onClick={onClose} disabled={loading}>
+        <IconButton onClick={onClose} disabled={isLoading}>
           <Close />
         </IconButton>
       </DialogTitle>
@@ -433,14 +436,14 @@ const MovieCreateModal: React.FC<Props> = ({
             color="secondary"
             size="large"
             onClick={onClose}
-            disabled={called && loading}
+            disabled={isLoading}
           >
             Cancel
           </Button>
           <LoadingButton
             type="submit"
             size="large"
-            pending={called && loading}
+            pending={isLoading}
             form="movie-create-form"
           >
             Submit

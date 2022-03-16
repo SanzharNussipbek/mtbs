@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -31,6 +31,7 @@ const PostCreateModal: React.FC<Props> = ({
 }) => {
   const dispatch = useAppDispatch();
 
+  const [isLoading, setIsLoading] = useState(false);
   const defaultValues = {
     title: "",
     body: "",
@@ -47,8 +48,9 @@ const PostCreateModal: React.FC<Props> = ({
     defaultValues: defaultValues,
   });
 
-  const [createPost, { called, loading }] = useMutation(CREATE_POST, {
-    update(_, { data: { createPost: postData } }) {
+  const [createPost] = useMutation(CREATE_POST, {
+    update(_, { data }) {
+      setIsLoading(false);
       onCreateCallback();
       onClose();
       dispatch(
@@ -59,6 +61,7 @@ const PostCreateModal: React.FC<Props> = ({
       );
     },
     onError(err) {
+      setIsLoading(false);
       dispatch(
         openSnackbar({
           message: "Error while creating the post. See the logs.",
@@ -66,14 +69,13 @@ const PostCreateModal: React.FC<Props> = ({
         })
       );
       console.error(JSON.stringify(err, null, 2));
-      // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
     },
     variables: defaultValues,
   });
 
   const onSubmit = async (values: any, e: any) => {
     e.preventDefault();
-    console.log(values);
+    setIsLoading(true);
     createPost({ variables: values });
   };
 
@@ -87,7 +89,7 @@ const PostCreateModal: React.FC<Props> = ({
         }}
       >
         Create Post
-        <IconButton onClick={onClose} disabled={loading}>
+        <IconButton onClick={onClose} disabled={isLoading}>
           <Close />
         </IconButton>
       </DialogTitle>
@@ -237,14 +239,14 @@ const PostCreateModal: React.FC<Props> = ({
             color="secondary"
             size="large"
             onClick={onClose}
-            disabled={called && loading}
+            disabled={isLoading}
           >
             Cancel
           </Button>
           <LoadingButton
             type="submit"
             size="large"
-            pending={called && loading}
+            pending={isLoading}
             form="post-create-form"
           >
             Submit

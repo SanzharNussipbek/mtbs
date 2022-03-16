@@ -47,7 +47,7 @@ const HallEditModal: React.FC<Props> = ({ data, open, onClose }) => {
     defaultValues: values,
   });
 
-  const [updateHall, { called, loading }] = useMutation(UPDATE_HALL, {
+  const [updateHall] = useMutation(UPDATE_HALL, {
     update(_, { data }) {
       setIsLoading(false);
       onClose();
@@ -59,6 +59,7 @@ const HallEditModal: React.FC<Props> = ({ data, open, onClose }) => {
       );
     },
     onError(err) {
+      setIsLoading(false);
       dispatch(
         openSnackbar({
           message: "Error while updating the Hall. See the logs.",
@@ -66,7 +67,6 @@ const HallEditModal: React.FC<Props> = ({ data, open, onClose }) => {
         })
       );
       console.error(JSON.stringify(err, null, 2));
-      // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
     },
     variables: values,
   });
@@ -95,7 +95,7 @@ const HallEditModal: React.FC<Props> = ({ data, open, onClose }) => {
         }}
       >
         Update HALL
-        <IconButton onClick={onClose} disabled={loading}>
+        <IconButton onClick={onClose} disabled={isLoading}>
           <Close />
         </IconButton>
       </DialogTitle>

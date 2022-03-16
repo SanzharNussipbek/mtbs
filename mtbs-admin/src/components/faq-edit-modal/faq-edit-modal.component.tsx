@@ -28,6 +28,7 @@ type Props = {
 const FaqEditModal: React.FC<Props> = ({ data, open, onClose }) => {
   const dispatch = useAppDispatch();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [values, setValues] = useState({
     id: data?.id?.length ? data?.id : "",
     title: data?.title?.length ? data?.title : "",
@@ -42,8 +43,9 @@ const FaqEditModal: React.FC<Props> = ({ data, open, onClose }) => {
     defaultValues: values,
   });
 
-  const [updateFaq, { called, loading }] = useMutation(UPDATE_FAQ, {
-    update(_, { data: { updatePost: postData } }) {
+  const [updateFaq] = useMutation(UPDATE_FAQ, {
+    update(_, { data }) {
+      setIsLoading(false);
       onClose();
       dispatch(
         openSnackbar({
@@ -53,6 +55,7 @@ const FaqEditModal: React.FC<Props> = ({ data, open, onClose }) => {
       );
     },
     onError(err) {
+      setIsLoading(false);
       dispatch(
         openSnackbar({
           message: "Error while updating the FAQ. See the logs.",
@@ -60,13 +63,13 @@ const FaqEditModal: React.FC<Props> = ({ data, open, onClose }) => {
         })
       );
       console.error(JSON.stringify(err, null, 2));
-      // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
     },
     variables: values,
   });
 
   const onSubmit = async (v: any, e: any) => {
     e.preventDefault();
+    setIsLoading(true);
     updateFaq({ variables: values });
   };
 
@@ -88,7 +91,7 @@ const FaqEditModal: React.FC<Props> = ({ data, open, onClose }) => {
         }}
       >
         Update FAQ
-        <IconButton onClick={onClose} disabled={loading}>
+        <IconButton onClick={onClose} disabled={isLoading}>
           <Close />
         </IconButton>
       </DialogTitle>
@@ -168,14 +171,14 @@ const FaqEditModal: React.FC<Props> = ({ data, open, onClose }) => {
             color="secondary"
             size="large"
             onClick={onClose}
-            disabled={called && loading}
+            disabled={isLoading}
           >
             Cancel
           </Button>
           <LoadingButton
             type="submit"
             size="large"
-            pending={called && loading}
+            pending={isLoading}
             form="faq-edit-form"
           >
             Submit

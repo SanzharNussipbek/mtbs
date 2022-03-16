@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -31,6 +31,7 @@ const FaqCreateModal: React.FC<Props> = ({
 }) => {
   const dispatch = useAppDispatch();
 
+  const [isLoading, setIsLoading] = useState(false);
   const defaultValues = {
     title: "",
     body: "",
@@ -44,8 +45,9 @@ const FaqCreateModal: React.FC<Props> = ({
     defaultValues: defaultValues,
   });
 
-  const [createFaq, { called, loading }] = useMutation(CREATE_FAQ, {
+  const [createFaq] = useMutation(CREATE_FAQ, {
     update(_, { data: { createFaq: faqData } }) {
+      setIsLoading(false);
       onCreateCallback();
       onClose();
       dispatch(
@@ -56,6 +58,7 @@ const FaqCreateModal: React.FC<Props> = ({
       );
     },
     onError(err) {
+      setIsLoading(false);
       dispatch(
         openSnackbar({
           message: "Error while creating the FAQ. See the logs.",
@@ -63,14 +66,13 @@ const FaqCreateModal: React.FC<Props> = ({
         })
       );
       console.error(JSON.stringify(err, null, 2));
-      // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
     },
     variables: defaultValues,
   });
 
   const onSubmit = async (values: any, e: any) => {
     e.preventDefault();
-    console.log(values);
+    setIsLoading(true);
     createFaq({ variables: values });
   };
 
@@ -83,8 +85,8 @@ const FaqCreateModal: React.FC<Props> = ({
           justifyContent: "space-between",
         }}
       >
-        Create Post
-        <IconButton onClick={onClose} disabled={loading}>
+        Create FAQ
+        <IconButton onClick={onClose} disabled={isLoading}>
           <Close />
         </IconButton>
       </DialogTitle>
@@ -160,14 +162,14 @@ const FaqCreateModal: React.FC<Props> = ({
             color="secondary"
             size="large"
             onClick={onClose}
-            disabled={called && loading}
+            disabled={isLoading}
           >
             Cancel
           </Button>
           <LoadingButton
             type="submit"
             size="large"
-            pending={called && loading}
+            pending={isLoading}
             form="faq-create-form"
           >
             Submit

@@ -8,7 +8,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete } from "@mui/icons-material";
 
 import { Hall, Seat } from "../../types/types";
 import { useAppDispatch } from "../../hooks";
@@ -22,6 +22,7 @@ import { GET_ALL_HALLS } from "../../utils/gql/hall";
 import Table from "../table/table.component";
 import Loader from "../loader/loader.component";
 import Dialog from "../dialog/dialog.component";
+import SeatCreateModal from "../seat-create-modal/seat-create-modal.component";
 
 import { Styled } from "./seats-list.styles";
 
@@ -40,10 +41,8 @@ const SeatsList: React.FC = () => {
   const [rows, setRows] = useState<Row[]>([]);
   const [seats, setSeats] = useState<Seat[]>([]);
   const [halls, setHalls] = useState<Hall[]>([]);
-  const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
 
   const { isOpen: isCreateOpen, onToggle: toggleCreate } = useModalState();
-  const { isOpen: isEditOpen, onToggle: toggleEdit } = useModalState();
   const { isOpen: isDeleteOpen, onToggle: toggleDelete } = useModalState();
 
   const { called, loading, error, data, refetch } = useQuery(GET_ALL_SEATS, {
@@ -96,7 +95,6 @@ const SeatsList: React.FC = () => {
           })
         );
         console.error(JSON.stringify(err, null, 2));
-        // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
       },
       variables: { id: seatId },
     });
@@ -120,9 +118,6 @@ const SeatsList: React.FC = () => {
           hallId: halls.find((h) => h.id === seat.hallId)?.name,
           actions: (
             <ButtonGroup>
-              <IconButton color="warning" onClick={() => handleEditSeat(seat)}>
-                <Edit />
-              </IconButton>
               <IconButton
                 color="error"
                 onClick={() => handleDeleteSeat(seat?.id)}
@@ -135,11 +130,6 @@ const SeatsList: React.FC = () => {
       })
     );
   }, [seats, halls]);
-
-  const handleEditSeat = (seat: Seat) => {
-    setSelectedSeat(seat);
-    toggleEdit();
-  };
 
   const handleDeleteSeat = (id: string) => {
     setSeatId(id);
@@ -181,16 +171,11 @@ const SeatsList: React.FC = () => {
         onSubmit={handleDeleteSubmit}
         pending={false}
       />
-      {/* <FaqCreateModal
+      <SeatCreateModal
         open={isCreateOpen}
         onClose={toggleCreate}
         onCreateCallback={onCreateSeat}
       />
-      <FaqEditModal
-        data={selectedSeat}
-        open={isEditOpen}
-        onClose={toggleEdit}
-      /> */}
     </Styled.Container>
   );
 };

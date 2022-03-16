@@ -52,8 +52,8 @@ const HallCreateModal: React.FC<Props> = ({
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedTypeInputValue, setSelectedTypeInputValue] = useState("");
 
-  const [createHall, { called, loading }] = useMutation(CREATE_HALL, {
-    update(_, { data: { createHall: hallData } }) {
+  const [createHall] = useMutation(CREATE_HALL, {
+    update(_, { data }) {
       setIsLoading(false);
       onCreateCallback();
       onClose();
@@ -65,6 +65,7 @@ const HallCreateModal: React.FC<Props> = ({
       );
     },
     onError(err) {
+      setIsLoading(false);
       dispatch(
         openSnackbar({
           message: "Error while creating the hall. See the logs.",
@@ -96,7 +97,7 @@ const HallCreateModal: React.FC<Props> = ({
         }}
       >
         Create Hall
-        <IconButton onClick={onClose} disabled={loading}>
+        <IconButton onClick={onClose} disabled={isLoading}>
           <Close />
         </IconButton>
       </DialogTitle>

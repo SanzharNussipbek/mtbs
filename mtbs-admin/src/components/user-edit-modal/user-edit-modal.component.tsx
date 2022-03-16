@@ -28,6 +28,7 @@ type Props = {
 const UserEditModal: React.FC<Props> = ({ data, open, onClose }) => {
   const dispatch = useAppDispatch();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [values, setValues] = useState({
     id: data?.id?.length ? data?.id : "",
     firstname: data?.firstname?.length ? data?.firstname : "",
@@ -44,8 +45,9 @@ const UserEditModal: React.FC<Props> = ({ data, open, onClose }) => {
     defaultValues: values,
   });
 
-  const [updateUser, { called, loading }] = useMutation(UPDATE_USER, {
-    update(_, { data: { updateUser: userData } }) {
+  const [updateUser] = useMutation(UPDATE_USER, {
+    update(_, { data }) {
+      setIsLoading(false);
       dispatch(
         openSnackbar({
           message: "User updated successfully!",
@@ -55,6 +57,7 @@ const UserEditModal: React.FC<Props> = ({ data, open, onClose }) => {
       onClose();
     },
     onError(err) {
+      setIsLoading(false);
       dispatch(
         openSnackbar({
           message: "Error while updating the user. See the logs.",
@@ -62,14 +65,13 @@ const UserEditModal: React.FC<Props> = ({ data, open, onClose }) => {
         })
       );
       console.error(JSON.stringify(err, null, 2));
-      // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
     },
     variables: values,
   });
 
   const onSubmit = async (v: any, e: any) => {
     e.preventDefault();
-    console.table(values);
+    setIsLoading(true);
     updateUser({ variables: values });
   };
 
@@ -93,7 +95,7 @@ const UserEditModal: React.FC<Props> = ({ data, open, onClose }) => {
         }}
       >
         Edit User
-        <IconButton onClick={onClose} disabled={loading}>
+        <IconButton onClick={onClose} disabled={isLoading}>
           <Close />
         </IconButton>
       </DialogTitle>
@@ -229,14 +231,14 @@ const UserEditModal: React.FC<Props> = ({ data, open, onClose }) => {
             color="secondary"
             size="large"
             onClick={onClose}
-            disabled={called && loading}
+            disabled={isLoading}
           >
             Cancel
           </Button>
           <LoadingButton
             type="submit"
             size="large"
-            pending={called && loading}
+            pending={isLoading}
             form="user-edit-form"
           >
             Submit
