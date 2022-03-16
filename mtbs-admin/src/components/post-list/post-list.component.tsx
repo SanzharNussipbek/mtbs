@@ -8,6 +8,7 @@ import {
   ButtonGroup,
   IconButton,
   Link,
+  Typography,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 
@@ -99,7 +100,11 @@ const PostList: React.FC = () => {
         return {
           ...post,
           createdAt: format(new Date(post?.createdAt), "dd.MM.yyyy, HH:mm:ss"),
-          body: <Box maxHeight={100} overflow="auto" >{post.body}</Box>,
+          body: (
+            <Box maxHeight={100} overflow="auto">
+              {post.body}
+            </Box>
+          ),
           imgUrl: (
             <Link href={post.imgUrl} target="_blank">
               Link to poster
@@ -148,12 +153,15 @@ const PostList: React.FC = () => {
   };
 
   return (called && loading) || (isDeleteCalled && isDeleteLoading) ? (
-    <Loader fullscreen/>
+    <Loader fullscreen />
   ) : error ? (
     <Alert severity="error">{error?.message}</Alert>
   ) : (
     <Styled.Container>
-      <Box display={"flex"} justifyContent="flex-end">
+      <Box display={"flex"} justifyContent="space-between">
+        <Typography variant="h5" color="primary">
+          Posts
+        </Typography>
         <Button color="info" variant="contained" onClick={toggleCreate}>
           Create
         </Button>

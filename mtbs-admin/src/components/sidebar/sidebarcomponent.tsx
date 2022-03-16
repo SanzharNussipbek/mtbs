@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import {
   styled,
   Drawer as MuiDrawer,
@@ -10,16 +11,17 @@ import {
   ListItemText,
   Divider,
 } from "@mui/material";
-import FeedIcon from "@mui/icons-material/Feed";
-import GroupIcon from "@mui/icons-material/Group";
-import MovieIcon from "@mui/icons-material/Movie";
-import LiveHelpIcon from "@mui/icons-material/LiveHelp";
-import EventSeatIcon from "@mui/icons-material/EventSeat";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import LocalMoviesIcon from "@mui/icons-material/LocalMovies";
-import CameraOutdoorIcon from "@mui/icons-material/CameraOutdoor";
-import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import {
+  Feed,
+  Group,
+  Movie,
+  LiveHelp,
+  EventSeat,
+  ChevronLeft,
+  LocalMovies,
+  CameraOutdoor,
+  ConfirmationNumber,
+} from "@mui/icons-material";
 
 const drawerWidth: number = 240;
 
@@ -57,42 +59,42 @@ const LIST_ITEMS: {
   {
     title: "Users",
     url: "",
-    icon: <GroupIcon />,
+    icon: <Group />,
   },
   {
     title: "Movies",
     url: "/movies",
-    icon: <MovieIcon />,
+    icon: <Movie />,
   },
   {
     title: "Sessions",
     url: "/sessions",
-    icon: <LocalMoviesIcon />,
+    icon: <LocalMovies />,
   },
   {
     title: "Halls",
     url: "/halls",
-    icon: <CameraOutdoorIcon />,
+    icon: <CameraOutdoor />,
   },
   {
     title: "Seats",
     url: "/seats",
-    icon: <EventSeatIcon />,
+    icon: <EventSeat />,
   },
   {
     title: "Tickets",
     url: "/tickets",
-    icon: <ConfirmationNumberIcon />,
+    icon: <ConfirmationNumber />,
   },
   {
     title: "Posts",
     url: "/posts",
-    icon: <FeedIcon />,
+    icon: <Feed />,
   },
   {
     title: "FAQ",
     url: "/faq",
-    icon: <LiveHelpIcon />,
+    icon: <LiveHelp />,
   },
 ];
 
@@ -123,7 +125,7 @@ const Sidebar: React.FC<Props> = ({ isOpen, onToggle }) => {
         }}
       >
         <IconButton onClick={onToggle}>
-          <ChevronLeftIcon />
+          <ChevronLeft />
         </IconButton>
       </Toolbar>
       <Divider />
@@ -136,6 +138,9 @@ const Sidebar: React.FC<Props> = ({ isOpen, onToggle }) => {
             key={index}
             onClick={() => handleClick(url)}
             selected={index === selectedIdx}
+            style={{
+              minHeight: 48,
+            }}
           >
             <ListItemIcon>{icon}</ListItemIcon>
             <ListItemText primary={title} />

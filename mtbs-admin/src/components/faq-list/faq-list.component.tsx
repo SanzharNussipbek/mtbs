@@ -6,6 +6,7 @@ import {
   Button,
   ButtonGroup,
   IconButton,
+  Typography,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 
@@ -92,7 +93,11 @@ const FaqList: React.FC = () => {
       faqs.map((faq) => {
         return {
           ...faq,
-          body: <Box maxHeight={100} overflow="auto" >{faq.body}</Box>,
+          body: (
+            <Box maxHeight={100} overflow="auto">
+              {faq.body}
+            </Box>
+          ),
           actions: (
             <ButtonGroup>
               <IconButton color="warning" onClick={() => handleEditFaq(faq)}>
@@ -131,12 +136,15 @@ const FaqList: React.FC = () => {
   };
 
   return (called && loading) || (isDeleteCalled && isDeleteLoading) ? (
-    <Loader fullscreen/>
+    <Loader fullscreen />
   ) : error ? (
     <Alert severity="error">{error?.message}</Alert>
   ) : (
     <Styled.Container>
-      <Box display={"flex"} justifyContent="flex-end">
+      <Box display={"flex"} justifyContent="space-between">
+        <Typography variant="h5" color="primary">
+          FAQ
+        </Typography>
         <Button color="info" variant="contained" onClick={toggleCreate}>
           Create
         </Button>
@@ -156,11 +164,7 @@ const FaqList: React.FC = () => {
         onClose={toggleCreate}
         onCreateCallback={onCreateFaq}
       />
-      <FaqEditModal
-        data={selectedFaq}
-        open={isEditOpen}
-        onClose={toggleEdit}
-      />
+      <FaqEditModal data={selectedFaq} open={isEditOpen} onClose={toggleEdit} />
     </Styled.Container>
   );
 };

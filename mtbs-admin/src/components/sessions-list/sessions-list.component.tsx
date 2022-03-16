@@ -172,7 +172,10 @@ const SessionsList: React.FC = () => {
     <Alert severity="error">{error?.message}</Alert>
   ) : (
     <Styled.Container>
-      <Box display={"flex"} justifyContent="flex-end">
+      <Box display={"flex"} justifyContent="space-between">
+        <Typography variant="h5" color="primary">
+          Sessions
+        </Typography>
         <Button color="info" variant="contained" onClick={toggleCreate}>
           Create
         </Button>

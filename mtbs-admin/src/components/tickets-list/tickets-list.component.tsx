@@ -117,7 +117,7 @@ const TicketsList: React.FC = () => {
           seats: (
             <Box display="flex" flexDirection="column">
               {ticket?.seats?.map((s) => (
-                <Typography key={s.id} style={{ whiteSpace: 'nowrap' }}>
+                <Typography key={s.id} style={{ whiteSpace: "nowrap" }}>
                   {`Seat: ${s.seat.seatNumber}, Row: ${s.seat.rowNumber}`}
                 </Typography>
               ))}
@@ -169,7 +169,10 @@ const TicketsList: React.FC = () => {
     <Alert severity="error">{error?.message}</Alert>
   ) : (
     <Styled.Container>
-      <Box display={"flex"} justifyContent="flex-end">
+      <Box display={"flex"} justifyContent="space-between">
+        <Typography variant="h5" color="primary">
+          Tickets
+        </Typography>
         <Button color="info" variant="contained" onClick={toggleCreate}>
           Create
         </Button>

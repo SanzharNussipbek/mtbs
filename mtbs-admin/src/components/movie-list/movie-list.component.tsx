@@ -8,6 +8,7 @@ import {
   ButtonGroup,
   IconButton,
   Link,
+  Typography,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 
@@ -105,7 +106,11 @@ const MovieList: React.FC = () => {
         return {
           ...movie,
           releaseDate: format(new Date(movie?.releaseDate), "dd.MM.yyyy"),
-          description: <Box maxHeight={100} overflow="auto" >{movie.description}</Box>,
+          description: (
+            <Box maxHeight={100} overflow="auto">
+              {movie.description}
+            </Box>
+          ),
           imgUrl: (
             <Link href={movie.imgUrl} target="_blank">
               Link to poster
@@ -157,12 +162,15 @@ const MovieList: React.FC = () => {
   };
 
   return (called && loading) || (isDeleteCalled && isDeleteLoading) ? (
-    <Loader fullscreen/>
+    <Loader fullscreen />
   ) : error ? (
     <Alert severity="error" title={error?.message} />
   ) : (
     <Styled.Container>
-      <Box display={"flex"} justifyContent="flex-end">
+      <Box display={"flex"} justifyContent="space-between">
+        <Typography variant="h5" color="primary">
+          Movies
+        </Typography>
         <Button color="info" variant="contained" onClick={toggleCreate}>
           Create
         </Button>

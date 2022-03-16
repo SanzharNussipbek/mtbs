@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import { Alert, Box, Button, ButtonGroup, IconButton } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  ButtonGroup,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 
 import { Hall, Seat } from "../../types/types";
@@ -156,7 +163,10 @@ const SeatsList: React.FC = () => {
     <Alert severity="error">{error?.message}</Alert>
   ) : (
     <Styled.Container>
-      <Box display={"flex"} justifyContent="flex-end">
+      <Box display={"flex"} justifyContent="space-between">
+        <Typography variant="h5" color="primary">
+          Seats
+        </Typography>
         <Button color="info" variant="contained" onClick={toggleCreate}>
           Create
         </Button>
