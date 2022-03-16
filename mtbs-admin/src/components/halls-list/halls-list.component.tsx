@@ -21,6 +21,8 @@ import { setHallList } from "../../redux/hall/hall.actions";
 import Table from "../table/table.component";
 import Loader from "../loader/loader.component";
 import Dialog from "../dialog/dialog.component";
+import HallEditModal from "../hall-edit-modal/hall-edit-modal.component";
+import HallCreateModal from "../hall-create-modal/hall-create-modal.component";
 
 import { Styled } from "./halls-list.styles";
 
@@ -154,16 +156,16 @@ const HallsList: React.FC = () => {
         onSubmit={handleDeleteSubmit}
         pending={false}
       />
-      {/* <FaqCreateModal
+      <HallCreateModal
         open={isCreateOpen}
         onClose={toggleCreate}
         onCreateCallback={onCreateHall}
       />
-      <FaqEditModal
+      <HallEditModal
         data={selectedHall}
         open={isEditOpen}
         onClose={toggleEdit}
-      /> */}
+      />
     </Styled.Container>
   );
 };
