@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { format } from "date-fns";
 import { useMutation, useQuery } from "@apollo/client";
 import {
   Alert,
@@ -10,7 +11,7 @@ import {
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 
-import { Session, SessionRates } from "../../types/types";
+import { Session } from "../../types/types";
 import { useAppDispatch } from "../../hooks";
 import { Column, Row } from "../table/table.types";
 import useModalState from "../../utils/useModalState";
@@ -21,9 +22,10 @@ import { updateSessionList } from "../../redux/session/session.actions";
 import Table from "../table/table.component";
 import Loader from "../loader/loader.component";
 import Dialog from "../dialog/dialog.component";
+import SessionEditModal from "../session-edit-modal/session-edit-modal.component";
+import SessionCreateModal from "../session-create-modal/session-create-modal.component";
 
 import { Styled } from "./sessions-list.styles";
-import { format } from "date-fns";
 
 const columns: Column[] = [
   { title: "ID", field: "id" },
@@ -190,16 +192,16 @@ const SessionsList: React.FC = () => {
         onSubmit={handleDeleteSubmit}
         pending={false}
       />
-      {/* <FaqCreateModal
+      <SessionCreateModal
         open={isCreateOpen}
         onClose={toggleCreate}
         onCreateCallback={onCreateSession}
       />
-      <FaqEditModal
+      <SessionEditModal
         data={selectedSession}
         open={isEditOpen}
         onClose={toggleEdit}
-      /> */}
+      />
     </Styled.Container>
   );
 };

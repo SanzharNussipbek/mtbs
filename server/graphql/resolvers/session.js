@@ -50,14 +50,18 @@ module.exports = {
   Mutation: {
     async createSession(
       _,
-      { data: { movieId, hallId, datetime, rates } },
+      {
+        data: { movieId, hallId, datetime, adultRate, studentRate, childRate },
+      },
       context
     ) {
       const { valid, errors } = await validateCreateSessionInput(
         movieId,
         hallId,
         datetime,
-        rates
+        adultRate,
+        studentRate,
+        childRate
       );
       if (!valid) {
         throw new UserInputError("Errors", {
@@ -85,7 +89,11 @@ module.exports = {
         hall: hall,
         seats: sessionSeats,
         datetime,
-        rates,
+        rates: {
+          ADULT: adultRate,
+          STUDENT: studentRate,
+          CHILD: childRate,
+        },
       });
 
       const session = await newSession.save();
@@ -119,7 +127,11 @@ module.exports = {
           hall: hall,
           seats: sessionSeats,
           datetime: sessionData.datetime,
-          rates: sessionData.rates,
+          rates: {
+            ADULT: sessionData.adultRate,
+            STUDENT: sessionData.studentRate,
+            CHILD: sessionData.childRate,
+          },
         });
 
         const session = await newSession.save();
@@ -162,7 +174,17 @@ module.exports = {
     },
     async updateSession(
       _,
-      { data: { id, movieId, hallId, datetime } },
+      {
+        data: {
+          id,
+          movieId,
+          hallId,
+          datetime,
+          adultRate,
+          studentRate,
+          childRate,
+        },
+      },
       context
     ) {
       try {
@@ -178,6 +200,11 @@ module.exports = {
           movie,
           hall,
           datetime,
+          rates: {
+            ADULT: adultRate ?? session?.rates?.ADULT,
+            STUDENT: studentRate ?? session?.rates?.STUDENT,
+            CHILD: childRate ?? session?.rates?.CHILD,
+          },
         };
         const updatedSession = await Session.findByIdAndUpdate(
           id,

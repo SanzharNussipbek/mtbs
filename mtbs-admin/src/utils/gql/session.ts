@@ -212,18 +212,15 @@ export const DELETE_ALL_SESSIONS = gql`
 `;
 
 export const UPDATE_SESSION = gql`
-  input CreateSessionRatesInput {
-    ADULT: Int!
-    STUDENT: Int
-    CHILD: Int
-  }
   mutation updateSession(
     $id: ID!
     $movieId: ID
     $hallId: ID
     $datetime: Int
     $seats: [ID]
-    # $rates: CreateSessionRatesInput
+    $adultRate: Int!
+    $studentRate: Int!
+    $childRate: Int!
   ) {
     updateSession(
       data: {
@@ -232,7 +229,9 @@ export const UPDATE_SESSION = gql`
         hallId: $hallId
         datetime: $datetime
         seats: $seats
-        # rates: $rates
+        adultRate: $adultRate
+        studentRate: $studentRate
+        childRate: $childRate
       }
     ) {
       id
@@ -283,23 +282,22 @@ export const UPDATE_SESSION = gql`
 `;
 
 export const CREATE_SESSION = gql`
-  input CreateSessionRatesInput {
-    ADULT: Int!
-    STUDENT: Int
-    CHILD: Int
-  }
   mutation createSession(
     $movieId: String!
     $hallId: String!
     $datetime: Int!
-    # $rates: CreateSessionRatesInput!
+    $adultRate: Int!
+    $studentRate: Int!
+    $childRate: Int!
   ) {
     createSession(
       data: {
         movieId: $movieId
         hallId: $hallId
         datetime: $datetime
-        # rates: $rates
+        adultRate: $adultRate
+        studentRate: $studentRate
+        childRate: $childRate
       }
     ) {
       id

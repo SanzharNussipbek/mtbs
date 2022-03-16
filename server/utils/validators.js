@@ -193,7 +193,9 @@ module.exports.validateCreateSessionInput = async (
   movieId,
   hallId,
   datetime,
-  rates
+  adultRate, 
+  studentRate, 
+  childRate
 ) => {
   const errors = {};
 
@@ -226,10 +228,17 @@ module.exports.validateCreateSessionInput = async (
   ) {
     errors.datetime = "This session already exists";
   }
-  if (rates == null) {
-    errors.rates = "Rates must not be empty";
-  } else if (rates?.ADULT == null) {
-    errors.rates = "Adult rates must not be empty";
+  
+  if (adultRate == null) {
+    errors.rates = "Adult rate must not be empty";
+  }
+
+  if (studentRate == null) {
+    errors.rates = "Student rate must not be empty";
+  }
+
+  if (childRate == null) {
+    errors.rates = "Child rate must not be empty";
   }
 
   return {
