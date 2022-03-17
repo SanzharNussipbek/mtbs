@@ -13,12 +13,11 @@ import MoviesListItem from "../movies-list-item/movies-list-item.component";
 import { styles } from "./movies-list.styles";
 
 const MoviesList: React.FC = () => {
-
   const [movies, setMovies] = useState<Movie[]>([]);
   const [currentMovies, setCurrentMovies] = useState<Movie[]>([]);
   const [comingSoonMovies, setComingSoonMovies] = useState<Movie[]>([]);
 
-  const { loading, error, data } = useQuery(GET_ALL_MOVIES_MUTATION, {
+  const { called, loading, error, data } = useQuery(GET_ALL_MOVIES_MUTATION, {
     onError(err) {
       Alert.alert("ERROR", err.message);
     },
@@ -47,12 +46,12 @@ const MoviesList: React.FC = () => {
     );
   }, [movies]);
 
-  return !movies.length || loading ? (
+  return called && loading ? (
     <Loader />
   ) : (
     <ScrollView style={styles.container}>
       <View style={styles.moviesList}>
-        <Heading size='xl' color={"secondary.500"} mb={4}>
+        <Heading size="xl" color={"secondary.500"} mb={4}>
           Today on screen
         </Heading>
         <ScrollView horizontal>
@@ -64,7 +63,7 @@ const MoviesList: React.FC = () => {
         </ScrollView>
       </View>
       <View style={styles.moviesList}>
-        <Heading size='xl' color={"secondary.500"} mb={4}>
+        <Heading size="xl" color={"secondary.500"} mb={4}>
           Coming soon
         </Heading>
         <ScrollView horizontal>

@@ -33,7 +33,7 @@ export default function FaqScreen(props: RootStackScreenProps<"FAQ">) {
   const [expanded, setExpanded] = useState("");
   const [faqList, setFaqList] = useState<Faq[]>([]);
 
-  const { loading, error, data } = useQuery(GET_FAQS, {
+  const { called, loading, error, data } = useQuery(GET_FAQS, {
     onError(err) {
       Alert.alert("ERROR", err.message);
     },
@@ -53,7 +53,7 @@ export default function FaqScreen(props: RootStackScreenProps<"FAQ">) {
       <Heading textAlign="center" color="secondary.500" mb={4}>
         FAQ
       </Heading>
-      {loading ? (
+      {called && loading ? (
         <Loader />
       ) : (
         faqList.map(({ id, title, body }) => (

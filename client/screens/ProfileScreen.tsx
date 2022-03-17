@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Pressable } from "native-base";
 import { StyleSheet, Image, Alert } from "react-native";
 
 import { useAppSelector } from "../hooks";
@@ -7,7 +8,6 @@ import { Text, View } from "../components/Themed";
 import { selectUser } from "../redux/user/user.selector";
 
 import ProfileMenu from "../components/profile-menu/profile-menu.component";
-import { Pressable } from "native-base";
 
 export default function ProfileScreen({
   navigation,
@@ -20,7 +20,10 @@ export default function ProfileScreen({
   }, [user]);
 
   const handleImgClick = () => {
-    Alert.alert("Oops..", "You can't change your image yet.\nThat feature will be here soon!");
+    Alert.alert(
+      "Oops..",
+      "You can't change your image yet.\nThat feature will be here soon!"
+    );
   };
 
   return user ? (
@@ -28,9 +31,9 @@ export default function ProfileScreen({
       <View style={styles.profile}>
         <View style={styles.avatar}>
           <Pressable onPress={handleImgClick}>
-          <Image
-            style={styles.img}
-            source={require("../assets/images/profile.png")}
+            <Image
+              style={styles.img}
+              source={require("../assets/images/profile.png")}
             />
           </Pressable>
         </View>

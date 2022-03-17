@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { Flex, Text, VStack } from "native-base";
 
-import { SessionSeat } from "../../types/types";
+import { Session, SessionSeat } from "../../types/types";
 import { setSession } from "../../redux/session/session.slice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { selectSession } from "../../redux/session/session.selector";
@@ -12,12 +12,12 @@ import SessionSeatItem from "../session-seat-item/session-seat-item.componenent"
 import { styles } from "./session-seat-list.styles";
 
 type Props = {
+  session: Session;
   onChange: (seats: SessionSeat[]) => void;
 };
 
-const SessionSeatList: React.FC<Props> = ({ onChange }) => {
+const SessionSeatList: React.FC<Props> = ({ session, onChange }) => {
   const dispatch = useAppDispatch();
-  const session = useAppSelector(selectSession);
 
   const [selectedSeats, setSelectedSeats] = useState<SessionSeat[]>([]);
 

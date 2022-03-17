@@ -27,7 +27,7 @@ const RegisterScreen = () => {
 
   const navigation = useNavigation();
 
-  const [register, { loading }] = useMutation(REGISTER_MUTATION, {
+  const [register, { called, loading }] = useMutation(REGISTER_MUTATION, {
     update(_, { data: { register: userData } }) {
       AsyncStorage.setItem("token", userData?.token).then(() => {
         navigation.navigate("Root");
@@ -68,8 +68,8 @@ const RegisterScreen = () => {
         height: "100%",
       }}
     >
-      {loading ? (
-        <Loader />
+      {called && loading ? (
+        <Loader text="Registration in process..."/>
       ) : (
         <View style={{ width: "100%" }}>
           <TextInput

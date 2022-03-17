@@ -10,17 +10,13 @@ import {
   Input,
   WarningOutlineIcon,
 } from "native-base";
-import SnackBar from "react-native-snackbar-component";
 
-import { User } from "../../types/types";
 import { RootStackScreenProps } from "../../types";
-import {
-  CHANGE_PASSWORD_MUTATION,
-  UPDATE_USER_MUTATION,
-} from "../../utils/gql";
-import { useAppDispatch, useAppSelector } from "../../hooks";
+import { CHANGE_PASSWORD_MUTATION } from "../../utils/gql";
 import { updateUser } from "../../redux/user/user.actions";
 import { selectUser } from "../../redux/user/user.selector";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { openSnackbar } from "../../redux/loading/loading.slice";
 
 import { styles } from "./EditPasswordScreen.styles";
 
@@ -49,26 +45,23 @@ export default function EditPasswordScreen(
     newPassword: "",
     confirmPassword: "",
   });
-  const [showSnackbar, setShowSnackbar] = useState(false);
-  const [snackbarStatus, setSnackbarStatus] = useState<"SUCCESS" | "ERROR">(
-    "SUCCESS"
-  );
 
   const [changePassword, { loading }] = useMutation(CHANGE_PASSWORD_MUTATION, {
     update(_, { data: { changePassword: userData } }) {
       setIsLoading(false);
       dispatch(updateUser(userData));
-      setSnackbarStatus("SUCCESS");
-      setShowSnackbar(true);
+      dispatch(
+        openSnackbar({
+          severity: "success",
+          message: "Your password is updated successfully!",
+        })
+      );
       AsyncStorage.setItem("token", userData?.token).then(() => {
         navigation.navigate("Root");
       });
     },
     onError(err) {
       setIsLoading(false);
-      setSnackbarStatus("ERROR");
-      setShowSnackbar(true);
-      // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
       Alert.alert("ERROR", err?.message);
     },
     variables: values,
@@ -98,17 +91,6 @@ export default function EditPasswordScreen(
 
   return user ? (
     <View style={styles.container}>
-      <SnackBar
-        position="top"
-        autoHidingTime={3000}
-        visible={showSnackbar}
-        backgroundColor={snackbarStatus === "SUCCESS" ? "#22c55e" : "#ef4444"}
-        textMessage={
-          snackbarStatus === "SUCCESS"
-            ? "Your information is updated successfully!"
-            : "Error while updating the information!"
-        }
-      />
       <View style={{ width: "100%" }}>
         <FormControl
           style={styles.formControl}

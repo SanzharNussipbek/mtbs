@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { format } from "date-fns";
 import { useQuery } from "@apollo/client";
-import { Flex, Heading, HStack, Switch, Text } from "native-base";
+import { useNavigation } from "@react-navigation/native";
 import { Alert, useWindowDimensions } from "react-native";
+import { Flex, Heading, HStack, Switch, Text } from "native-base";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 
 import { View } from "../Themed";
@@ -12,8 +14,6 @@ import Loader from "../loader/loader.component";
 import SessionTimeItem from "../session-time-item/session-time-item.component";
 
 import { styles } from "./session-list.styles";
-import { useNavigation } from "@react-navigation/native";
-import { format } from "date-fns";
 
 type Props = {
   movieId: string;
@@ -33,7 +33,7 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
     { key: "second", title: "Tomorrow" },
   ]);
 
-  const { loading, error, data } = useQuery(GET_SESSIONS_BY_MOVIE_ID, {
+  const { called, loading, error, data } = useQuery(GET_SESSIONS_BY_MOVIE_ID, {
     onError(err) {
       Alert.alert("ERROR", err.message);
     },
@@ -72,7 +72,7 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
     }
   }, [checked]);
 
-  return loading ? (
+  return called && loading ? (
     <Loader />
   ) : (
     <View style={styles.sessionList}>
@@ -112,9 +112,9 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
       <View style={styles.main}>
         {sessions.filter((s) =>
           index === 0
-            ? format(new Date(s.datetime * 1000).getDate(), "dd.MM.yyyy") ===
-              format(new Date().getDate(), "dd.MM.yyyy")
-            : format(new Date(s.datetime * 1000).getDate(), "dd.MM.yyyy") ===
+            ? format(new Date(s.datetime * 1000), "dd.MM.yyyy") ===
+              format(new Date(), "dd.MM.yyyy")
+            : format(new Date(s.datetime * 1000), "dd.MM.yyyy") ===
               format(new Date().setDate(new Date().getDate() + 1), "dd.MM.yyyy")
         )?.length ? (
           halls.map((hall: Hall) => {
@@ -122,15 +122,10 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
               .filter((s) =>
                 index === 0
                   ? s.hall.id === hall.id &&
-                    format(
-                      new Date(s.datetime * 1000).getDate(),
-                      "dd.MM.yyyy"
-                    ) === format(new Date().getDate(), "dd.MM.yyyy")
+                    format(new Date(s.datetime * 1000), "dd.MM.yyyy") ===
+                      format(new Date(), "dd.MM.yyyy")
                   : s.hall.id === hall.id &&
-                    format(
-                      new Date(s.datetime * 1000).getDate(),
-                      "dd.MM.yyyy"
-                    ) ===
+                    format(new Date(s.datetime * 1000), "dd.MM.yyyy") ===
                       format(
                         new Date().setDate(new Date().getDate() + 1),
                         "dd.MM.yyyy"

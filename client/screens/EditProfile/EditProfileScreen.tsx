@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Alert, View } from "react-native";
 import { useMutation } from "@apollo/client";
 import { useNavigation } from "@react-navigation/native";
@@ -10,7 +10,6 @@ import {
   Input,
   WarningOutlineIcon,
 } from "native-base";
-import SnackBar from "react-native-snackbar-component";
 
 import { User } from "../../types/types";
 import { RootStackScreenProps } from "../../types";
@@ -20,6 +19,7 @@ import { updateUser } from "../../redux/user/user.actions";
 import { selectUser } from "../../redux/user/user.selector";
 
 import { styles } from "./EditProfileScreen.styles";
+import { openSnackbar } from "../../redux/loading/loading.slice";
 
 const EmptyUserData: Partial<User> = {
   id: "",
@@ -46,28 +46,29 @@ export default function EditProfileScreen(
     email: user?.email,
     phone: user?.phone,
   });
-  const [showSnackbar, setShowSnackbar] = useState(false);
-  const [snackbarStatus, setSnackbarStatus] = useState<"SUCCESS" | "ERROR">(
-    "SUCCESS"
-  );
 
-  const [updateUserService, { loading }] = useMutation(UPDATE_USER_MUTATION, {
-    update(_, { data: { updateUser: userData } }) {
-      dispatch(updateUser(userData));
-      setSnackbarStatus("SUCCESS");
-      setShowSnackbar(true);
-      AsyncStorage.setItem("token", userData?.token).then(() => {
-        navigation.navigate("Root");
-      });
-    },
-    onError(err) {
-      setSnackbarStatus("ERROR");
-      setShowSnackbar(true);
-      setErrors(err?.graphQLErrors[0]?.extensions?.errors as Partial<User>);
-      // Alert.alert("ERROR", err?.message);
-    },
-    variables: values,
-  });
+  const [updateUserService, { called, loading }] = useMutation(
+    UPDATE_USER_MUTATION,
+    {
+      update(_, { data: { updateUser: userData } }) {
+        dispatch(updateUser(userData));
+        dispatch(
+          openSnackbar({
+            severity: "success",
+            message: "Your information is updated successfully!",
+          })
+        );
+        AsyncStorage.setItem("token", userData?.token).then(() => {
+          navigation.navigate("Root");
+        });
+      },
+      onError(err) {
+        Alert.alert("ERROR", err?.message);
+        setErrors(err?.graphQLErrors[0]?.extensions?.errors as Partial<User>);
+      },
+      variables: values,
+    }
+  );
 
   const onSubmit = () => {
     setShowAlert(true);
@@ -88,17 +89,6 @@ export default function EditProfileScreen(
 
   return user ? (
     <View style={styles.container}>
-      <SnackBar
-        position="top"
-        autoHidingTime={3000}
-        visible={showSnackbar}
-        backgroundColor={snackbarStatus === "SUCCESS" ? "#22c55e" : "#ef4444"}
-        textMessage={
-          snackbarStatus === "SUCCESS"
-            ? "Your information is updated successfully!"
-            : "Error while updating the information!"
-        }
-      />
       <View style={{ width: "100%" }}>
         <FormControl
           style={styles.formControl}
@@ -203,7 +193,7 @@ export default function EditProfileScreen(
               borderRadius: 5,
               marginTop: 64,
             }}
-            isLoading={loading}
+            isLoading={called && loading}
             isDisabled={
               values.firstname === user.firstname &&
               values.lastname === user.lastname &&
@@ -222,7 +212,7 @@ export default function EditProfileScreen(
               borderRadius: 5,
               marginTop: 64,
             }}
-            isLoading={loading}
+            disabled={called && loading}
           >
             Change Password
           </Button>

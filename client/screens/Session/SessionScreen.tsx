@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView } from "react-native";
+import { Alert, ScrollView } from "react-native";
 import { Text, Flex, Button, Modal } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 
@@ -16,17 +16,34 @@ import SessionSeatList from "../../components/session-seat-list/session-seat-lis
 import SessionPageHeader from "../../components/session-page-header/session-page-header.component";
 
 import { styles } from "./SessionScreen.styles";
+import { GET_SESSION_BY_ID } from "../../utils/gql";
+import { useQuery } from "@apollo/client";
+import Loader from "../../components/loader/loader.component";
 
 export default function SessionScreen(props: RootStackScreenProps<"Session">) {
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
-  const session: Session = props?.route?.params?.session;
+  const id = props?.route?.params?.session?.id;
 
   const [showModal, setShowModal] = useState(false);
   const [selectedSeats, setSelectedSeats] = useState<SessionSeat[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [session, setSession] = useState<Session | null>(null);
 
+  const { called, loading, error, data, refetch } = useQuery(
+    GET_SESSION_BY_ID,
+    {
+      onCompleted(data) {
+        setSession(data?.getSession);
+      },
+      onError(err) {
+        Alert.alert("ERROR", err.message);
+      },
+      variables: { id: id },
+    }
+  );
+  
   useEffect(() => {
     dispatch(updateSession(session));
   }, [session]);
@@ -63,7 +80,9 @@ export default function SessionScreen(props: RootStackScreenProps<"Session">) {
     setTotalPrice(price);
   }, [selectedSeats]);
 
-  return session ? (
+  return called && loading ? (
+    <Loader />
+  ) : session ? (
     <Flex
       flex={1}
       height="100%"
@@ -72,7 +91,7 @@ export default function SessionScreen(props: RootStackScreenProps<"Session">) {
     >
       <ScrollView style={styles.container}>
         <SessionPageHeader session={session} />
-        <SessionSeatList onChange={handleSelectSeats} />
+        <SessionSeatList session={session} onChange={handleSelectSeats} />
       </ScrollView>
       {selectedSeats?.length > 0 ? (
         <Button colorScheme="secondary" onPress={handleNext}>

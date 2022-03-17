@@ -13,7 +13,7 @@ import { styles } from "./post-list.styles";
 
 const PostsList: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const { loading, error, data } = useQuery(GET_POSTS, {
+  const { called, loading, error, data } = useQuery(GET_POSTS, {
     onError(err) {
       Alert.alert("ERROR", err.message);
     },
@@ -29,7 +29,7 @@ const PostsList: React.FC = () => {
     setPosts(data?.getPosts);
   }, [data]);
 
-  return loading ? (
+  return called && loading ? (
     <Loader />
   ) : (
     <View style={styles.container}>

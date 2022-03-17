@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Text } from "native-base";
 import { Alert, FlatList } from "react-native";
 import { useQuery } from "@apollo/client";
 import { useNavigation } from "@react-navigation/native";
@@ -32,7 +33,7 @@ const TicketList: React.FC = () => {
     { key: "second", title: "Used" },
   ]);
 
-  const { loading, error, data } = useQuery(GET_TICKETS_BY_USER_ID, {
+  const { called, loading, error, data } = useQuery(GET_TICKETS_BY_USER_ID, {
     onError(err) {
       Alert.alert("ERROR", err.message);
     },
@@ -59,54 +60,93 @@ const TicketList: React.FC = () => {
     setTickets(data?.getTicketsByUserId);
   }, [data]);
 
-  const UpcomingTicketsRoute = () => (
-    <FlatList
-      data={tickets
-        .filter(
-          (t) =>
-            new Date(t.session.datetime * 1000).valueOf() > new Date().valueOf()
-        )
-        .sort(function (a, b) {
-          return (
-            new Date(b.session.datetime * 1000).valueOf() -
-            new Date(a.session.datetime * 1000).valueOf()
-          );
-        })}
-      style={styles.list}
-      renderItem={({ item, index }) => (
-        <TicketListItem ticket={item} key={index} onDelete={onDeleteTicket} />
-      )}
-      keyExtractor={(ticket: Ticket) => ticket.id}
-    />
-  );
+  const UpcomingTicketsRoute = () =>
+    called && tickets?.length ? (
+      <FlatList
+        data={tickets
+          .filter(
+            (t) =>
+              new Date(t.session.datetime * 1000).valueOf() >
+              new Date().valueOf()
+          )
+          .sort(function (a, b) {
+            return (
+              new Date(b.session.datetime * 1000).valueOf() -
+              new Date(a.session.datetime * 1000).valueOf()
+            );
+          })}
+        style={styles.list}
+        renderItem={({ item, index }) => (
+          <TicketListItem ticket={item} key={index} onDelete={onDeleteTicket} />
+        )}
+        keyExtractor={(ticket: Ticket) => ticket.id}
+      />
+    ) : (
+      <View
+        style={{
+          justifyContent: "center",
+          width: "100%",
+          marginTop: 16,
+        }}
+      >
+        <Text
+          color="white"
+          size="full"
+          fontSize={18}
+          width="100%"
+          textAlign={"center"}
+        >
+          No upcoming tickets
+        </Text>
+      </View>
+    );
 
-  const UsedTicketsRoute = () => (
-    <FlatList
-      data={tickets
-        .filter(
-          (t) =>
-            new Date(t.session.datetime * 1000).valueOf() < new Date().valueOf()
-        )
-        .sort(function (a, b) {
-          return (
-            new Date(b.session.datetime * 1000).valueOf() -
-            new Date(a.session.datetime * 1000).valueOf()
-          );
-        })}
-      style={styles.list}
-      renderItem={({ item, index }) => (
-        <TicketListItem ticket={item} key={index} onDelete={onDeleteTicket} />
-      )}
-      keyExtractor={(ticket: Ticket) => ticket.id}
-    />
-  );
+  const UsedTicketsRoute = () =>
+    called && tickets?.length ? (
+      <FlatList
+        data={tickets
+          .filter(
+            (t) =>
+              new Date(t.session.datetime * 1000).valueOf() <
+              new Date().valueOf()
+          )
+          .sort(function (a, b) {
+            return (
+              new Date(b.session.datetime * 1000).valueOf() -
+              new Date(a.session.datetime * 1000).valueOf()
+            );
+          })}
+        style={styles.list}
+        renderItem={({ item, index }) => (
+          <TicketListItem ticket={item} key={index} onDelete={onDeleteTicket} />
+        )}
+        keyExtractor={(ticket: Ticket) => ticket.id}
+      />
+    ) : (
+      <View
+        style={{
+          justifyContent: "center",
+          width: "100%",
+          marginTop: 16,
+        }}
+      >
+        <Text
+          color="white"
+          size="full"
+          fontSize={18}
+          width="100%"
+          textAlign={"center"}
+        >
+          No used tickets
+        </Text>
+      </View>
+    );
 
   const onDeleteTicket = (id: string) => {
     setTickets(tickets.filter((t) => t.id !== id));
-    setShowSnackbar(true);
   };
 
-  return loading ? (
+  return called && loading ? (
     <Loader />
   ) : (
     <View style={styles.container}>
@@ -127,13 +167,6 @@ const TicketList: React.FC = () => {
             style={{ backgroundColor: "transparent" }}
           />
         )}
-      />
-      <SnackBar
-        position="top"
-        autoHidingTime={3000}
-        visible={showSnackbar}
-        backgroundColor={"#22c55e"}
-        textMessage={"Ticket deleted successfully!"}
       />
     </View>
   );

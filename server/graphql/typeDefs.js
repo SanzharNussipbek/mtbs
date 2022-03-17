@@ -305,7 +305,6 @@ module.exports = gql`
 
     getAllSessions: [Session]
     getSession(id: ID!): Session
-    getSessionsByUserId(userId: ID!): [Session]
     getSessionsByMovieId(movieId: ID!): [Session]
 
     getAllSessionSeats: [SessionSeat]

@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Alert } from "react-native";
 import { useMutation } from "@apollo/client";
-import SnackBar from "react-native-snackbar-component";
 import { useNavigation } from "@react-navigation/native";
 import { CreditCardInput } from "react-native-credit-card-input-view";
-import { Text, Flex, Button, Modal, View, VStack } from "native-base";
+import {
+  Text,
+  Flex,
+  Button,
+  Modal,
+  View,
+  VStack,
+  AlertDialog,
+} from "native-base";
 
 import {
   CREATE_TICKET_MUTATION,
   DELETE_TICKET_BY_ID,
+  GET_SESSION_BY_ID,
   PAY_FOR_TICKET_MUTATION,
 } from "../../utils/gql";
 import {
@@ -19,7 +27,9 @@ import { RootStackScreenProps } from "../../types";
 import { SeatType, Ticket } from "../../types/types";
 import { selectUser } from "../../redux/user/user.selector";
 import { useAppDispatch, useAppSelector } from "../../hooks";
+import { openSnackbar } from "../../redux/loading/loading.slice";
 
+import Timer from "../../components/timer/timer.component";
 import Loader from "../../components/loader/loader.component";
 import TicketListItem from "../../components/ticket-list-item/ticket-list-item.component";
 
@@ -40,10 +50,12 @@ export default function SessionTicketScreen(
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPayDisabled, setIsPayDisabled] = useState(true);
   const [isTicketPaid, setIsTicketPaid] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
-  const [createTicket, { loading: isCreateLoading }] = useMutation(
-    CREATE_TICKET_MUTATION,
-    {
+  const cancelRef = React.useRef(null);
+
+  const [createTicket, { called: isCreateCalled, loading: isCreateLoading }] =
+    useMutation(CREATE_TICKET_MUTATION, {
       update(_, { data: { createTicket: ticketData } }) {
         setTicket(ticketData);
       },
@@ -51,8 +63,7 @@ export default function SessionTicketScreen(
         Alert.alert("ERROR", JSON.stringify(err));
         setErrors(err?.graphQLErrors[0]?.extensions?.errors);
       },
-    }
-  );
+    });
 
   const [payForTicket, { loading: isPayLoading }] = useMutation(
     PAY_FOR_TICKET_MUTATION,
@@ -60,6 +71,12 @@ export default function SessionTicketScreen(
       update(_, { data: { payForTicket: ticketData } }) {
         setTicket(ticketData);
         setIsTicketPaid(true);
+        dispatch(
+          openSnackbar({
+            severity: "success",
+            message: "Ticket paid successfully!",
+          })
+        );
       },
       onError(err) {
         Alert.alert("ERROR", JSON.stringify(err));
@@ -73,18 +90,27 @@ export default function SessionTicketScreen(
     DELETE_TICKET_BY_ID,
     {
       update(_, { data }) {
-        Alert.alert("Success", "You ticket is deleted!");
+        dispatch(
+          openSnackbar({
+            severity: "success",
+            message: "Booking stopped successfully!",
+          })
+        );
+        navigation.navigate("Root");
       },
       onError(err) {
         Alert.alert("ERROR", err?.message);
         setErrors(err?.graphQLErrors[0]?.extensions?.errors);
       },
+      refetchQueries: [
+        { query: GET_SESSION_BY_ID, variables: { id: session?.id } },
+      ],
       variables: { id: ticket?.id },
     }
   );
 
   useEffect(() => {
-    if (!user || !session || !selectedSeats.length) return;
+    if (!user || !session || !selectedSeats.length || isCreateCalled) return;
 
     const seatIds = selectedSeats.map((s) => s.id);
 
@@ -125,6 +151,11 @@ export default function SessionTicketScreen(
   };
 
   const handleCancel = () => {
+    setShowAlert(true);
+  };
+
+  const handleConfirm = () => {
+    setShowAlert(false);
     deleteTicket({ variables: { id: ticket?.id } });
   };
 
@@ -132,15 +163,41 @@ export default function SessionTicketScreen(
     navigation.navigate("Root");
   };
 
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+  };
+
+  const onTimerFinish = () => {
+    deleteTicket({ variables: { id: ticket?.id } });
+  };
+
   return user && session && selectedSeats.length ? (
-    isCreateLoading || isDeleteLoading || isPayLoading ? (
-      <Loader />
+    isCreateLoading ? (
+      <Loader text="Creating your ticket..." />
+    ) : isDeleteLoading ? (
+      <Loader text="Deleting your ticket..." />
+    ) : isPayLoading ? (
+      <Loader text="Performing transaction..." />
     ) : ticket ? (
       <VStack
         style={styles.container}
         justifyContent="space-between"
         height={"100%"}
       >
+        {!isTicketPaid ? (
+          <>
+            <Text
+              color="white"
+              fontSize={20}
+              width="100%"
+              textAlign={"center"}
+              mb={10}
+            >
+              Time for payment:
+            </Text>
+            <Timer onFinish={onTimerFinish} duration={5} />
+          </>
+        ) : null}
         <Flex justifyContent={"center"} alignItems="center" height={"80%"}>
           <TicketListItem ticket={ticket} hideActions />
         </Flex>
@@ -208,13 +265,34 @@ export default function SessionTicketScreen(
             </Modal.Footer>
           </Modal.Content>
         </Modal>
-        <SnackBar
-          position="top"
-          autoHidingTime={3000}
-          visible={isTicketPaid}
-          backgroundColor={"#22c55e"}
-          textMessage={"Ticket paid successfully!"}
-        />
+        <AlertDialog
+          leastDestructiveRef={cancelRef}
+          isOpen={showAlert}
+          onClose={handleCloseAlert}
+        >
+          <AlertDialog.Content>
+            <AlertDialog.CloseButton />
+            <AlertDialog.Header>Stop booking</AlertDialog.Header>
+            <AlertDialog.Body>
+              Are you sure you want to stop booking ?
+            </AlertDialog.Body>
+            <AlertDialog.Footer>
+              <Button.Group space={2}>
+                <Button
+                  variant="unstyled"
+                  colorScheme="coolGray"
+                  onPress={handleCloseAlert}
+                  ref={cancelRef}
+                >
+                  Cancel
+                </Button>
+                <Button colorScheme="danger" onPress={handleConfirm}>
+                  Confirm
+                </Button>
+              </Button.Group>
+            </AlertDialog.Footer>
+          </AlertDialog.Content>
+        </AlertDialog>
       </VStack>
     ) : (
       <View style={styles.container}>

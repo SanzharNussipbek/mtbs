@@ -29,19 +29,10 @@ module.exports = {
         throw new Error(e);
       }
     },
-    async getSessionsByUserId(_, { userId }) {
-      try {
-        const sessions = await Session.find({ userId });
-        return sessions;
-      } catch (e) {
-        throw new Error(e);
-      }
-    },
     async getSessionsByMovieId(_, { movieId }) {
       try {
-        const movie = await Movie.findById(movieId);
-        const sessions = await Session.find({ movie });
-        return sessions;
+        const sessions = await Session.find();
+        return sessions.filter((s) => s.movie?.id === movieId);
       } catch (e) {
         throw new Error(e);
       }

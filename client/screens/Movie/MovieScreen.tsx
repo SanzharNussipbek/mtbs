@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Image, ScrollView, Linking, Alert } from "react-native";
 import {
@@ -7,20 +7,36 @@ import {
   Text as NativeText,
   ChevronLeftIcon,
 } from "native-base";
+import { useQuery } from "@apollo/client";
 import { FontAwesome } from "@expo/vector-icons";
 
 import { Movie } from "../../types/types";
 import { RootStackScreenProps } from "../../types";
+import { GET_MOVIE_BY_ID } from "../../utils/gql";
 import { Text, View } from "../../components/Themed";
 
 import NotFoundScreen from "../NotFoundScreen";
+import Loader from "../../components/loader/loader.component";
+import SessionList from "../../components/session-list/session-list.component";
 
 import { styles } from "./MovieScreen.styles";
-import SessionList from "../../components/session-list/session-list.component";
 
 export default function MovieScreen(props: RootStackScreenProps<"Movie">) {
   const navigation = useNavigation();
-  const movie: Movie = props?.route?.params?.movie;
+  const id = props?.route?.params?.movie?.id;
+  const [movie, setMovie] = useState<Movie | null>(null);
+
+  const { called, loading, data } = useQuery(GET_MOVIE_BY_ID, {
+    onError(err) {
+      Alert.alert("ERROR", err?.message);
+    },
+    variables: { id: id },
+  });
+
+  useEffect(() => {
+    if (!data) return;
+    setMovie(data?.getMovie);
+  }, [data]);
 
   const [isHidden, setIsHidden] = useState(true);
 
@@ -33,6 +49,7 @@ export default function MovieScreen(props: RootStackScreenProps<"Movie">) {
   };
 
   const handleOpenTrailer = useCallback(async () => {
+    if (!movie) return;
     const supported = await Linking.canOpenURL(movie?.trailerUrl);
 
     if (supported) {
@@ -40,7 +57,9 @@ export default function MovieScreen(props: RootStackScreenProps<"Movie">) {
     }
   }, [movie?.trailerUrl]);
 
-  return movie ? (
+  return called && loading ? (
+    <Loader />
+  ) : movie ? (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Button

@@ -25,6 +25,26 @@ export const GET_FAQS = gql`
   }
 `;
 
+export const GET_MOVIE_BY_ID = gql`
+  query getMovie($id: ID!) {
+    getMovie(id: $id) {
+      id
+      name
+      description
+      duration
+      language
+      releaseDate
+      country
+      genre
+      director
+      cast
+      rating
+      imgUrl
+      trailerUrl
+    }
+  }
+`;
+
 export const GET_ALL_MOVIES_MUTATION = gql`
   {
     getAllMovies {
@@ -48,6 +68,56 @@ export const GET_ALL_MOVIES_MUTATION = gql`
 export const GET_SESSIONS_BY_MOVIE_ID = gql`
   query getSessionsByMovieId($movieId: ID!) {
     getSessionsByMovieId(movieId: $movieId) {
+      id
+      datetime
+      movie {
+        id
+        name
+        description
+        duration
+        language
+        releaseDate
+        country
+        genre
+        director
+        cast
+        rating
+        imgUrl
+        trailerUrl
+      }
+      hall {
+        id
+        name
+        type
+        seats {
+          id
+          seatNumber
+          rowNumber
+          hallId
+        }
+      }
+      seats {
+        id
+        status
+        seat {
+          id
+          seatNumber
+          rowNumber
+          hallId
+        }
+      }
+      rates {
+        ADULT
+        CHILD
+        STUDENT
+      }
+    }
+  }
+
+`;
+export const GET_SESSION_BY_ID = gql`
+  query getSession($id: ID!) {
+    getSession(id: $id) {
       id
       datetime
       movie {
@@ -149,7 +219,6 @@ export const UPDATE_USER_MUTATION = gql`
     $email: String
     $firstname: String
     $lastname: String
-    $password: String
     $phone: String
   ) {
     updateUser(
@@ -158,7 +227,6 @@ export const UPDATE_USER_MUTATION = gql`
         email: $email
         firstname: $firstname
         lastname: $lastname
-        password: $password
         phone: $phone
       }
     ) {

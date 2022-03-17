@@ -33,6 +33,7 @@ import EditPasswordScreen from "../screens/EditPassword/EditPasswordScreen";
 import SessionScreen from "../screens/Session/SessionScreen";
 import SessionTicketScreen from "../screens/SessionTicket/SessionTicketScreen";
 import FaqScreen from "../screens/Faq/FaqScreen";
+import CustomSnackbar from "../components/custom-snackbar/custom-snackbar.component";
 
 export default function Navigation({
   colorScheme,
@@ -45,6 +46,7 @@ export default function Navigation({
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
     >
       <RootNavigator />
+      <CustomSnackbar />
     </NavigationContainer>
   );
 }
@@ -118,9 +120,6 @@ function RootNavigator() {
         component={NotFoundScreen}
         options={{ title: "Oops!", headerShown: false }}
       />
-      {/* <Stack.Group screenOptions={{ presentation: 'modal' }}>
-         <Stack.Screen name="Modal" component={ModalScreen} />
-       </Stack.Group> */}
     </Stack.Navigator>
   );
 }

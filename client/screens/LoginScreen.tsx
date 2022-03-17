@@ -19,7 +19,7 @@ const LoginScreen = () => {
     password: "",
   });
 
-  const [login, { loading }] = useMutation(LOGIN_MUTATION, {
+  const [login, { called, loading }] = useMutation(LOGIN_MUTATION, {
     update(_, { data: { login: userData } }) {
       dispatch(loginUser(userData));
       AsyncStorage.setItem("user", JSON.stringify(userData, null, 2));
@@ -59,8 +59,8 @@ const LoginScreen = () => {
         height: "100%",
       }}
     >
-      {loading && !errors ? (
-        <Loader />
+      {called && loading && !errors ? (
+        <Loader text="Logging you in..." />
       ) : (
         <View style={{ width: "100%" }}>
           <TextInput

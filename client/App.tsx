@@ -4,7 +4,6 @@ import { ApolloProvider } from "@apollo/client";
 import { StatusBar } from "expo-status-bar";
 
 import useCachedResources from "./hooks/useCachedResources";
-import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
 import { client } from "./apollo";
 import { NativeBaseProvider } from "native-base";
@@ -13,7 +12,7 @@ import { store } from "./redux/store";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
-  const colorScheme = useColorScheme();
+  const colorScheme = 'dark';
 
   if (!isLoadingComplete) {
     return null;

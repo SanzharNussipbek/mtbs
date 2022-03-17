@@ -114,11 +114,19 @@ module.exports = {
 
         const session = await Session.findById(ticket.session?.id);
         const sessionSeats = session?.seats;
-        sessionSeats?.map(async (seat) => {
-          await SessionSeat.findByIdAndUpdate(seat?.id, { status: "VACANT" });
-          return { ...seat, status: "VACANT" };
+        let newSeats = [];
+        for (let i = 0; i < sessionSeats?.length; i++) {
+          const seat = sessionSeats[i];
+          const newSeat = await SessionSeat.findByIdAndUpdate(
+            seat?.id,
+            { status: "VACANT" },
+            { new: true }
+          );
+          newSeats.push(newSeat);
+        }
+        await Session.findByIdAndUpdate(session?.id, {
+          seats: newSeats,
         });
-        await Session.findByIdAndUpdate(session?.id, { seats: sessionSeats });
 
         await ticket.delete();
         return "Ticket deleted successfully";
