@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  ActivityIndicator,
-  Alert,
-} from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
-
-import { useMutation } from "@apollo/client";
-import { REGISTER_MUTATION } from "../utils/gql";
 import { Button } from "native-base";
+import { useMutation } from "@apollo/client";
+import { View, TextInput, Alert } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { REGISTER_USER } from "../utils/gql";
+
 import Loader from "../components/loader/loader.component";
 
 const RegisterScreen = () => {
@@ -27,7 +21,7 @@ const RegisterScreen = () => {
 
   const navigation = useNavigation();
 
-  const [register, { called, loading }] = useMutation(REGISTER_MUTATION, {
+  const [register, { called, loading }] = useMutation(REGISTER_USER, {
     update(_, { data: { register: userData } }) {
       AsyncStorage.setItem("token", userData?.token).then(() => {
         navigation.navigate("Root");
@@ -69,11 +63,11 @@ const RegisterScreen = () => {
       }}
     >
       {called && loading ? (
-        <Loader text="Registration in process..."/>
+        <Loader text="Registration in process..." />
       ) : (
         <View style={{ width: "100%" }}>
           <TextInput
-            placeholder='First name'
+            placeholder="First name"
             value={values.firstname}
             onChangeText={(value: string) =>
               setValues({ ...values, firstname: value })
@@ -88,7 +82,7 @@ const RegisterScreen = () => {
           />
 
           <TextInput
-            placeholder='Last name'
+            placeholder="Last name"
             value={values.lastname}
             onChangeText={(value: string) =>
               setValues({ ...values, lastname: value })
@@ -103,8 +97,8 @@ const RegisterScreen = () => {
           />
 
           <TextInput
-            placeholder='Email'
-            autoCapitalize='none'
+            placeholder="Email"
+            autoCapitalize="none"
             value={values.email}
             onChangeText={(value: string) =>
               setValues({ ...values, email: value })
@@ -119,8 +113,8 @@ const RegisterScreen = () => {
           />
 
           <TextInput
-            placeholder='Password'
-            autoCapitalize='none'
+            placeholder="Password"
+            autoCapitalize="none"
             value={values.password}
             onChangeText={(value: string) =>
               setValues({ ...values, password: value })
@@ -136,8 +130,8 @@ const RegisterScreen = () => {
           />
 
           <TextInput
-            placeholder='Confirm Password'
-            autoCapitalize='none'
+            placeholder="Confirm Password"
+            autoCapitalize="none"
             value={values.confirmPassword}
             onChangeText={(value: string) =>
               setValues({ ...values, confirmPassword: value })
@@ -152,9 +146,9 @@ const RegisterScreen = () => {
             placeholderTextColor="grey"
           />
           <Button
-            size='lg'
-            variant='solid'
-            colorScheme='secondary'
+            size="lg"
+            variant="solid"
+            colorScheme="secondary"
             onPress={onSubmit}
             style={{
               borderRadius: 5,
@@ -171,9 +165,9 @@ const RegisterScreen = () => {
             Register
           </Button>
           <Button
-            size='lg'
-            variant='ghost'
-            colorScheme='secondary'
+            size="lg"
+            variant="ghost"
+            colorScheme="secondary"
             onPress={() => {
               navigation.navigate("Login");
             }}

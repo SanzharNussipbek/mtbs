@@ -82,9 +82,9 @@ const Table = (props: Props) => {
               ?.map((row, index) => {
                 return (
                   <TableRow key={index}>
-                    {columns?.map((column) => (
+                    {columns?.map((column, idx) => (
                       <TableCell
-                        key={column.field}
+                        key={idx}
                         align={column.align || "left"}
                         style={{ color: "#fff" }}
                       >

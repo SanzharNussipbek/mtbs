@@ -372,3 +372,70 @@ export const DELETE_TICKET = gql`
     deleteTicket(id: $id)
   }
 `;
+
+export const GET_TICKETS_BY_USER_ID = gql`
+  query getTicketsByUserId($userId: ID!) {
+    getTicketsByUserId(userId: $userId) {
+      id
+      userId
+      price
+      status
+      createdAt
+      session {
+        id
+        datetime
+        movie {
+          id
+          name
+          description
+          duration
+          language
+          releaseDate
+          country
+          genre
+          director
+          cast
+          rating
+          imgUrl
+          trailerUrl
+        }
+        hall {
+          id
+          name
+          type
+          seats {
+            id
+            seatNumber
+            rowNumber
+            hallId
+          }
+        }
+        seats {
+          id
+          status
+          seat {
+            id
+            seatNumber
+            rowNumber
+            hallId
+          }
+        }
+        rates {
+          ADULT
+          CHILD
+          STUDENT
+        }
+      }
+      seats {
+        id
+        status
+        seat {
+          id
+          seatNumber
+          rowNumber
+          hallId
+        }
+      }
+    }
+  }
+`;

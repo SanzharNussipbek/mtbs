@@ -14,7 +14,7 @@ import { Controller, useForm } from "react-hook-form";
 
 import { Faq } from "../../types/types";
 import { useAppDispatch } from "../../hooks";
-import { UPDATE_FAQ } from "../../utils/gql/faq";
+import { UPDATE_FAQ } from "../../utils/gql";
 import { openSnackbar } from "../../redux/loading/loading.slice";
 
 import LoadingButton from "../loading-button/loading-button.component";

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import React from "react";
 import CountDown from "react-native-countdown-component";
+import { SafeAreaView, StyleSheet, View } from "react-native";
 
 type Props = {
   onFinish: () => void;

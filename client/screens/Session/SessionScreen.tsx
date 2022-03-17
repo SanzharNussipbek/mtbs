@@ -99,8 +99,8 @@ export default function SessionScreen(props: RootStackScreenProps<"Session">) {
           <Modal.CloseButton />
           <Modal.Header>Please confirm selection:</Modal.Header>
           <Modal.Body>
-            {selectedSeats.map((s) => (
-              <Text key={s.id} mb={4} color="black">
+            {selectedSeats.map((s, index) => (
+              <Text key={index} mb={4} color="black">
                 {`Row: ${s.seat.rowNumber}, Seat: ${s.seat.seatNumber}, Rate: ${s.type}`}
               </Text>
             ))}

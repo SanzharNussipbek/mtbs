@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Pressable, Alert } from "react-native";
+import { Button } from "native-base";
+import { useMutation } from "@apollo/client";
+import { View, TextInput, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useMutation } from "@apollo/client";
-import { LOGIN_MUTATION } from "../utils/gql";
-import { Button } from "native-base";
-import Loader from "../components/loader/loader.component";
+
+import { LOGIN_USER } from "../utils/gql";
 import { useAppDispatch } from "../hooks";
 import { loginUser } from "../redux/user/user.actions";
+
+import Loader from "../components/loader/loader.component";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -19,7 +21,7 @@ const LoginScreen = () => {
     password: "",
   });
 
-  const [login, { called, loading }] = useMutation(LOGIN_MUTATION, {
+  const [login, { called, loading }] = useMutation(LOGIN_USER, {
     update(_, { data: { login: userData } }) {
       dispatch(loginUser(userData));
       AsyncStorage.setItem("user", JSON.stringify(userData, null, 2));

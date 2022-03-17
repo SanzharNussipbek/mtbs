@@ -17,8 +17,8 @@ import { useAppDispatch } from "../../hooks";
 import { Column, Row } from "../table/table.types";
 import useModalState from "../../utils/useModalState";
 import { setMovieList } from "../../redux/movie/movie.slice";
+import { DELETE_MOVIE, GET_ALL_MOVIES } from "../../utils/gql";
 import { openSnackbar } from "../../redux/loading/loading.slice";
-import { DELETE_MOVIE, GET_ALL_MOVIES } from "../../utils/gql/movie";
 
 import Table from "../table/table.component";
 import Loader from "../loader/loader.component";

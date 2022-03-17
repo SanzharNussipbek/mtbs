@@ -12,14 +12,14 @@ import {
 } from "native-base";
 
 import { User } from "../../types/types";
+import { UPDATE_USER } from "../../utils/gql";
 import { RootStackScreenProps } from "../../types";
-import { UPDATE_USER_MUTATION } from "../../utils/gql";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { updateUser } from "../../redux/user/user.actions";
 import { selectUser } from "../../redux/user/user.selector";
+import { openSnackbar } from "../../redux/loading/loading.slice";
 
 import { styles } from "./EditProfileScreen.styles";
-import { openSnackbar } from "../../redux/loading/loading.slice";
 
 const EmptyUserData: Partial<User> = {
   id: "",
@@ -48,7 +48,7 @@ export default function EditProfileScreen(
   });
 
   const [updateUserService, { called, loading }] = useMutation(
-    UPDATE_USER_MUTATION,
+    UPDATE_USER,
     {
       update(_, { data: { updateUser: userData } }) {
         dispatch(updateUser(userData));

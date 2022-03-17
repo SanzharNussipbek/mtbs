@@ -16,7 +16,7 @@ import { useAppDispatch } from "../../hooks";
 import { Column, Row } from "../table/table.types";
 import useModalState from "../../utils/useModalState";
 import { openSnackbar } from "../../redux/loading/loading.slice";
-import { DELETE_SESSION, GET_ALL_SESSIONS } from "../../utils/gql/session";
+import { DELETE_SESSION, GET_ALL_SESSIONS } from "../../utils/gql";
 import { updateSessionList } from "../../redux/session/session.actions";
 
 import Table from "../table/table.component";

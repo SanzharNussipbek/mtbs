@@ -1,9 +1,9 @@
 import React from "react";
+import { FontAwesome } from "@expo/vector-icons";
 import { Pressable, View, Text } from "native-base";
-import { LayoutAnimation, Platform, UIManager } from "react-native";
+import { Platform, UIManager } from "react-native";
 
 import { styles } from "./accordion.styles";
-import { FontAwesome } from "@expo/vector-icons";
 
 type Props = {
   id: string;

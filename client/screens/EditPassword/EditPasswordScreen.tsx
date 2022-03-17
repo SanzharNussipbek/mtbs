@@ -11,8 +11,8 @@ import {
   WarningOutlineIcon,
 } from "native-base";
 
+import { CHANGE_PASSWORD } from "../../utils/gql";
 import { RootStackScreenProps } from "../../types";
-import { CHANGE_PASSWORD_MUTATION } from "../../utils/gql";
 import { updateUser } from "../../redux/user/user.actions";
 import { selectUser } from "../../redux/user/user.selector";
 import { useAppDispatch, useAppSelector } from "../../hooks";
@@ -46,7 +46,7 @@ export default function EditPasswordScreen(
     confirmPassword: "",
   });
 
-  const [changePassword, { loading }] = useMutation(CHANGE_PASSWORD_MUTATION, {
+  const [changePassword] = useMutation(CHANGE_PASSWORD, {
     update(_, { data: { changePassword: userData } }) {
       setIsLoading(false);
       dispatch(updateUser(userData));

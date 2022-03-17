@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { Alert, FlatList } from "react-native";
 
 import { View } from "../Themed";
-import { GET_POSTS } from "../../utils/gql";
 import { Post } from "../../types/types";
+import { GET_ALL_POSTS } from "../../utils/gql";
 
 import Loader from "../loader/loader.component";
 import PostsListItem from "../posts-list-item/posts-list-item.component";
@@ -13,21 +13,14 @@ import { styles } from "./post-list.styles";
 
 const PostsList: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const { called, loading, error, data } = useQuery(GET_POSTS, {
+  const { called, loading } = useQuery(GET_ALL_POSTS, {
+    onCompleted(data) {
+      setPosts(data?.getPosts);
+    },
     onError(err) {
       Alert.alert("ERROR", err.message);
     },
   });
-
-  useEffect(() => {
-    if (!error) return;
-    Alert.alert("ERROR", error?.message);
-  }, [error]);
-
-  useEffect(() => {
-    if (!data) return;
-    setPosts(data?.getPosts);
-  }, [data]);
 
   return called && loading ? (
     <Loader />

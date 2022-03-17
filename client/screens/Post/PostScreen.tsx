@@ -7,7 +7,7 @@ import { Image, ScrollView, Linking, Alert } from "react-native";
 import { Post } from "../../types/types";
 import { RootStackScreenProps } from "../../types";
 import { Text, View } from "../../components/Themed";
-import { GET_POST_BY_ID } from "../../utils/gql/post";
+import { GET_POST_BY_ID } from "../../utils/gql";
 
 import Loader from "../../components/loader/loader.component";
 

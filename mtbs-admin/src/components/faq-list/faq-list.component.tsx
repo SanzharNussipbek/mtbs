@@ -15,7 +15,7 @@ import { useAppDispatch } from "../../hooks";
 import { Column, Row } from "../table/table.types";
 import useModalState from "../../utils/useModalState";
 import { setFaqList } from "../../redux/faq/faq.actions";
-import { DELETE_FAQ, GET_ALL_FAQ } from "../../utils/gql/faq";
+import { DELETE_FAQ, GET_ALL_FAQ } from "../../utils/gql";
 import { openSnackbar } from "../../redux/loading/loading.slice";
 
 import Table from "../table/table.component";

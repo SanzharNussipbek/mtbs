@@ -33,7 +33,12 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
     { key: "second", title: "Tomorrow" },
   ]);
 
-  const { called, loading, error, data } = useQuery(GET_SESSIONS_BY_MOVIE_ID, {
+  const { called, loading, data } = useQuery(GET_SESSIONS_BY_MOVIE_ID, {
+    onCompleted(data) {
+      const sessions: Session[] = data.getSessionsByMovieId;
+      setSessions(sessions);
+      setHalls([...new Set(sessions.map((s) => s.hall))]);
+    },
     onError(err) {
       Alert.alert("ERROR", err.message);
     },
@@ -41,18 +46,6 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
       movieId,
     },
   });
-
-  useEffect(() => {
-    if (!error) return;
-    Alert.alert("ERROR", error?.message);
-  }, [error]);
-
-  useEffect(() => {
-    if (!data) return;
-    const sessions: Session[] = data.getSessionsByMovieId;
-    setSessions(sessions);
-    setHalls([...new Set(sessions.map((s) => s.hall))]);
-  }, [data]);
 
   const handleClick = (session: Session) => {
     if (new Date(session.datetime * 1000) < new Date()) return;
@@ -117,7 +110,7 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
             : format(new Date(s.datetime * 1000), "dd.MM.yyyy") ===
               format(new Date().setDate(new Date().getDate() + 1), "dd.MM.yyyy")
         )?.length ? (
-          halls.map((hall: Hall) => {
+          halls.map((hall: Hall, index) => {
             const hallSessions: Session[] = sessions
               .filter((s) =>
                 index === 0
@@ -139,7 +132,7 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
                 direction="column"
                 mb={8}
                 style={styles.group}
-                key={hall.id}
+                key={index}
               >
                 <Heading
                   size="sm"
@@ -150,9 +143,9 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
                   {`${hall.name} hall (${hall.type})`}
                 </Heading>
                 <Flex direction="row" style={styles.groupBody}>
-                  {hallSessions.map((session: Session) => (
+                  {hallSessions.map((session: Session, idx) => (
                     <SessionTimeItem
-                      key={session.id}
+                      key={idx}
                       datetime={session.datetime}
                       onClick={() => handleClick(session)}
                     />

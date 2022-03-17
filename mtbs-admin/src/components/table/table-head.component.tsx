@@ -35,9 +35,9 @@ const TableHead = (props: Props) => {
   return (
     <MuiTableHead>
       <TableRow>
-        {columns?.map((column) => (
+        {columns?.map((column, index) => (
           <TableCell
-            key={column.title}
+            key={index}
             align={column.align ? column.align : "inherit"}
             style={{
               width: column.width || "auto",

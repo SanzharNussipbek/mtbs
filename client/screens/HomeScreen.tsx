@@ -3,10 +3,10 @@ import { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import MoviesList from '../components/movies-list/movies-list.component';
 
-import { Text, View } from '../components/Themed';
 import { useAppSelector } from '../hooks';
-import { selectUser } from '../redux/user/user.selector';
+import { View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
+import { selectUser } from '../redux/user/user.selector';
 
 export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
   const user = useAppSelector(selectUser);

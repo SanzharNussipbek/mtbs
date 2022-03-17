@@ -17,7 +17,7 @@ import { useAppDispatch } from "../../hooks";
 import { Column, Row } from "../table/table.types";
 import useModalState from "../../utils/useModalState";
 import { setPostList } from "../../redux/post/post.actions";
-import { DELETE_POST, GET_ALL_POSTS } from "../../utils/gql/post";
+import { DELETE_POST, GET_ALL_POSTS } from "../../utils/gql";
 import { openSnackbar } from "../../redux/loading/loading.slice";
 
 import Table from "../table/table.component";

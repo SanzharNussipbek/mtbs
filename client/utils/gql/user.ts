@@ -118,3 +118,26 @@ export const REGISTER_USER = gql`
     }
   }
 `;
+
+export const CHANGE_PASSWORD = gql`
+  mutation changePassword(
+    $id: ID!
+    $oldPassword: String!
+    $newPassword: String!
+  ) {
+    changePassword(
+      data: { id: $id, oldPassword: $oldPassword, newPassword: $newPassword }
+    ) {
+      id
+      firstname
+      lastname
+      email
+      password
+      createdAt
+      status
+      phone
+      tickets
+      token
+    }
+  }
+`;

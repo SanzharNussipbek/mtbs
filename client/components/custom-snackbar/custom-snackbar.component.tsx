@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import SnackBar from "react-native-snackbar-component";
+
 import {
   selectSnackbarOpen,
   selectSnackbarSeverity,
   selectSnackbarMessage,
 } from "../../redux/loading/loading.selector";
-import SnackBar from "react-native-snackbar-component";
-import useTimeout from "../../hooks/useTimeout";
 import { useAppDispatch } from "../../hooks";
+import useTimeout from "../../hooks/useTimeout";
 import { closeSnackbar } from "../../redux/loading/loading.slice";
 
 const CustomSnackbar: React.FC = () => {

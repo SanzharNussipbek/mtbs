@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { format } from "date-fns";
 import { Flex, Text, View } from "native-base";
 
 import { Session } from "../../types/types";
 
 import { styles } from "./session-page-header.styles";
-import { format } from "date-fns";
 
 type Props = {
   session: Session;
@@ -16,13 +16,16 @@ const SessionPageHeader: React.FC<Props> = ({ session }) => {
       timeZone: "Asia/Hong_Kong",
     })
   );
+
   return (
     <View style={styles.container} mb={4}>
       <Flex alignItems={"center"}>
         <Text
           fontSize={24}
           fontWeight="bold"
-          color={session.hall.name ==='Green' ? 'emerald.300' : "secondary.700"}
+          color={
+            session.hall.name === "Green" ? "emerald.300" : "secondary.700"
+          }
           mb={2}
           textTransform="uppercase"
         >{`${session.hall.name} hall`}</Text>

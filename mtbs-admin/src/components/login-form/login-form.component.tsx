@@ -12,7 +12,7 @@ import { useHistory } from "react-router-dom";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 import { useAppDispatch } from "../../hooks";
-import { LOGIN_USER } from "../../utils/gql/user";
+import { LOGIN_USER } from "../../utils/gql";
 import { loginUser, logoutUser } from "../../redux/user/user.actions";
 
 import Loader from "../loader/loader.component";

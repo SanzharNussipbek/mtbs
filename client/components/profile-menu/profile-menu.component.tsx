@@ -1,8 +1,8 @@
 import React from "react";
 import { Alert } from "react-native";
+import { Heading, Pressable} from "native-base";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { Heading, Pressable, Text as NativeText } from "native-base";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { Text, View } from "../Themed";

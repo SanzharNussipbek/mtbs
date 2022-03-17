@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { Flex, Text, VStack } from "native-base";
 
+import { useAppDispatch } from "../../hooks";
 import { Session, SessionSeat } from "../../types/types";
 import { setSession } from "../../redux/session/session.slice";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { selectSession } from "../../redux/session/session.selector";
 
 import SessionSeatItem from "../session-seat-item/session-seat-item.componenent";
 
@@ -48,19 +47,19 @@ const SessionSeatList: React.FC<Props> = ({ session, onChange }) => {
   return session ? (
     <View style={styles.container}>
       <VStack>
-        {rows.map((row) => (
-          <Flex key={row} direction="row" style={styles.row}>
+        {rows.map((row, index) => (
+          <Flex key={index} direction="row" style={styles.row}>
             <Text style={styles.rowNum} color="secondary.500">
               {row}
             </Text>
             <Flex direction="row">
               {session?.seats
                 .filter((s) => s.seat.rowNumber === row)
-                .map((s) => (
+                .map((s, idx) => (
                   <SessionSeatItem
                     sessionSeat={s}
                     rates={session?.rates}
-                    key={s.id}
+                    key={idx}
                     onChange={handleSelectSeat}
                   />
                 ))}

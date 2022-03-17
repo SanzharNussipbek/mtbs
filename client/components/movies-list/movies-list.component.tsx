@@ -5,7 +5,7 @@ import { Alert, ScrollView, Image } from "react-native";
 
 import { View } from "../Themed";
 import { Movie } from "../../types/types";
-import { GET_ALL_MOVIES_MUTATION } from "../../utils/gql";
+import { GET_ALL_MOVIES } from "../../utils/gql";
 
 import Loader from "../loader/loader.component";
 import MoviesListItem from "../movies-list-item/movies-list-item.component";
@@ -17,7 +17,7 @@ const MoviesList: React.FC = () => {
   const [currentMovies, setCurrentMovies] = useState<Movie[]>([]);
   const [comingSoonMovies, setComingSoonMovies] = useState<Movie[]>([]);
 
-  const { called, loading, error, data } = useQuery(GET_ALL_MOVIES_MUTATION, {
+  const { called, loading, error, data } = useQuery(GET_ALL_MOVIES, {
     onError(err) {
       Alert.alert("ERROR", err.message);
     },

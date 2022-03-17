@@ -15,8 +15,7 @@ import { Controller, useForm } from "react-hook-form";
 
 import { Hall } from "../../types/types";
 import { useAppDispatch } from "../../hooks";
-import { CREATE_SEAT } from "../../utils/gql/seat";
-import { GET_ALL_HALLS } from "../../utils/gql/hall";
+import { CREATE_SEAT, GET_ALL_HALLS } from "../../utils/gql";
 import { openSnackbar } from "../../redux/loading/loading.slice";
 
 import LoadingButton from "../loading-button/loading-button.component";

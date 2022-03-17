@@ -17,7 +17,7 @@ import DatePicker from "@mui/lab/DatePicker";
 import { format } from "date-fns";
 
 import { useAppDispatch } from "../../hooks";
-import { CREATE_MOVIE } from "../../utils/gql/movie";
+import { CREATE_MOVIE } from "../../utils/gql";
 import { openSnackbar } from "../../redux/loading/loading.slice";
 
 import LoadingButton from "../loading-button/loading-button.component";

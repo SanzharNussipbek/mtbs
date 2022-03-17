@@ -10,14 +10,13 @@ import {
 } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 
-import { Hall, Seat } from "../../types/types";
 import { useAppDispatch } from "../../hooks";
+import { Hall, Seat } from "../../types/types";
 import { Column, Row } from "../table/table.types";
 import useModalState from "../../utils/useModalState";
-import { openSnackbar } from "../../redux/loading/loading.slice";
-import { DELETE_SEAT, GET_ALL_SEATS } from "../../utils/gql/seat";
 import { setSeatList } from "../../redux/seat/seat.actions";
-import { GET_ALL_HALLS } from "../../utils/gql/hall";
+import { openSnackbar } from "../../redux/loading/loading.slice";
+import { DELETE_SEAT, GET_ALL_SEATS, GET_ALL_HALLS } from "../../utils/gql";
 
 import Table from "../table/table.component";
 import Loader from "../loader/loader.component";
@@ -60,9 +59,7 @@ const SeatsList: React.FC = () => {
   const {
     called: isHallCalled,
     loading: isHallLoading,
-    error: hallError,
     data: hallData,
-    refetch: refetchHall,
   } = useQuery(GET_ALL_HALLS, {
     onError(err) {
       dispatch(

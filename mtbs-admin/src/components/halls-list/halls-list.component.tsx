@@ -14,9 +14,9 @@ import { Hall } from "../../types/types";
 import { useAppDispatch } from "../../hooks";
 import { Column, Row } from "../table/table.types";
 import useModalState from "../../utils/useModalState";
-import { openSnackbar } from "../../redux/loading/loading.slice";
-import { DELETE_HALL, GET_ALL_HALLS } from "../../utils/gql/hall";
 import { setHallList } from "../../redux/hall/hall.actions";
+import { DELETE_HALL, GET_ALL_HALLS } from "../../utils/gql";
+import { openSnackbar } from "../../redux/loading/loading.slice";
 
 import Table from "../table/table.component";
 import Loader from "../loader/loader.component";

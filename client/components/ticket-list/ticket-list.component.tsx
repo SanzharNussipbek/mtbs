@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Text } from "native-base";
-import { Alert, FlatList } from "react-native";
 import { useQuery } from "@apollo/client";
 import { useNavigation } from "@react-navigation/native";
-import { useWindowDimensions } from "react-native";
-import SnackBar from "react-native-snackbar-component";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import { Alert, FlatList, useWindowDimensions } from "react-native";
 
 import { View } from "../Themed";
 import { Ticket } from "../../types/types";
@@ -26,14 +24,16 @@ const TicketList: React.FC = () => {
   const [index, setIndex] = useState(0);
   const [userId, setUserId] = useState(user?.id);
   const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [showSnackbar, setShowSnackbar] = useState(false);
 
   const [routes] = useState([
     { key: "first", title: "Upcoming" },
     { key: "second", title: "Used" },
   ]);
 
-  const { called, loading, error, data } = useQuery(GET_TICKETS_BY_USER_ID, {
+  const { called, loading, refetch } = useQuery(GET_TICKETS_BY_USER_ID, {
+    onCompleted(data) {
+      setTickets(data?.getTicketsByUserId);
+    },
     onError(err) {
       Alert.alert("ERROR", err.message);
     },
@@ -49,16 +49,6 @@ const TicketList: React.FC = () => {
     }
     navigation.navigate("Login");
   }, [user]);
-
-  useEffect(() => {
-    if (!error) return;
-    Alert.alert("ERROR", error?.message);
-  }, [error]);
-
-  useEffect(() => {
-    if (!data) return;
-    setTickets(data?.getTicketsByUserId);
-  }, [data]);
 
   const UpcomingTicketsRoute = () =>
     called && tickets?.length ? (
@@ -144,6 +134,7 @@ const TicketList: React.FC = () => {
 
   const onDeleteTicket = (id: string) => {
     setTickets(tickets.filter((t) => t.id !== id));
+    refetch();
   };
 
   return called && loading ? (

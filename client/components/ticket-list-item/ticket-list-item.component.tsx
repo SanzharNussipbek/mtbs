@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { differenceInMinutes, format } from "date-fns";
 import {
   AlertDialog,
@@ -14,8 +14,12 @@ import { useMutation } from "@apollo/client";
 
 import { Ticket } from "../../types/types";
 import { useAppDispatch } from "../../hooks";
-import { DELETE_TICKET_BY_ID, GET_SESSION_BY_ID } from "../../utils/gql";
 import { openSnackbar } from "../../redux/loading/loading.slice";
+import {
+  DELETE_TICKET,
+  GET_SESSION_BY_ID,
+  GET_TICKETS_BY_USER_ID,
+} from "../../utils/gql";
 
 import Loader from "../loader/loader.component";
 
@@ -35,6 +39,7 @@ const TicketListItem: React.FC<Props> = ({
   const dispatch = useAppDispatch();
 
   const sessionId = ticket?.session?.id;
+  const userId = ticket?.userId;
   const ticketDate = new Date(ticket.session.datetime * 1000);
   const isUsed = ticketDate.valueOf() < new Date().valueOf();
   const canCancel = differenceInMinutes(ticketDate, new Date()) > 30;
@@ -45,7 +50,7 @@ const TicketListItem: React.FC<Props> = ({
 
   const cancelRef = React.useRef(null);
 
-  const [deleteTicket, { called, loading }] = useMutation(DELETE_TICKET_BY_ID, {
+  const [deleteTicket, { called, loading }] = useMutation(DELETE_TICKET, {
     update(_, { data }) {
       if (!onDelete) return;
       onDelete(ticket.id);
@@ -61,6 +66,7 @@ const TicketListItem: React.FC<Props> = ({
     },
     refetchQueries: [
       { query: GET_SESSION_BY_ID, variables: { id: sessionId } },
+      { query: GET_TICKETS_BY_USER_ID, variables: { userId: userId } },
     ],
     variables: { id: ticket.id },
   });
@@ -149,8 +155,8 @@ const TicketListItem: React.FC<Props> = ({
             <Text mb={1} color="black">
               Seats:
             </Text>
-            {ticket.seats.map((s) => (
-              <Text key={s.id} mb={4} color="black">
+            {ticket.seats.map((s, index) => (
+              <Text key={index} mb={4} color="black">
                 {`Row: ${s.seat.rowNumber}, Seat: ${s.seat.seatNumber}${
                   s.type?.length ? `, Rate: ${s.type}` : ""
                 }`}

@@ -1,12 +1,13 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 
-import { Text, View } from '../components/Themed';
-import { RootTabScreenProps } from '../types';
-import PostsList from '../components/posts-list/post-list.component';
 import { useAppSelector } from '../hooks';
+import { View } from '../components/Themed';
+import { RootTabScreenProps } from '../types';
 import { selectUser } from '../redux/user/user.selector';
-import { useEffect } from 'react';
+
+import PostsList from '../components/posts-list/post-list.component';
 
 export default function NewsScreen({ navigation }: RootTabScreenProps<'News'>) {
   const user = useAppSelector(selectUser);

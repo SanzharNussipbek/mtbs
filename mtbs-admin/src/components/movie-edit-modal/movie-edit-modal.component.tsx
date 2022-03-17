@@ -18,7 +18,7 @@ import { format } from "date-fns";
 
 import { Movie } from "../../types/types";
 import { useAppDispatch } from "../../hooks";
-import { UPDATE_MOVIE } from "../../utils/gql/movie";
+import { UPDATE_MOVIE } from "../../utils/gql";
 import { openSnackbar } from "../../redux/loading/loading.slice";
 
 import LoadingButton from "../loading-button/loading-button.component";

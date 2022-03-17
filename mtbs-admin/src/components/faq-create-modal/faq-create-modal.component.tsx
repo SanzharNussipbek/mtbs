@@ -13,7 +13,7 @@ import { useMutation } from "@apollo/client";
 import { Controller, useForm } from "react-hook-form";
 
 import { useAppDispatch } from "../../hooks";
-import { CREATE_FAQ } from "../../utils/gql/faq";
+import { CREATE_FAQ } from "../../utils/gql";
 import { openSnackbar } from "../../redux/loading/loading.slice";
 
 import LoadingButton from "../loading-button/loading-button.component";

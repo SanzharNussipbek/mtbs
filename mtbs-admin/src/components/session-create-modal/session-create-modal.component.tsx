@@ -17,10 +17,8 @@ import { DateTimePicker, LocalizationProvider } from "@mui/lab";
 
 import { useAppDispatch } from "../../hooks";
 import { Hall, Movie } from "../../types/types";
-import { GET_ALL_HALLS } from "../../utils/gql/hall";
-import { GET_ALL_MOVIES } from "../../utils/gql/movie";
-import { CREATE_SESSION } from "../../utils/gql/session";
 import { openSnackbar } from "../../redux/loading/loading.slice";
+import { GET_ALL_HALLS, GET_ALL_MOVIES, CREATE_SESSION } from "../../utils/gql";
 
 import LoadingButton from "../loading-button/loading-button.component";
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import { Skeleton, Text } from "native-base";
 import { Image, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Skeleton, Text } from "native-base";
 
 import { View } from "../Themed";
 import { Post } from "../../types/types";
@@ -17,7 +17,7 @@ const PostsListItem: React.FC<Props> = ({ post }) => {
   const [loading, setLoading] = useState(true);
 
   const onPress = () => {
-    navigation.navigate("Post", { post });
+    navigation.navigate("Post", { id: post?.id });
   };
 
   return post ? (
@@ -37,10 +37,10 @@ const PostsListItem: React.FC<Props> = ({ post }) => {
         />
       </View>
       <View style={styles.text}>
-        <Text style={styles.title} isTruncated color='white'>
+        <Text style={styles.title} isTruncated color="white">
           {post?.title}
         </Text>
-        <Text style={styles.body} noOfLines={4} isTruncated color='white'>
+        <Text style={styles.body} noOfLines={4} isTruncated color="white">
           {post?.body}
         </Text>
       </View>

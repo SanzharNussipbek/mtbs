@@ -14,10 +14,10 @@ import {
 } from "native-base";
 
 import {
-  CREATE_TICKET_MUTATION,
-  DELETE_TICKET_BY_ID,
+  CREATE_TICKET,
+  DELETE_TICKET,
+  PAY_FOR_TICKET,
   GET_SESSION_BY_ID,
-  PAY_FOR_TICKET_MUTATION,
 } from "../../utils/gql";
 import {
   selectSession,
@@ -55,7 +55,7 @@ export default function SessionTicketScreen(
   const cancelRef = React.useRef(null);
 
   const [createTicket, { called: isCreateCalled, loading: isCreateLoading }] =
-    useMutation(CREATE_TICKET_MUTATION, {
+    useMutation(CREATE_TICKET, {
       update(_, { data: { createTicket: ticketData } }) {
         setTicket(ticketData);
       },
@@ -66,7 +66,7 @@ export default function SessionTicketScreen(
     });
 
   const [payForTicket, { loading: isPayLoading }] = useMutation(
-    PAY_FOR_TICKET_MUTATION,
+    PAY_FOR_TICKET,
     {
       update(_, { data: { payForTicket: ticketData } }) {
         setTicket(ticketData);
@@ -87,7 +87,7 @@ export default function SessionTicketScreen(
   );
 
   const [deleteTicket, { loading: isDeleteLoading }] = useMutation(
-    DELETE_TICKET_BY_ID,
+    DELETE_TICKET,
     {
       update(_, { data }) {
         dispatch(
@@ -195,7 +195,7 @@ export default function SessionTicketScreen(
             >
               Time for payment:
             </Text>
-            <Timer onFinish={onTimerFinish} duration={5} />
+            <Timer onFinish={onTimerFinish} />
           </>
         ) : null}
         <Flex justifyContent={"center"} alignItems="center" height={"80%"}>

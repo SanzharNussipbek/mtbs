@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Image, ScrollView, Linking, Alert } from "react-native";
 import {

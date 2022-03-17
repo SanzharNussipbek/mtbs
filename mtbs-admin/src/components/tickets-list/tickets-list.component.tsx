@@ -9,7 +9,7 @@ import { useAppDispatch } from "../../hooks";
 import { Column, Row } from "../table/table.types";
 import useModalState from "../../utils/useModalState";
 import { openSnackbar } from "../../redux/loading/loading.slice";
-import { DELETE_TICKET, GET_ALL_TICKETS } from "../../utils/gql/ticket";
+import { DELETE_TICKET, GET_ALL_TICKETS } from "../../utils/gql";
 import { setTicketList } from "../../redux/ticket/ticket.actions";
 
 import Table from "../table/table.component";
@@ -106,8 +106,8 @@ const TicketsList: React.FC = () => {
           sessionMovie: ticket?.session?.movie?.name,
           seats: (
             <Box display="flex" flexDirection="column">
-              {ticket?.seats?.map((s) => (
-                <Typography key={s.id} style={{ whiteSpace: "nowrap" }}>
+              {ticket?.seats?.map((s, index) => (
+                <Typography key={index} style={{ whiteSpace: "nowrap" }}>
                   {`Seat: ${s.seat.seatNumber}, Row: ${s.seat.rowNumber}`}
                 </Typography>
               ))}
