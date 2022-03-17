@@ -15,7 +15,6 @@ import { RootStackScreenProps } from "../../types";
 import { GET_MOVIE_BY_ID } from "../../utils/gql";
 import { Text, View } from "../../components/Themed";
 
-import NotFoundScreen from "../NotFoundScreen";
 import Loader from "../../components/loader/loader.component";
 import SessionList from "../../components/session-list/session-list.component";
 
@@ -23,20 +22,18 @@ import { styles } from "./MovieScreen.styles";
 
 export default function MovieScreen(props: RootStackScreenProps<"Movie">) {
   const navigation = useNavigation();
-  const id = props?.route?.params?.movie?.id;
+  const id = props?.route?.params?.id;
   const [movie, setMovie] = useState<Movie | null>(null);
 
-  const { called, loading, data } = useQuery(GET_MOVIE_BY_ID, {
+  const { called, loading } = useQuery(GET_MOVIE_BY_ID, {
+    onCompleted(data) {
+      setMovie(data?.getMovie);
+    },
     onError(err) {
       Alert.alert("ERROR", err?.message);
     },
     variables: { id: id },
   });
-
-  useEffect(() => {
-    if (!data) return;
-    setMovie(data?.getMovie);
-  }, [data]);
 
   const [isHidden, setIsHidden] = useState(true);
 
@@ -153,7 +150,5 @@ export default function MovieScreen(props: RootStackScreenProps<"Movie">) {
       </View>
       <SessionList movieId={movie?.id} />
     </ScrollView>
-  ) : (
-    NotFoundScreen
-  );
+  ) : null;
 }

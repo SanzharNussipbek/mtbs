@@ -1,31 +1,39 @@
 import React, { useCallback, useState } from "react";
-import { Image, ScrollView, Pressable, Linking } from "react-native";
-import {
-  Button,
-  Heading,
-  Text as NativeText,
-  ChevronLeftIcon,
-  Link,
-} from "native-base";
+import { useQuery } from "@apollo/client";
 import { useNavigation } from "@react-navigation/native";
+import { Button, Heading, ChevronLeftIcon } from "native-base";
+import { Image, ScrollView, Linking, Alert } from "react-native";
 
-import { Text, View } from "../../components/Themed";
-import { RootStackScreenProps } from "../../types";
 import { Post } from "../../types/types";
+import { RootStackScreenProps } from "../../types";
+import { Text, View } from "../../components/Themed";
+import { GET_POST_BY_ID } from "../../utils/gql/post";
 
-import NotFoundScreen from "../NotFoundScreen";
+import Loader from "../../components/loader/loader.component";
 
 import { styles } from "./PostScreen.styles";
 
 export default function PostScreen(props: RootStackScreenProps<"Post">) {
   const navigation = useNavigation();
-  const post: Post = props?.route?.params?.post;
+  const id = props?.route?.params?.id;
+  const [post, setPost] = useState<Post | null>(null);
+
+  const { called, loading } = useQuery(GET_POST_BY_ID, {
+    onCompleted(data) {
+      setPost(data?.getPost);
+    },
+    onError(err) {
+      Alert.alert("ERROR", err?.message);
+    },
+    variables: { id: id },
+  });
 
   const handleGoBack = () => {
     navigation.navigate("Root");
   };
 
   const handleOpenSource = useCallback(async () => {
+    if (!post) return;
     const supported = await Linking.canOpenURL(post?.sourceUrl);
 
     if (supported) {
@@ -33,26 +41,28 @@ export default function PostScreen(props: RootStackScreenProps<"Post">) {
     }
   }, [post?.sourceUrl]);
 
-  return post ? (
+  return called && loading ? (
+    <Loader />
+  ) : post ? (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Button
           size={"lg"}
-          variant='ghost'
-          colorScheme='secondary'
+          variant="ghost"
+          colorScheme="secondary"
           leftIcon={<ChevronLeftIcon style={{ marginRight: -10 }} />}
           onPress={handleGoBack}
           style={styles.backButton}
         >
           Back
         </Button>
-        <Heading color='white' style={{ flex: 1, textAlign: "center" }}>
+        <Heading color="white" style={{ flex: 1, textAlign: "center" }}>
           Post
         </Heading>
       </View>
       <View style={styles.poster}>
         <Image style={styles.img} source={{ uri: post?.imgUrl }} />
-        <Heading size='xl' style={styles.title}>
+        <Heading size="xl" style={styles.title}>
           {post?.title}
         </Heading>
       </View>
@@ -68,7 +78,5 @@ export default function PostScreen(props: RootStackScreenProps<"Post">) {
         <Text style={styles.descriptionText}>{post?.body}</Text>
       </View>
     </ScrollView>
-  ) : (
-    NotFoundScreen
-  );
+  ) : null;
 }

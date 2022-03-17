@@ -1,49 +1,45 @@
 import React, { useEffect, useState } from "react";
+import { useQuery } from "@apollo/client";
 import { Alert, ScrollView } from "react-native";
 import { Text, Flex, Button, Modal } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 
-import { useAppDispatch } from "../../hooks";
-import { RootStackScreenProps } from "../../types";
-import { SeatType, Session, SessionSeat } from "../../types/types";
 import {
   updateSession,
   updateSessionSeats,
 } from "../../redux/session/session.actions";
+import { useAppDispatch } from "../../hooks";
+import { RootStackScreenProps } from "../../types";
+import { GET_SESSION_BY_ID } from "../../utils/gql";
+import { SeatType, Session, SessionSeat } from "../../types/types";
 
-import NotFoundScreen from "../NotFoundScreen";
+import Loader from "../../components/loader/loader.component";
 import SessionSeatList from "../../components/session-seat-list/session-seat-list.componenent";
 import SessionPageHeader from "../../components/session-page-header/session-page-header.component";
 
 import { styles } from "./SessionScreen.styles";
-import { GET_SESSION_BY_ID } from "../../utils/gql";
-import { useQuery } from "@apollo/client";
-import Loader from "../../components/loader/loader.component";
 
 export default function SessionScreen(props: RootStackScreenProps<"Session">) {
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
-  const id = props?.route?.params?.session?.id;
+  const id = props?.route?.params?.id;
 
   const [showModal, setShowModal] = useState(false);
   const [selectedSeats, setSelectedSeats] = useState<SessionSeat[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [session, setSession] = useState<Session | null>(null);
 
-  const { called, loading, error, data, refetch } = useQuery(
-    GET_SESSION_BY_ID,
-    {
-      onCompleted(data) {
-        setSession(data?.getSession);
-      },
-      onError(err) {
-        Alert.alert("ERROR", err.message);
-      },
-      variables: { id: id },
-    }
-  );
-  
+  const { called, loading } = useQuery(GET_SESSION_BY_ID, {
+    onCompleted(data) {
+      setSession(data?.getSession);
+    },
+    onError(err) {
+      Alert.alert("ERROR", err.message);
+    },
+    variables: { id: id },
+  });
+
   useEffect(() => {
     dispatch(updateSession(session));
   }, [session]);
@@ -133,7 +129,5 @@ export default function SessionScreen(props: RootStackScreenProps<"Session">) {
         </Modal.Content>
       </Modal>
     </Flex>
-  ) : (
-    NotFoundScreen
-  );
+  ) : null;
 }

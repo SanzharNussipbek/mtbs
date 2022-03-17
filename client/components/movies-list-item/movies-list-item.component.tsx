@@ -17,7 +17,7 @@ const MoviesListItem: React.FC<Props> = ({ movie }) => {
   const [loading, setLoading] = useState(false);
 
   const onPress = () => {
-    navigation.navigate("Movie", { movie });
+    navigation.navigate("Movie", { id: movie?.id });
   };
 
   return movie ? (

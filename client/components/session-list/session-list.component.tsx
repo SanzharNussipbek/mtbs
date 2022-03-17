@@ -56,7 +56,7 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
 
   const handleClick = (session: Session) => {
     if (new Date(session.datetime * 1000) < new Date()) return;
-    navigation.navigate("Session", { session });
+    navigation.navigate("Session", { id: session?.id });
   };
 
   const handleToggleSwitch = () => {
