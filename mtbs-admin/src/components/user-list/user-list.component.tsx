@@ -51,7 +51,11 @@ const UserList: React.FC = () => {
   const { isOpen: isEditOpen, onToggle: toggleEdit } = useModalState();
   const { isOpen: isDeleteOpen, onToggle: toggleDelete } = useModalState();
 
-  const { called, loading, error, data, refetch } = useQuery(GET_ALL_USERS, {
+  const { called, loading, error, refetch } = useQuery(GET_ALL_USERS, {
+    onCompleted(data) {
+      setUsers(data.getAllUsers);
+      dispatch(setUserList(data.getAllUsers));
+    },
     onError(err) {
       dispatch(
         openSnackbar({
@@ -83,16 +87,9 @@ const UserList: React.FC = () => {
           })
         );
         console.error(JSON.stringify(err, null, 2));
-        // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
       },
       variables: { id: userId },
     });
-
-  useEffect(() => {
-    if (!data) return;
-    setUsers(data.getAllUsers);
-    dispatch(setUserList(data.getAllUsers));
-  }, [data]);
 
   useEffect(() => {
     setRows(

@@ -50,7 +50,11 @@ const SessionsList: React.FC = () => {
   const { isOpen: isEditOpen, onToggle: toggleEdit } = useModalState();
   const { isOpen: isDeleteOpen, onToggle: toggleDelete } = useModalState();
 
-  const { called, loading, error, data, refetch } = useQuery(GET_ALL_SESSIONS, {
+  const { called, loading, error, refetch } = useQuery(GET_ALL_SESSIONS, {
+    onCompleted(data) {
+      setSessions(data.getAllSessions);
+      dispatch(updateSessionList(data.getAllSessions));
+    },
     onError(err) {
       dispatch(
         openSnackbar({
@@ -86,12 +90,6 @@ const SessionsList: React.FC = () => {
       },
       variables: { id: sessionId },
     });
-
-  useEffect(() => {
-    if (!data) return;
-    setSessions(data.getAllSessions);
-    dispatch(updateSessionList(data.getAllSessions));
-  }, [data]);
 
   useEffect(() => {
     setRows(

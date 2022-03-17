@@ -44,7 +44,11 @@ const SeatsList: React.FC = () => {
   const { isOpen: isCreateOpen, onToggle: toggleCreate } = useModalState();
   const { isOpen: isDeleteOpen, onToggle: toggleDelete } = useModalState();
 
-  const { called, loading, error, data, refetch } = useQuery(GET_ALL_SEATS, {
+  const { called, loading, error, refetch } = useQuery(GET_ALL_SEATS, {
+    onCompleted(data) {
+      setSeats(data.getAllSeats);
+      dispatch(setSeatList(data.getAllSeats));
+    },
     onError(err) {
       dispatch(
         openSnackbar({
@@ -95,12 +99,6 @@ const SeatsList: React.FC = () => {
       },
       variables: { id: seatId },
     });
-
-  useEffect(() => {
-    if (!data) return;
-    setSeats(data.getAllSeats);
-    dispatch(setSeatList(data.getAllSeats));
-  }, [data]);
 
   useEffect(() => {
     if (!hallData) return;

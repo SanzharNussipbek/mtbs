@@ -41,7 +41,11 @@ const TicketsList: React.FC = () => {
 
   const { isOpen: isDeleteOpen, onToggle: toggleDelete } = useModalState();
 
-  const { called, loading, error, data, refetch } = useQuery(GET_ALL_TICKETS, {
+  const { called, loading, error, refetch } = useQuery(GET_ALL_TICKETS, {
+    onCompleted(data) {
+      setTickets(data.getAllTickets);
+      dispatch(setTicketList(data.getAllTickets));
+    },
     onError(err) {
       dispatch(
         openSnackbar({
@@ -77,12 +81,6 @@ const TicketsList: React.FC = () => {
       },
       variables: { id: ticketId },
     });
-
-  useEffect(() => {
-    if (!data) return;
-    setTickets(data.getAllTickets);
-    dispatch(setTicketList(data.getAllTickets));
-  }, [data]);
 
   useEffect(() => {
     setRows(

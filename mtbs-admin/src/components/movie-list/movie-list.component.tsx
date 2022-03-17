@@ -57,7 +57,11 @@ const MovieList: React.FC = () => {
   const { isOpen: isEditOpen, onToggle: toggleEdit } = useModalState();
   const { isOpen: isDeleteOpen, onToggle: toggleDelete } = useModalState();
 
-  const { called, loading, error, data, refetch } = useQuery(GET_ALL_MOVIES, {
+  const { called, loading, error, refetch } = useQuery(GET_ALL_MOVIES, {
+    onCompleted(data) {
+      setMovies(data.getAllMovies);
+      dispatch(setMovieList(data.getAllMovies));
+    },
     onError(err) {
       dispatch(
         openSnackbar({
@@ -89,16 +93,9 @@ const MovieList: React.FC = () => {
           })
         );
         console.error(JSON.stringify(err, null, 2));
-        // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
       },
       variables: { id: movieId },
     });
-
-  useEffect(() => {
-    if (!data) return;
-    setMovies(data.getAllMovies);
-    dispatch(setMovieList(data.getAllMovies));
-  }, [data]);
 
   useEffect(() => {
     setRows(

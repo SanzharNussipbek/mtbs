@@ -46,7 +46,11 @@ const HallsList: React.FC = () => {
   const { isOpen: isEditOpen, onToggle: toggleEdit } = useModalState();
   const { isOpen: isDeleteOpen, onToggle: toggleDelete } = useModalState();
 
-  const { called, loading, error, data, refetch } = useQuery(GET_ALL_HALLS, {
+  const { called, loading, error, refetch } = useQuery(GET_ALL_HALLS, {
+    onCompleted(data) {
+      setHalls(data.getAllHalls);
+      dispatch(setHallList(data.getAllHalls));
+    },
     onError(err) {
       dispatch(
         openSnackbar({
@@ -78,16 +82,9 @@ const HallsList: React.FC = () => {
           })
         );
         console.error(JSON.stringify(err, null, 2));
-        // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
       },
       variables: { id: hallId },
     });
-
-  useEffect(() => {
-    if (!data) return;
-    setHalls(data.getAllHalls);
-    dispatch(setHallList(data.getAllHalls));
-  }, [data]);
 
   useEffect(() => {
     setRows(

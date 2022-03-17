@@ -45,7 +45,11 @@ const FaqList: React.FC = () => {
   const { isOpen: isEditOpen, onToggle: toggleEdit } = useModalState();
   const { isOpen: isDeleteOpen, onToggle: toggleDelete } = useModalState();
 
-  const { called, loading, error, data, refetch } = useQuery(GET_ALL_FAQ, {
+  const { called, loading, error, refetch } = useQuery(GET_ALL_FAQ, {
+    onCompleted(data) {
+      setFaqs(data.getFaqs);
+      dispatch(setFaqList(data.getFaqs));
+    },
     onError(err) {
       dispatch(
         openSnackbar({
@@ -81,12 +85,6 @@ const FaqList: React.FC = () => {
       },
       variables: { id: faqId },
     });
-
-  useEffect(() => {
-    if (!data) return;
-    setFaqs(data.getFaqs);
-    dispatch(setFaqList(data.getFaqs));
-  }, [data]);
 
   useEffect(() => {
     setRows(

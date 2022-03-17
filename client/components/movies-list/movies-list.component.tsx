@@ -17,24 +17,17 @@ const MoviesList: React.FC = () => {
   const [currentMovies, setCurrentMovies] = useState<Movie[]>([]);
   const [comingSoonMovies, setComingSoonMovies] = useState<Movie[]>([]);
 
-  const { called, loading, error, data } = useQuery(GET_ALL_MOVIES, {
+  const { called, loading } = useQuery(GET_ALL_MOVIES, {
+    onCompleted(data) {
+      data?.getAllMovies?.map(async (movie: Movie) => {
+        await Image.prefetch(movie.imgUrl);
+      });
+      setMovies(data?.getAllMovies);
+    },
     onError(err) {
       Alert.alert("ERROR", err.message);
     },
   });
-
-  useEffect(() => {
-    if (!error) return;
-    Alert.alert("ERROR", error?.message);
-  }, [error]);
-
-  useEffect(() => {
-    if (!data) return;
-    data?.getAllMovies?.map(async (movie: Movie) => {
-      await Image.prefetch(movie.imgUrl);
-    });
-    setMovies(data?.getAllMovies);
-  }, [data]);
 
   useEffect(() => {
     if (!movies?.length) return;

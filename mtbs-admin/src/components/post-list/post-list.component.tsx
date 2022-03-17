@@ -51,7 +51,11 @@ const PostList: React.FC = () => {
   const { isOpen: isEditOpen, onToggle: toggleEdit } = useModalState();
   const { isOpen: isDeleteOpen, onToggle: toggleDelete } = useModalState();
 
-  const { called, loading, error, data, refetch } = useQuery(GET_ALL_POSTS, {
+  const { called, loading, error, refetch } = useQuery(GET_ALL_POSTS, {
+    onCompleted(data) {
+      setPosts(data.getPosts);
+      dispatch(setPostList(data.getPosts));
+    },
     onError(err) {
       dispatch(
         openSnackbar({
@@ -87,12 +91,6 @@ const PostList: React.FC = () => {
       },
       variables: { id: postId },
     });
-
-  useEffect(() => {
-    if (!data) return;
-    setPosts(data.getPosts);
-    dispatch(setPostList(data.getPosts));
-  }, [data]);
 
   useEffect(() => {
     setRows(
