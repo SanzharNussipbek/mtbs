@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { format } from "date-fns";
 import { useQuery } from "@apollo/client";
 import { useNavigation } from "@react-navigation/native";
 import { Alert, useWindowDimensions } from "react-native";
@@ -8,6 +7,7 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 
 import { View } from "../Themed";
 import { Session, Hall } from "../../types/types";
+import { isToday, isTomorrow } from "../../utils/date";
 import { GET_SESSIONS_BY_MOVIE_ID } from "../../utils/gql";
 
 import Loader from "../loader/loader.component";
@@ -33,19 +33,22 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
     { key: "second", title: "Tomorrow" },
   ]);
 
-  const { called, loading, data } = useQuery(GET_SESSIONS_BY_MOVIE_ID, {
-    onCompleted(data) {
-      const sessions: Session[] = data.getSessionsByMovieId;
-      setSessions(sessions);
-      setHalls([...new Set(sessions.map((s) => s.hall))]);
-    },
-    onError(err) {
-      Alert.alert("ERROR", err.message);
-    },
-    variables: {
-      movieId,
-    },
-  });
+  const { called, loading, data } = useQuery(
+    GET_SESSIONS_BY_MOVIE_ID,
+    {
+      onCompleted(data) {
+        const sessions: Session[] = data.getSessionsByMovieId;
+        setSessions(sessions);
+        setHalls([...new Set(sessions.map((s) => s.hall))]);
+      },
+      onError(err) {
+        Alert.alert("ERROR", err.message);
+      },
+      variables: {
+        movieId,
+      },
+    }
+  );
 
   const handleClick = (session: Session) => {
     if (new Date(session.datetime * 1000) < new Date()) return;
@@ -104,36 +107,20 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
       />
       <View style={styles.main}>
         {sessions.filter((s) =>
-          index === 0
-            ? format(new Date(s.datetime * 1000), "dd.MM.yyyy") ===
-              format(new Date(), "dd.MM.yyyy")
-            : format(new Date(s.datetime * 1000), "dd.MM.yyyy") ===
-              format(new Date().setDate(new Date().getDate() + 1), "dd.MM.yyyy")
+          index === 0 ? isToday(s.datetime) : isTomorrow(s.datetime)
         )?.length ? (
-          halls.map((hall: Hall, index) => {
+          halls.map((hall: Hall, idx) => {
             const hallSessions: Session[] = sessions
               .filter((s) =>
                 index === 0
-                  ? s.hall.id === hall.id &&
-                    format(new Date(s.datetime * 1000), "dd.MM.yyyy") ===
-                      format(new Date(), "dd.MM.yyyy")
-                  : s.hall.id === hall.id &&
-                    format(new Date(s.datetime * 1000), "dd.MM.yyyy") ===
-                      format(
-                        new Date().setDate(new Date().getDate() + 1),
-                        "dd.MM.yyyy"
-                      )
+                  ? s.hall.id === hall.id && isToday(s.datetime)
+                  : s.hall.id === hall.id && isTomorrow(s.datetime)
               )
               .sort(function (a, b) {
                 return a.datetime - b.datetime;
               });
             return hallSessions?.length ? (
-              <Flex
-                direction="column"
-                mb={8}
-                style={styles.group}
-                key={index}
-              >
+              <Flex direction="column" mb={8} style={styles.group} key={idx}>
                 <Heading
                   size="sm"
                   color={hall.type === "Green" ? "emerald.300" : "white"}
@@ -143,9 +130,9 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
                   {`${hall.name} hall (${hall.type})`}
                 </Heading>
                 <Flex direction="row" style={styles.groupBody}>
-                  {hallSessions.map((session: Session, idx) => (
+                  {hallSessions.map((session: Session, i) => (
                     <SessionTimeItem
-                      key={idx}
+                      key={i}
                       datetime={session.datetime}
                       onClick={() => handleClick(session)}
                     />

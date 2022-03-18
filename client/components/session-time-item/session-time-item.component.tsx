@@ -10,12 +10,7 @@ type Props = {
 };
 
 const SessionTimeItem: React.FC<Props> = ({ datetime, onClick }) => {
-  const date = new Date(
-    new Date(datetime * 1000).toLocaleString("en-US", {
-      timeZone: "Asia/Hong_Kong",
-    })
-  );
-  const inFuture = date.valueOf() > new Date().valueOf();
+  const inFuture = new Date(datetime * 1000).valueOf() > new Date().valueOf();
 
   return (
     <Pressable
@@ -27,7 +22,7 @@ const SessionTimeItem: React.FC<Props> = ({ datetime, onClick }) => {
       }
     >
       <Text color={inFuture ? "white" : "muted.300"} style={styles.text}>
-        {format(date, "HH:mm")}
+        {format(new Date(datetime * 1000), "HH:mm")}
       </Text>
       {inFuture ? <View style={styles.circle} /> : null}
     </Pressable>

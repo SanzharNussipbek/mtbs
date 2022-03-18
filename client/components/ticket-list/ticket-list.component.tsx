@@ -8,6 +8,7 @@ import { Alert, FlatList, useWindowDimensions } from "react-native";
 import { View } from "../Themed";
 import { Ticket } from "../../types/types";
 import { useAppSelector } from "../../hooks";
+import { isInFuture, isInPast } from "../../utils/date";
 import { GET_TICKETS_BY_USER_ID } from "../../utils/gql";
 import { selectUser } from "../../redux/user/user.selector";
 
@@ -54,11 +55,7 @@ const TicketList: React.FC = () => {
     called && tickets?.length ? (
       <FlatList
         data={tickets
-          .filter(
-            (t) =>
-              new Date(t.session.datetime * 1000).valueOf() >
-              new Date().valueOf()
-          )
+          .filter((t) => isInFuture(t.session.datetime))
           .sort(function (a, b) {
             return (
               new Date(b.session.datetime * 1000).valueOf() -
@@ -95,11 +92,7 @@ const TicketList: React.FC = () => {
     called && tickets?.length ? (
       <FlatList
         data={tickets
-          .filter(
-            (t) =>
-              new Date(t.session.datetime * 1000).valueOf() <
-              new Date().valueOf()
-          )
+          .filter((t) => isInPast(t.session.datetime))
           .sort(function (a, b) {
             return (
               new Date(b.session.datetime * 1000).valueOf() -

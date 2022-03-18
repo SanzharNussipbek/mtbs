@@ -11,12 +11,6 @@ type Props = {
 };
 
 const SessionPageHeader: React.FC<Props> = ({ session }) => {
-  const date = new Date(
-    new Date(session.datetime * 1000).toLocaleString("en-US", {
-      timeZone: "Asia/Hong_Kong",
-    })
-  );
-
   return (
     <View style={styles.container} mb={4}>
       <Flex alignItems={"center"}>
@@ -39,10 +33,10 @@ const SessionPageHeader: React.FC<Props> = ({ session }) => {
           {session.movie.name}
         </Text>
         <Text fontSize={16} color="secondary.300" mb={2}>
-          {format(date, "dd.MM.yyyy")}
+          {format(new Date(session.datetime * 1000), "dd.MM.yyyy")}
         </Text>
         <Text fontSize={16} color="secondary.300" mb={3}>
-          {format(date, "HH:mm")}
+          {format(new Date(session.datetime * 1000), "HH:mm")}
         </Text>
         <Text fontSize={12} color="muted.300" mb={1}>
           Screen
