@@ -1,7 +1,6 @@
 import { format } from "date-fns";
 
 export const getCurrentDate = () => {
-  const offset = +8;
   return new Date(new Date().getTime());
 };
 

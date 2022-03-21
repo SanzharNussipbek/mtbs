@@ -117,7 +117,8 @@ const SessionCreateModal: React.FC<Props> = ({
     e.preventDefault();
     setIsLoading(true);
     const data = {
-      datetime: new Date(values?.datetime)?.getTime() / 1000,
+      datetime:
+        new Date(new Date(values?.datetime).setSeconds(0, 0))?.getTime() / 1000,
       movieId: movies.find((m) => m.name === values?.movieId)?.id ?? "",
       hallId: halls.find((h) => h.name === values?.hallId)?.id ?? "",
       adultRate: parseInt(values?.adultRate),
@@ -134,6 +135,14 @@ const SessionCreateModal: React.FC<Props> = ({
   useEffect(() => {
     setMovies(moviesData?.getAllMovies);
   }, [moviesData]);
+
+  useEffect(() => {
+    setSelectedDatetime(null);
+    setSelectedHall(null);
+    setSelectedMovie(null);
+    setSelectedHallInputValue("");
+    setSelectedMovieInputValue("");
+  }, [open]);
 
   return (
     <Dialog open={open}>
@@ -234,12 +243,16 @@ const SessionCreateModal: React.FC<Props> = ({
             render={({ ...props }) => (
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DateTimePicker
+                  disablePast
                   label="Date & Time"
                   value={selectedDatetime}
                   onChange={(newValue) => {
                     setSelectedDatetime(newValue);
                     props?.field?.onChange(newValue);
                   }}
+                  inputFormat="dd.MM.yyyy HH:mm"
+                  ampm={false}
+                  ampmInClock={false}
                   renderInput={(params) => (
                     <TextField
                       {...params}

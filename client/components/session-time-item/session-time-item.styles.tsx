@@ -5,7 +5,7 @@ export const styles = StyleSheet.create({
     minWidth: 80,
     paddingVertical: 4,
     marginBottom: 8,
-    marginRight: 8,
+    marginRight: 10,
     position: 'relative',
   },
   future: {

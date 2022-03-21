@@ -51,6 +51,7 @@ export default function SessionTicketScreen(
   const [isPayDisabled, setIsPayDisabled] = useState(true);
   const [isTicketPaid, setIsTicketPaid] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const cancelRef = React.useRef(null);
 
@@ -58,6 +59,7 @@ export default function SessionTicketScreen(
     useMutation(CREATE_TICKET, {
       update(_, { data: { createTicket: ticketData } }) {
         setTicket(ticketData);
+        setIsLoading(false);
       },
       onError(err) {
         Alert.alert("ERROR", JSON.stringify(err));
@@ -172,7 +174,7 @@ export default function SessionTicketScreen(
   };
 
   return user && session && selectedSeats.length ? (
-    isCreateLoading ? (
+    isCreateLoading || isLoading ? (
       <Loader text="Creating your ticket..." />
     ) : isDeleteLoading ? (
       <Loader text="Deleting your ticket..." />

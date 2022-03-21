@@ -24,6 +24,7 @@ import Loader from "../loader/loader.component";
 import Dialog from "../dialog/dialog.component";
 import SessionEditModal from "../session-edit-modal/session-edit-modal.component";
 import SessionCreateModal from "../session-create-modal/session-create-modal.component";
+import SessionPopulateModal from "../session-populate-modal/session-populate-modal.component";
 
 import { Styled } from "./sessions-list.styles";
 
@@ -49,6 +50,7 @@ const SessionsList: React.FC = () => {
   const { isOpen: isCreateOpen, onToggle: toggleCreate } = useModalState();
   const { isOpen: isEditOpen, onToggle: toggleEdit } = useModalState();
   const { isOpen: isDeleteOpen, onToggle: toggleDelete } = useModalState();
+  const { isOpen: isPopulateOpen, onToggle: togglePopulate } = useModalState();
 
   const { called, loading, error, refetch } = useQuery(GET_ALL_SESSIONS, {
     onCompleted(data) {
@@ -86,7 +88,6 @@ const SessionsList: React.FC = () => {
           })
         );
         console.error(JSON.stringify(err, null, 2));
-        // setErrors(err?.graphQLErrors[0]?.extensions?.errors);
       },
       variables: { id: sessionId },
     });
@@ -176,9 +177,19 @@ const SessionsList: React.FC = () => {
         <Typography variant="h5" color="primary">
           Sessions
         </Typography>
-        <Button color="info" variant="contained" onClick={toggleCreate}>
-          Create
-        </Button>
+        <Box style={{ display: 'flex', alignItems: 'center' }}>
+          <Button
+            color="secondary"
+            variant="outlined"
+            onClick={togglePopulate}
+            style={{ marginRight: 16 }}
+          >
+            Populate
+          </Button>
+          <Button color="info" variant="contained" onClick={toggleCreate}>
+            Create
+          </Button>
+        </Box>
       </Box>
       <Table columns={columns} rows={rows} />
       <Dialog
@@ -193,6 +204,11 @@ const SessionsList: React.FC = () => {
       <SessionCreateModal
         open={isCreateOpen}
         onClose={toggleCreate}
+        onCreateCallback={onCreateSession}
+      />
+      <SessionPopulateModal
+        open={isPopulateOpen}
+        onClose={togglePopulate}
         onCreateCallback={onCreateSession}
       />
       <SessionEditModal
