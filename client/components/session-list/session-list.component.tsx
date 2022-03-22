@@ -7,8 +7,8 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 
 import { View } from "../Themed";
 import { Session, Hall } from "../../types/types";
-import { isToday, isTomorrow } from "../../utils/date";
 import { GET_SESSIONS_BY_MOVIE_ID } from "../../utils/gql";
+import { isInPast, isToday, isTomorrow } from "../../utils/date";
 
 import Loader from "../loader/loader.component";
 import SessionTimeItem from "../session-time-item/session-time-item.component";
@@ -51,7 +51,7 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
   );
 
   const handleClick = (session: Session) => {
-    if (new Date(session.datetime * 1000) < new Date()) return;
+    if (isInPast(session.datetime)) return;
     navigation.navigate("Session", { id: session?.id });
   };
 

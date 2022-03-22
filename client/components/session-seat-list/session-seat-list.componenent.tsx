@@ -57,6 +57,7 @@ const SessionSeatList: React.FC<Props> = ({ session, onChange }) => {
                 .filter((s) => s.seat.rowNumber === row)
                 .map((s, idx) => (
                   <SessionSeatItem
+                    totalSelectedSeatsNum={selectedSeats?.length}
                     sessionSeat={s}
                     rates={session?.rates}
                     key={idx}

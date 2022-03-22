@@ -5,13 +5,21 @@ import { SeatType, SessionRates, SessionSeat } from "../../types/types";
 
 import { styles } from "../session-seat-item/session-seat-item.styles";
 
+const MAX_SEATS_NUM = 5;
+
 type Props = {
   rates: SessionRates;
   sessionSeat: SessionSeat;
   onChange: (seat: SessionSeat, remove?: boolean) => void;
+  totalSelectedSeatsNum: number;
 };
 
-const SessionSeatItem: React.FC<Props> = ({ sessionSeat, rates, onChange }) => {
+const SessionSeatItem: React.FC<Props> = ({
+  sessionSeat,
+  rates,
+  onChange,
+  totalSelectedSeatsNum,
+}) => {
   const [showModal, setShowModal] = useState(false);
   const [rate, setRate] = useState<SeatType | null>(null);
   const [seat, setSeat] = useState<SessionSeat>(sessionSeat);
@@ -77,52 +85,62 @@ const SessionSeatItem: React.FC<Props> = ({ sessionSeat, rates, onChange }) => {
       <Modal isOpen={showModal} onClose={handleClose}>
         <Modal.Content maxWidth="400px">
           <Modal.CloseButton />
-          <Modal.Header>Choose the rate:</Modal.Header>
+          <Modal.Header>
+            {totalSelectedSeatsNum < MAX_SEATS_NUM || rate !== null
+              ? "Choose the rate:"
+              : "Oops"}
+          </Modal.Header>
           <Modal.Body>
-            <Button.Group space={2} direction="column">
-              <Button
-                colorScheme="secondary"
-                onPress={() => handleChooseRate("ADULT")}
-                variant={
-                  rates.ADULT === 0
-                    ? "ghost"
-                    : rate === "ADULT"
-                    ? "subtle"
-                    : "outline"
-                }
-                disabled={rates.ADULT === 0}
-              >
-                {rates.ADULT === 0 ? "ADULT" : `ADULT $${rates.ADULT}`}
-              </Button>
-              <Button
-                colorScheme="secondary"
-                onPress={() => handleChooseRate("STUDENT")}
-                variant={
-                  rates.STUDENT === 0
-                    ? "ghost"
-                    : rate === "STUDENT"
-                    ? "subtle"
-                    : "outline"
-                }
-                disabled={rates.STUDENT === 0}
-              >
-                {rates.STUDENT === 0 ? "STUDENT" : `STUDENT $${rates.STUDENT}`}
-              </Button>
-              <Button
-                colorScheme="secondary"
-                onPress={() => handleChooseRate("CHILD")}
-                variant={
-                  rates.CHILD === 0
-                    ? "ghost"
-                    : rate === "CHILD"
-                    ? "subtle"
-                    : "outline"
-                }
-                disabled={rates.CHILD === 0}
-              >
-                {rates.CHILD === 0 ? "CHILD" : `CHILD $${rates.CHILD}`}
-              </Button>
-            </Button.Group>
+            {totalSelectedSeatsNum < MAX_SEATS_NUM || rate !== null ? (
+              <Button.Group space={2} direction="column">
+                <Button
+                  colorScheme="secondary"
+                  onPress={() => handleChooseRate("ADULT")}
+                  variant={
+                    rates.ADULT === 0
+                      ? "ghost"
+                      : rate === "ADULT"
+                      ? "subtle"
+                      : "outline"
+                  }
+                  disabled={rates.ADULT === 0}
+                >
+                  {rates.ADULT === 0 ? "ADULT" : `ADULT $${rates.ADULT}`}
+                </Button>
+                <Button
+                  colorScheme="secondary"
+                  onPress={() => handleChooseRate("STUDENT")}
+                  variant={
+                    rates.STUDENT === 0
+                      ? "ghost"
+                      : rate === "STUDENT"
+                      ? "subtle"
+                      : "outline"
+                  }
+                  disabled={rates.STUDENT === 0}
+                >
+                  {rates.STUDENT === 0
+                    ? "STUDENT"
+                    : `STUDENT $${rates.STUDENT}`}
+                </Button>
+                <Button
+                  colorScheme="secondary"
+                  onPress={() => handleChooseRate("CHILD")}
+                  variant={
+                    rates.CHILD === 0
+                      ? "ghost"
+                      : rate === "CHILD"
+                      ? "subtle"
+                      : "outline"
+                  }
+                  disabled={rates.CHILD === 0}
+                >
+                  {rates.CHILD === 0 ? "CHILD" : `CHILD $${rates.CHILD}`}
+                </Button>
+              </Button.Group>
+            ) : (
+              <Text>{`You can't select more than ${MAX_SEATS_NUM} seats.`}</Text>
+            )}
           </Modal.Body>
           <Modal.Footer>
             {rate === null ? (

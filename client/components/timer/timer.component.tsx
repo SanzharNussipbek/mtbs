@@ -8,7 +8,7 @@ type Props = {
 };
 
 const Timer: React.FC<Props> = ({ onFinish, duration }) => {
-  const totalDuration = duration ?? 900;
+  const totalDuration = duration ?? 300;
 
   return (
     <SafeAreaView style={styles.container}>
