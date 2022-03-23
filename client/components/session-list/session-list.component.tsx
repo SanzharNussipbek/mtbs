@@ -51,7 +51,6 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
   );
 
   const handleClick = (session: Session) => {
-    if (isInPast(session.datetime)) return;
     navigation.navigate("Session", { id: session?.id });
   };
 

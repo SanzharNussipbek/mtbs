@@ -24,6 +24,7 @@ import {
 import Loader from "../loader/loader.component";
 
 import { styles } from "./ticket-list-item.styles";
+import { isInOneHour } from "../../utils/date";
 
 type Props = {
   ticket: Ticket;
@@ -163,7 +164,9 @@ const TicketListItem: React.FC<Props> = ({
               </Text>
             ))}
           </Modal.Body>
-          {canCancel && !hideActions ? (
+          {canCancel &&
+          !hideActions &&
+          !isInOneHour(ticket.session.datetime) ? (
             <Modal.Footer>
               <Button.Group space={2}>
                 <Button

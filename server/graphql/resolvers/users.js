@@ -141,11 +141,6 @@ module.exports = {
     async updateUser(_, { data }, context) {
       const { id, ...updateUserInput } = data;
       const user = await User.findById(id);
-      const signedUser = checkAuth(context);
-
-      // if (user?.id !== signedUser?.id) {
-      //   throw new UserInputError("User is not signed in");
-      // }
 
       if (!user) {
         throw new UserInputError("User not found");
@@ -183,11 +178,6 @@ module.exports = {
       context
     ) {
       const user = await User.findById(id);
-      const signedUser = checkAuth(context);
-
-      // if (user?.id !== signedUser?.id) {
-      //   throw new UserInputError("User is not signed in");
-      // }
 
       if (!user) {
         throw new UserInputError("User not found");

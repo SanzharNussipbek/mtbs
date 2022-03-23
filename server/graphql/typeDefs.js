@@ -326,7 +326,6 @@ module.exports = gql`
     updateUser(data: UpdateUserInput): User!
     deleteUser(id: ID!): String!
     changePassword(data: ChangePasswordInput): User!
-
     createMovie(data: CreateMovieInput): Movie!
     updateMovie(data: UpdateMovieInput): Movie!
     deleteMovie(id: ID!): String!

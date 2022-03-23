@@ -2,6 +2,8 @@ import React from "react";
 import { format } from "date-fns";
 import { Pressable, Text, View } from "native-base";
 
+import { isInOneHour, isInPast } from "../../utils/date";
+
 import { styles } from "./session-time-item.styles";
 
 type Props = {
@@ -10,21 +12,26 @@ type Props = {
 };
 
 const SessionTimeItem: React.FC<Props> = ({ datetime, onClick }) => {
-  const inFuture = new Date(datetime * 1000).valueOf() > new Date().valueOf();
+  const isDisabled = isInPast(datetime) || isInOneHour(datetime);
+
+  const handleClick = () => {
+    if (isDisabled) return;
+    onClick();
+  };
 
   return (
     <Pressable
-      onPress={onClick}
+      onPress={handleClick}
       style={
-        inFuture
-          ? [styles.sessionTimeItem, styles.future]
-          : [styles.sessionTimeItem, styles.past]
+        isDisabled
+          ? [styles.sessionTimeItem, styles.past]
+          : [styles.sessionTimeItem, styles.future]
       }
     >
-      <Text color={inFuture ? "white" : "muted.300"} style={styles.text}>
+      <Text color={isDisabled ? "muted.300" : "white"} style={styles.text}>
         {format(new Date(datetime * 1000), "HH:mm")}
       </Text>
-      {inFuture ? <View style={styles.circle} /> : null}
+      {isDisabled ? null : <View style={styles.circle} />}
     </Pressable>
   );
 };

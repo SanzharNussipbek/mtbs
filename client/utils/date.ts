@@ -28,3 +28,9 @@ export const isInFuture = (datetime: number) => {
 export const isInPast = (datetime: number) => {
   return new Date(datetime * 1000).getTime() < getCurrentDate().getTime();
 };
+
+export const isInOneHour = (datetime: number) => {
+  const ONE_HOUR = 60 * 60 * 1000;
+  const diff = Math.abs(getCurrentDate().getTime() - new Date(new Date(datetime * 1000).getTime()).getTime());
+  return diff < ONE_HOUR;
+};
