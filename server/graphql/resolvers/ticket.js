@@ -101,6 +101,10 @@ module.exports = {
         id: ticket.id,
       };
     },
+    async deleteAllTickets(_, {}, context) {
+      await Ticket.deleteMany();
+      return "All tickets are deleted successfully";
+    },
     async deleteTicket(_, { id }, context) {
       try {
         const ticket = await Ticket.findById(id);

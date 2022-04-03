@@ -40,8 +40,8 @@ const Home = () => {
               ? theme.palette.grey[100]
               : theme.palette.grey[900],
           flexGrow: 1,
-          height: "100vh",
-          overflow: "auto",
+          height: "calc(100vh - 64px)",
+          overflow: "hidden",
         }}
         style={{
           transform: "translateY(64px)",

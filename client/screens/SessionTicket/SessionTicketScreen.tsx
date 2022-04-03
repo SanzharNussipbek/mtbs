@@ -18,6 +18,7 @@ import {
   DELETE_TICKET,
   PAY_FOR_TICKET,
   GET_SESSION_BY_ID,
+  GET_TICKETS_BY_USER_ID,
 } from "../../utils/gql";
 import {
   selectSession,
@@ -65,6 +66,10 @@ export default function SessionTicketScreen(
         Alert.alert("ERROR", JSON.stringify(err));
         setErrors(err?.graphQLErrors[0]?.extensions?.errors);
       },
+      refetchQueries: [
+        { query: GET_SESSION_BY_ID, variables: { id: session?.id } },
+        { query: GET_TICKETS_BY_USER_ID, variables: { userId: user?.id } },
+      ],
     });
 
   const [payForTicket, { loading: isPayLoading }] = useMutation(
@@ -85,6 +90,10 @@ export default function SessionTicketScreen(
         setErrors(err?.graphQLErrors[0]?.extensions?.errors);
       },
       variables: { id: ticket?.id, price: ticket?.price },
+      refetchQueries: [
+        { query: GET_SESSION_BY_ID, variables: { id: session?.id } },
+        { query: GET_TICKETS_BY_USER_ID, variables: { userId: user?.id } },
+      ],
     }
   );
 
@@ -106,6 +115,7 @@ export default function SessionTicketScreen(
       },
       refetchQueries: [
         { query: GET_SESSION_BY_ID, variables: { id: session?.id } },
+        { query: GET_TICKETS_BY_USER_ID, variables: { userId: user?.id } },
       ],
       variables: { id: ticket?.id },
     }

@@ -45,12 +45,22 @@ export default function SessionScreen(props: RootStackScreenProps<"Session">) {
   }, [session]);
 
   const handleSelectSeats = (seats: SessionSeat[]) => {
-    setSelectedSeats(
-      seats.sort((a, b) => a.seat.seatNumber - b.seat.seatNumber)
-    );
+    setSelectedSeats(seats);
   };
 
   const handleNext = () => {
+    setSelectedSeats(
+      selectedSeats.sort((a, b) => a.seat.seatNumber - b.seat.seatNumber)
+    );
+    let price = 0;
+    for (let i = 0; i < selectedSeats.length; i++) {
+      const rate: SeatType | "" = selectedSeats[i].type;
+      if (rate === "") continue;
+      const seatPrice = session?.rates[rate];
+      if (!seatPrice) return;
+      price += seatPrice;
+    }
+    setTotalPrice(price);
     setShowModal(true);
   };
 
@@ -63,18 +73,6 @@ export default function SessionScreen(props: RootStackScreenProps<"Session">) {
     dispatch(updateSessionSeats(selectedSeats));
     navigation.navigate("SessionTicket");
   };
-
-  useEffect(() => {
-    let price = 0;
-    for (let i = 0; i < selectedSeats.length; i++) {
-      const rate: SeatType | "" = selectedSeats[i].type;
-      if (rate === "") continue;
-      const seatPrice = session?.rates[rate];
-      if (!seatPrice) return;
-      price += seatPrice;
-    }
-    setTotalPrice(price);
-  }, [selectedSeats]);
 
   return called && loading ? (
     <Loader />

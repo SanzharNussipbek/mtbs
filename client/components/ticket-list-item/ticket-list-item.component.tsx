@@ -148,6 +148,9 @@ const TicketListItem: React.FC<Props> = ({
               {`Movie: ${ticket.session.movie.name}`}
             </Text>
             <Text mb={4} color="black">
+              {`Hall: ${ticket.session.hall.name}`}
+            </Text>
+            <Text mb={4} color="black">
               {`Date: ${format(ticketDate, "dd.MM.yyyy")}`}
             </Text>
             <Text mb={6} color="black">

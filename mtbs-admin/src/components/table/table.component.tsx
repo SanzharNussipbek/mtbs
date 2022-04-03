@@ -66,7 +66,12 @@ const Table = (props: Props) => {
 
   return (
     <TableWrapper>
-      <TableContainer>
+      <TableContainer
+        style={{
+          height: "calc(100vh - 64px - 32px - 36px - 36px)",
+          overflowY: "auto",
+        }}
+      >
         {loading && <div>loading...</div>}
         <MuiTable>
           <TableHead

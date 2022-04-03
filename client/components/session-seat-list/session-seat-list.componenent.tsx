@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { View } from "react-native";
 import { Flex, Text, VStack } from "native-base";
 
-import { useAppDispatch } from "../../hooks";
 import { Session, SessionSeat } from "../../types/types";
-import { setSession } from "../../redux/session/session.slice";
 
 import SessionSeatItem from "../session-seat-item/session-seat-item.componenent";
 
@@ -16,8 +14,6 @@ type Props = {
 };
 
 const SessionSeatList: React.FC<Props> = ({ session, onChange }) => {
-  const dispatch = useAppDispatch();
-
   const [selectedSeats, setSelectedSeats] = useState<SessionSeat[]>([]);
 
   const rows = [
@@ -27,22 +23,19 @@ const SessionSeatList: React.FC<Props> = ({ session, onChange }) => {
   ];
 
   const handleSelectSeat = (seat: SessionSeat, remove?: Boolean) => {
+    let newSelectedSeats = selectedSeats;
     if (remove) {
-      setSelectedSeats(selectedSeats.filter((s) => s.id !== seat.id));
+      newSelectedSeats = selectedSeats.filter((s) => s.id !== seat.id);
     } else if (selectedSeats.findIndex((s) => s.id === seat.id) !== -1) {
-      setSelectedSeats(selectedSeats.map((s) => (s.id === seat.id ? seat : s)));
+      newSelectedSeats = selectedSeats.map((s) =>
+        s.id === seat.id ? seat : s
+      );
     } else {
-      setSelectedSeats([...selectedSeats, seat]);
+      newSelectedSeats = [...selectedSeats, seat];
     }
+    setSelectedSeats(newSelectedSeats);
+    onChange(newSelectedSeats);
   };
-
-  useEffect(() => {
-    onChange(selectedSeats);
-  }, [selectedSeats]);
-
-  useEffect(() => {
-    dispatch(setSession(null));
-  }, []);
 
   return session ? (
     <View style={styles.container}>

@@ -27,28 +27,28 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
   const [checked, setChecked] = useState(false);
   const [halls, setHalls] = useState<Hall[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentSessions, setCurrentSessions] = useState<Session[]>([]);
 
   const [routes] = useState([
     { key: "first", title: "Today" },
     { key: "second", title: "Tomorrow" },
   ]);
 
-  const { called, loading, data } = useQuery(
-    GET_SESSIONS_BY_MOVIE_ID,
-    {
-      onCompleted(data) {
-        const sessions: Session[] = data.getSessionsByMovieId;
-        setSessions(sessions);
-        setHalls([...new Set(sessions.map((s) => s.hall))]);
-      },
-      onError(err) {
-        Alert.alert("ERROR", err.message);
-      },
-      variables: {
-        movieId,
-      },
-    }
-  );
+  const { called, loading, data } = useQuery(GET_SESSIONS_BY_MOVIE_ID, {
+    onCompleted(data) {
+      setIsLoading(false);
+      const sessions: Session[] = data.getSessionsByMovieId;
+      setSessions(sessions);
+      setHalls([...new Set(sessions.map((s) => s.hall))]);
+    },
+    onError(err) {
+      Alert.alert("ERROR", err.message);
+    },
+    variables: {
+      movieId,
+    },
+  });
 
   const handleClick = (session: Session) => {
     navigation.navigate("Session", { id: session?.id });
@@ -67,7 +67,15 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
     }
   }, [checked]);
 
-  return called && loading ? (
+  useEffect(() => {
+    setCurrentSessions(
+      sessions.filter((s) =>
+        index === 0 ? isToday(s.datetime) : isTomorrow(s.datetime)
+      )
+    );
+  }, [index, sessions]);
+
+  return isLoading ? (
     <Loader />
   ) : (
     <View style={styles.sessionList}>
@@ -105,16 +113,10 @@ const SessionList: React.FC<Props> = ({ movieId }) => {
         )}
       />
       <View style={styles.main}>
-        {sessions.filter((s) =>
-          index === 0 ? isToday(s.datetime) : isTomorrow(s.datetime)
-        )?.length ? (
+        {currentSessions?.length ? (
           halls.map((hall: Hall, idx) => {
-            const hallSessions: Session[] = sessions
-              .filter((s) =>
-                index === 0
-                  ? s.hall.id === hall.id && isToday(s.datetime)
-                  : s.hall.id === hall.id && isTomorrow(s.datetime)
-              )
+            const hallSessions: Session[] = currentSessions
+              .filter((s) => s.hall.id === hall.id)
               .sort(function (a, b) {
                 return a.datetime - b.datetime;
               });

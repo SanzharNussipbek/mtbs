@@ -9,8 +9,10 @@ import { client } from "./apollo";
 import { NativeBaseProvider } from "native-base";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import {LogBox} from 'react-native';
 
 export default function App() {
+  LogBox.ignoreAllLogs(true);
   const isLoadingComplete = useCachedResources();
   const colorScheme = 'dark';
 

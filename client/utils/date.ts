@@ -12,12 +12,10 @@ export const isToday = (datetime: number) => {
 };
 
 export const isTomorrow = (datetime: number) => {
+  const currentDate = getCurrentDate();
   return (
     format(new Date(datetime * 1000), "dd.MM.yyyy") ===
-    format(
-      getCurrentDate().setDate(getCurrentDate().getDate() + 1),
-      "dd.MM.yyyy"
-    )
+    format(currentDate.setDate(currentDate.getDate() + 1), "dd.MM.yyyy")
   );
 };
 
@@ -31,6 +29,9 @@ export const isInPast = (datetime: number) => {
 
 export const isInOneHour = (datetime: number) => {
   const ONE_HOUR = 60 * 60 * 1000;
-  const diff = Math.abs(getCurrentDate().getTime() - new Date(new Date(datetime * 1000).getTime()).getTime());
+  const diff = Math.abs(
+    getCurrentDate().getTime() -
+      new Date(new Date(datetime * 1000).getTime()).getTime()
+  );
   return diff < ONE_HOUR;
 };

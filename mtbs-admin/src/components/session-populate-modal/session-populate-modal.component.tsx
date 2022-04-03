@@ -42,7 +42,6 @@ const SessionPopulateModal: React.FC<Props> = ({ open, onClose }) => {
   });
 
   const [sessions, setSessions] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [halls, setHalls] = useState<Hall[]>([]);
   const [movies, setMovies] = useState<Movie[]>([]);
   const [selectedMovie, setSelectedMovie] = useState<string | null>(null);
@@ -79,17 +78,19 @@ const SessionPopulateModal: React.FC<Props> = ({ open, onClose }) => {
     e.preventDefault();
     const sessions = [];
     const hallIds = halls.map((h) => h.id);
-    const timeDiffs = [0, 86400];
+    const timeDiffs = [86400, 172800];
+    const movieId = movies.find((m) => m.name === values?.movieId)?.id ?? "";
     for (let index = 0; index < timeDiffs.length; index++) {
       const timeDiff = timeDiffs[index];
       for (let j = 0; j < hallIds.length; j++) {
-        for (let i = 0; i < 4; i++) {
+        const hallId = hallIds[j];
+        for (let i = 0; i < 5; i++) {
           const session = {
             datetime:
-              new Date(new Date().setHours(i + 10, 0, 0, 0))?.getTime() / 1000 +
+              new Date(new Date().setHours(i + 12, 0, 0, 0))?.getTime() / 1000 +
               timeDiff,
-            hallId: hallIds[j],
-            movieId: movies.find((m) => m.name === values?.movieId)?.id ?? "",
+            hallId: hallId,
+            movieId: movieId,
             adultRate: 100,
             studentRate: 75,
             childRate: 50,
@@ -98,7 +99,7 @@ const SessionPopulateModal: React.FC<Props> = ({ open, onClose }) => {
         }
       }
     }
-    console.log(sessions);
+    console.log('SESSIONS:\n', sessions.length);
     setSessions(JSON.stringify(sessions, null, 2));
   };
 
