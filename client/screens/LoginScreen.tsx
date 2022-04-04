@@ -5,7 +5,12 @@ import { View, TextInput, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { LOGIN_USER } from "../utils/gql";
+import {
+  GET_ALL_FAQ,
+  GET_ALL_MOVIES,
+  GET_ALL_POSTS,
+  LOGIN_USER,
+} from "../utils/gql";
 import { useAppDispatch } from "../hooks";
 import { loginUser } from "../redux/user/user.actions";
 
@@ -33,6 +38,17 @@ const LoginScreen = () => {
       setErrors(err?.graphQLErrors[0]?.extensions?.errors);
     },
     variables: values,
+    refetchQueries: [
+      {
+        query: GET_ALL_MOVIES,
+      },
+      {
+        query: GET_ALL_POSTS,
+      },
+      {
+        query: GET_ALL_FAQ,
+      },
+    ],
   });
 
   useEffect(() => {

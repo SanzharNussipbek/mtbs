@@ -78,16 +78,16 @@ const SessionPopulateModal: React.FC<Props> = ({ open, onClose }) => {
     e.preventDefault();
     const sessions = [];
     const hallIds = halls.map((h) => h.id);
-    const timeDiffs = [86400, 172800];
+    const timeDiffs = [0, 86400];
     const movieId = movies.find((m) => m.name === values?.movieId)?.id ?? "";
     for (let index = 0; index < timeDiffs.length; index++) {
       const timeDiff = timeDiffs[index];
       for (let j = 0; j < hallIds.length; j++) {
         const hallId = hallIds[j];
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 8; i++) {
           const session = {
             datetime:
-              new Date(new Date().setHours(i + 12, 0, 0, 0))?.getTime() / 1000 +
+              new Date(new Date().setHours(i + 10, 0, 0, 0))?.getTime() / 1000 +
               timeDiff,
             hallId: hallId,
             movieId: movieId,
